@@ -418,6 +418,7 @@ function playFrom(id, i) {
   if (s.audioBuffers[i]) {
     const src = s.audioCtx.createBufferSource();
     src.buffer = s.audioBuffers[i];
+    src.playbackRate.value = parseFloat(document.getElementById('speedSelect').value) || 1.25;
     src.connect(s.audioCtx.destination);
     src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
     src.start();
