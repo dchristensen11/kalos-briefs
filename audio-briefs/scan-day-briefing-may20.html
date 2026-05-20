@@ -329,8 +329,6 @@ async function fetchAudio(text) {
   const apiKey = document.getElementById('apiKey').value.trim();
   const voiceId = document.getElementById('voiceSelect').value;
   const speed = parseFloat(document.getElementById('speedSelect').value) || 1.25;
-  // Wrap in SSML prosody — ElevenLabs processes this natively, no pitch shift
-  const ssml = `<speak><prosody rate="${Math.round(speed * 100)}%">${text}</prosody></speak>`;
   const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
     method: 'POST',
     headers: {
@@ -339,7 +337,7 @@ async function fetchAudio(text) {
       'Accept': 'audio/mpeg'
     },
     body: JSON.stringify({
-      text: ssml,
+      text,
       model_id: 'eleven_turbo_v2_5',
       voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.15, use_speaker_boost: true }
     })
@@ -423,6 +421,10 @@ function playFrom(id, i) {
   if (s.audioBuffers[i]) {
     const src = s.audioCtx.createBufferSource();
     src.buffer = s.audioBuffers[i];
+    // Speed up playback while compensating pitch so voice stays natural (no chipmunk)
+    const speed = parseFloat(document.getElementById('speedSelect').value) || 1.25;
+    src.playbackRate.value = speed;
+    src.detune.value = -1200 * Math.log2(speed); // cancel pitch shift from speed change
     src.connect(s.audioCtx.destination);
     src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
     src.start();
