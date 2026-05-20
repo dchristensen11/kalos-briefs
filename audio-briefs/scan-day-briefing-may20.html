@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing · May 20, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f13; color: #e8e8ee; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 28px 16px 48px; }
+
+  .page-header { text-align: center; margin-bottom: 24px; }
+  .page-header h1 { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .page-header p { font-size: 12px; color: #555; margin-top: 4px; }
+
+  /* Shared config */
+  .shared-config { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; width: 100%; max-width: 680px; margin-bottom: 20px; }
+  .shared-config h3 { font-size: 12px; color: #555; letter-spacing: 0.6px;
+    text-transform: uppercase; margin-bottom: 12px; }
+  .cfg-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .cfg-row label { font-size: 11px; color: #666; white-space: nowrap; }
+  .cfg-row input, .cfg-row select {
+    background: #252530; border: 1px solid #333; color: #ccc;
+    font-size: 12px; padding: 8px 10px; border-radius: 8px; flex: 1; min-width: 0; }
+  .cfg-row input { font-family: monospace; letter-spacing: 0.5px; }
+  .cfg-note { font-size: 11px; color: #444; margin-top: 10px; line-height: 1.5; }
+
+  /* Client card */
+  .client-card { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 16px;
+    padding: 28px 32px; max-width: 680px; width: 100%;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4); margin-bottom: 20px; }
+  .card-header { margin-bottom: 20px; }
+  .name { font-size: 20px; font-weight: 700; color: #fff; }
+  .sub { font-size: 12px; color: #777; margin-top: 3px; }
+  .scan-badge { display: inline-block; background: #1e3a5f; color: #5ab4ff;
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 7px; }
+
+  .flag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .flag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 12px; }
+  .flag.red { background: rgba(198,40,40,0.15); color: #ef5350; border: 1px solid rgba(198,40,40,0.25); }
+  .flag.orange { background: rgba(230,81,0,0.15); color: #ff8a50; border: 1px solid rgba(230,81,0,0.25); }
+  .flag.green { background: rgba(46,125,50,0.15); color: #66bb6a; border: 1px solid rgba(46,125,50,0.25); }
+  .flag.blue { background: rgba(21,101,192,0.15); color: #64b5f6; border: 1px solid rgba(21,101,192,0.25); }
+  .flag.yellow { background: rgba(249,168,37,0.15); color: #ffcc02; border: 1px solid rgba(249,168,37,0.25); }
+
+  .progress-wrap { background: #252530; border-radius: 6px; height: 5px;
+    margin: 18px 0 6px; overflow: hidden; }
+  .progress-bar { background: linear-gradient(90deg, #5ab4ff, #7c6fff);
+    height: 100%; width: 0%; border-radius: 6px; transition: width 0.5s ease; }
+  .progress-label { font-size: 11px; color: #444; margin-bottom: 18px; }
+
+  .controls { display: flex; gap: 10px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+  .btn-primary { background: linear-gradient(135deg, #4a9eff, #7c6fff);
+    border: none; border-radius: 50px; color: #fff; font-size: 13px; font-weight: 600;
+    padding: 11px 22px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+  .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: #252530; border: 1px solid #333; border-radius: 50px;
+    color: #999; font-size: 12px; font-weight: 500; padding: 10px 18px; cursor: pointer; }
+  .btn-secondary:hover { background: #2e2e3d; }
+  .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .sections { display: flex; flex-direction: column; gap: 3px; }
+  .section-item { display: flex; align-items: flex-start; gap: 11px;
+    padding: 9px 12px; border-radius: 8px; font-size: 12px;
+    color: #555; border: 1px solid transparent; transition: all 0.2s; cursor: default; }
+  .section-item.active { background: #1c2640; border-color: #2a4070; color: #c8daff; }
+  .section-item.done { color: #3a6b3a; }
+  .section-item.loaded { cursor: pointer; }
+  .section-item.loaded:hover { background: #1f1f2a; color: #999; }
+  .sec-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .sec-title { font-weight: 600; }
+  .sec-desc { font-size: 10px; margin-top: 2px; opacity: 0.7; }
+  .sec-status { margin-left: auto; font-size: 10px; color: #333; flex-shrink: 0; margin-top: 2px; }
+  .section-item.active .sec-status { color: #5ab4ff; }
+  .section-item.done .sec-status { color: #3d7a3d; }
+
+  .status-msg { font-size: 11px; color: #444; margin-top: 14px; text-align: center; line-height: 1.6; }
+  .status-msg.error { color: #e05a5a; }
+
+  .play-both { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; max-width: 680px; width: 100%; text-align: center; margin-bottom: 20px; }
+  .play-both p { font-size: 12px; color: #555; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Scan Day Briefing · May 20, 2026</h1>
+  <p>Daniel Nguyen · Vishaka Iyer · ElevenLabs TTS</p>
+</div>
+
+<!-- Shared API config -->
+<div class="shared-config">
+  <h3>ElevenLabs Config</h3>
+  <div class="cfg-row">
+    <label>API Key</label>
+    <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" />
+  </div>
+  <div class="cfg-row" style="margin-top:10px">
+    <label>Voice</label>
+    <select id="voiceSelect">
+      <option value="TX3LPaxmHKxFdv7VOZE2">Josh — deep, engaging male ★</option>
+      <option value="21m00Tcm4TlvDq8ikWAM">Rachel — calm, clear female</option>
+      <option value="pNInz6obpgDQGcFmaJgB">Adam — authoritative male</option>
+      <option value="ErXwobaYiN019PkySvjV">Antoni — warm male</option>
+      <option value="EXAVITQu4vr4xnSDxMaL">Bella — soft female</option>
+      <option value="onwK4e9ZLuTAKqWW03F9">Daniel — British male</option>
+      <option value="pqHfZKP75CvOlQylNhV4">Bill — grounded male</option>
+    </select>
+    <label style="margin-left:6px">Speed</label>
+    <select id="speedSelect" style="max-width:80px">
+      <option value="0.85">0.85×</option>
+      <option value="0.95">0.95×</option>
+      <option value="1.0">1.0×</option>
+      <option value="1.1">1.1×</option>
+      <option value="1.25" selected>1.25×</option>
+      <option value="1.5">1.5×</option>
+    </select>
+  </div>
+  <div class="cfg-note">⚠️ Key is never sent anywhere except directly to api.elevenlabs.io — it stays in your browser tab only. If you get a 404 voice error, replace the voice ID in the dropdown with one from your ElevenLabs Voice Library.</div>
+</div>
+
+<!-- Play both in sequence -->
+<div class="play-both">
+  <p>Generate both briefings, then play them back-to-back for the full commute run.</p>
+  <button class="btn-primary" onclick="playBothSequence()">▶ Generate Both &amp; Play in Sequence</button>
+</div>
+
+<!-- ===== DANIEL NGUYEN ===== -->
+<div class="client-card" id="card-danielnguyen">
+  <div class="card-header">
+    <div class="name">Daniel Nguyen</div>
+    <div class="sub">Male · 23 · LBM Build</div>
+    <div class="scan-badge">📅 May 20, 2026 · 10:45 AM</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Consistency 89%</span>
+    <span class="flag green">Intensity ✓</span>
+    <span class="flag green">Progression ✓</span>
+    <span class="flag red">ALMI 25th %ile</span>
+    <span class="flag orange">Nutrition 50/100</span>
+    <span class="flag orange">Pressing Lag</span>
+    <span class="flag orange">Pre-workout Nausea</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="dn-progressBar"></div></div>
+  <div class="progress-label" id="dn-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="dn-btnGenerate" onclick="generateClient('dn')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="dn-btnStop" onclick="stopClient('dn')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="dn-btnDownload" onclick="downloadClient('dn')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="dn-sectionList"></div>
+  <div class="status-msg" id="dn-statusMsg"></div>
+</div>
+
+<!-- ===== VISHAKA IYER ===== -->
+<div class="client-card" id="card-vishaka">
+  <div class="card-header">
+    <div class="name">Vishaka Iyer</div>
+    <div class="sub">Female · LBM Build</div>
+    <div class="scan-badge">📅 May 20, 2026 · 1:45 PM</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag red">Consistency 54% — Dropped</span>
+    <span class="flag red">ALMI 7th %ile AM</span>
+    <span class="flag orange">Calories 2,223/day over target</span>
+    <span class="flag orange">Recovery/Sleep</span>
+    <span class="flag orange">Intensity 78/100</span>
+    <span class="flag yellow">Progression +2.9%</span>
+    <span class="flag yellow">Technique — Cossack + Rev Lunge</span>
+    <span class="flag blue">C-section history</span>
+    <span class="flag blue">Las Vegas trip post-scan</span>
+    <span class="flag green">Protein 159g ✓</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="vi-progressBar"></div></div>
+  <div class="progress-label" id="vi-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="vi-btnGenerate" onclick="generateClient('vi')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="vi-btnStop" onclick="stopClient('vi')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="vi-btnDownload" onclick="downloadClient('vi')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="vi-sectionList"></div>
+  <div class="status-msg" id="vi-statusMsg"></div>
+</div>
+
+<script>
+// ─── Section content ────────────────────────────────────────────────────────
+
+const CLIENT_SECTIONS = {
+  dn: [
+    {
+      icon: "👋", title: "Intro", desc: "Who he is and today's goal",
+      text: `Daniel Nguyen is a 23-year-old male focused on lean body mass building. Today is his second DEXA scan at 10:45 AM. He trains at home, 5 times a week on a push-pull-legs and upper-lower hybrid split. He's been in the program for roughly 26 days since his first scan in late April. His primary goal is to add lean tissue and improve his body composition, with ALMI as the key clinical marker to move.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Lead with these wins. His training consistency is 89 percent — 16 of 18 scheduled sessions completed. That's outstanding for a 5-day-per-week program. His deadlift has progressed to 200 pounds for 11 reps, putting his estimated one-rep max near 273 pounds. His cable row hit 120 for 12. His hack squat is at 110 for 9, bench at 110 for 11. Across the board, his big compound lifts are moving up meaningfully. He is doing the work.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `The primary clinical concern is ALMI — his Appendicular Lean Mass Index came in at 8.1 kilograms per square meter at Scan 1, which places him at the 25th age-matched percentile for a 23-year-old male. That means three out of four guys his age have more muscle relative to height. His total lean mass is 113.08 pounds and fat mass is 42.36 pounds. The good news is he is young and his training is progressing — but he needs to be gaining meaningfully on lean tissue before Scan 2 shows ALMI improving. Watch for that number today.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Form, injuries, what to watch",
+      text: `There are two training flags to be aware of. First, his pressing pattern is lagging relative to his pull and hinge. His Smith Machine bench is at 110 for 11 and Smith press is estimated around 93 pounds max — he has more room to grow there, and the gold standard for a male his age is around 243 pounds on bench. Second, he's reported pre-workout nausea. That's worth a quick check — is this happening on an empty stomach, is the pre-workout dose too high, or is it something digestive? Make a note to address it in the next program block. No joint injuries or mobility restrictions documented.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `No major recovery flags are documented from Iris for Daniel. He's a full-time student, so his schedule has natural regularity which helps with recovery. His 5-day training frequency is high — especially for a home gym program — so watch whether his session quality is holding up toward the end of the week. If he ever dips below 75 percent effort on the later sessions, that's a flag for frequency or volume adjustment. For now, his consistency suggests he is recovering well enough to keep showing up.`
+    },
+    {
+      icon: "📊", title: "DEXA Baseline — Know Your Numbers", desc: "Scan 1 anchors",
+      text: `Here are his Scan 1 anchors. Body weight 161.9 pounds at time of scan, currently around 163.1. Body fat 26.4 percent. Lean mass 113.08 pounds. Fat mass 42.36 pounds. VAT area 78.1 square centimeters — that's in the healthy range, under 100. ALMI 8.1, at the 25th age-matched percentile. BMD 1.190 — T-score negative 0.1, Z-score positive 0.0, which is normal. Regional breakdown: arms fairly even, trunk is the biggest lean compartment at 55 pounds. Legs are 19 and 20 pounds lean each. These are your baseline anchors for today's delta calculation.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `Daniel is a young male, data-driven, motivated by seeing numbers move. He responds well to direct, concrete feedback. No sensitive flags — no body dysmorphia, no anxiety notes. Lead with the strength progress first, then anchor into the ALMI clinical picture as the reason we need to keep the lean mass trajectory going. He's going to want to know if his numbers improved, so frame the delta clearly. If lean mass went up even modestly, that's a win. If ALMI crossed closer to the 30th percentile, name it. He'll appreciate the precision.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
+      text: `Coming out of today's scan, here are the four things to lock in. First, set a protein target — his current nutrition score is 50 out of 100, which means there's room to optimize. Aim for at least 150 to 160 grams of protein per day given his body weight and LBM goal. Second, address the pressing lag — add a dedicated incline or overhead movement to drive that pattern up over the next 8 weeks. Third, investigate the pre-workout nausea — timing, dose, or product change. Fourth, set an ALMI target: getting from 8.1 to 8.5 over the next scan cycle would represent real lean tissue gain, and that becomes the anchor for the next projection.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Daniel Nguyen going into this scan. Consistency is excellent — 89 percent. Lifts are progressing across the board. The clinical priority is ALMI, currently at the 25th percentile, which is the number to move over time. His VAT is healthy. His BMD is normal. Today is about measuring the lean mass trajectory and calibrating his fueling to match the training load. Walk in with energy — this one should be a good conversation.`
+    }
+  ],
+
+  vi: [
+    {
+      icon: "👋", title: "Intro", desc: "Who she is and today's goal",
+      text: `Vishaka Iyer's second DEXA scan is at 1:45 PM today. She's focused on lean body mass building. Her first scan established an ALMI at the 7th age-matched percentile — that's a significant clinical finding and the driver behind everything in her program. Today's scan will tell us whether the training and nutrition over the past several weeks have started to move that marker. She has a C-section history, which is relevant for core loading and intra-abdominal pressure. She's heading to Las Vegas right after the scan window, so today is also a closing conversation before a travel block.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Lead with these wins before anything else. Her Romanian deadlift has improved by 24 percent — that's a significant strength gain on a foundational hinge pattern. Her protein intake is hitting 159 grams per day, which is right at or above target — that is a genuine nutritional win and directly supports the lean mass goal. Her progression score overall is up 2.9 percent. And she did complete 7 out of 13 scheduled sessions in the last 30 days, which means she is showing up even when life gets complicated. Acknowledge the wins first, then address the challenges.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top red flag with data",
+      text: `The biggest concern right now is consistency, and it deserves a direct conversation. She completed 7 out of 13 sessions — that's 54 percent, down from previous reporting. This is a sharp drop, and it's a red flag. At 54 percent adherence, the training stimulus isn't sufficient to drive the lean mass gains needed to move her ALMI off the 7th percentile. The second red concern is caloric intake — she's averaging 2,223 calories per day, which is over her target. With protein solid at 159 grams, the excess is likely coming from fat or carbohydrates. That combination — over on calories, under on sessions — is a pattern to address directly today.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Form, injuries, movement flags",
+      text: `Two technique flags to be aware of. Her Cossack squat and reverse lunge form has been noted in Iris — these are movements that require lateral hip stability and single-leg loading, both of which can be affected by her C-section history. Her core pressure management in those patterns is worth a cue. Her intensity score is 78 out of 100, which is orange — she's working, but there may be more in the tank, or the drop in consistency is affecting the quality of individual sessions. Progression is positive at 2.9 percent, which is encouraging given the attendance challenges.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `Recovery and sleep are flagged as orange in Iris. The details aren't specific in the notes, but this is a real contributor to the consistency drop — if recovery is poor, motivation and energy for training sessions decreases, and the cycle compounds. She also has the Las Vegas trip coming up immediately post-scan, which adds travel fatigue on top of an already challenged recovery window. The next block plan needs to account for this. Consider a deload or flexible home-training option for the travel week, and then rebuilding structure when she's back. Setting expectations for that transition today is important.`
+    },
+    {
+      icon: "📊", title: "DEXA Baseline — Know Your Numbers", desc: "Scan 1 anchors",
+      text: `Here are Vishaka's Scan 1 anchors. Her ALMI is at the 7th age-matched percentile — that is the primary clinical number to track. This places her in the bottom range for lean mass relative to height for her age group. Today's scan will show whether the strength and protein work has begun to shift that. Her protein intake at 159 grams per day is well-positioned to support lean tissue growth, assuming training volume is sufficient. The RDL improvement of 24 percent is a strong indicator that the muscle recruitment is improving. Keep the ALMI delta front and center when you review the results with her today.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Sensitive flags and communication style",
+      text: `There are no body dysmorphia or anxiety flags documented for Vishaka, so you can lead with data directly. The most important framing choice today is around the consistency number. She knows the sessions dropped off — don't soften it, but anchor it in the forward path rather than the miss. The clinical frame is this: her protein is dialed in, her biggest strength marker is up 24 percent, and the ALMI number is what we're watching to see if the training stimulus was enough. If ALMI held or improved despite lower volume, that's a strong signal. If it didn't move, the message is clear — we need more sessions, and here's how we get there.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
+      text: `Four priorities to set in today's scan conversation. First, consistency must become the number one focus — 7 out of 13 is not enough volume to drive the lean mass gains she needs. Set a concrete session target for the next 8 weeks — something like 3 out of 4 minimum, non-negotiable. Second, address the caloric surplus — with protein solid at 159, look at where the extra calories are coming from and tighten the overall target. Third, plan the Las Vegas travel week explicitly — what does training look like on the road, what does eating look like. Fourth, schedule a check-in within the first week she's back to reset structure before momentum is lost.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Vishaka going into this scan. Her protein is a genuine win at 159 grams. Her RDL is up 24 percent, which is real strength development. The challenge is consistency — 54 percent adherence isn't generating the stimulus her ALMI needs. Today is about reading the ALMI delta, celebrating the strength gains, and having a direct conversation about what the next 8 weeks need to look like. She has the tools. The question is whether we can lock in the consistency. Walk in prepared to be honest and constructive — she's capable of more, and she knows it.`
+    }
+  ]
+};
+
+// ─── Engine ─────────────────────────────────────────────────────────────────
+
+const state = {};
+
+['dn', 'vi'].forEach(id => {
+  state[id] = {
+    audioBuffers: new Array(CLIENT_SECTIONS[id].length).fill(null),
+    audioCtx: null,
+    currentSource: null,
+    currentSection: -1,
+    isPlaying: false,
+    generationDone: false
+  };
+  buildSections(id);
+});
+
+function buildSections(id) {
+  const list = document.getElementById(id + '-sectionList');
+  CLIENT_SECTIONS[id].forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'section-item';
+    div.id = id + '-sec-' + i;
+    div.innerHTML = `<span class="sec-icon">${s.icon}</span>
+      <div style="flex:1"><div class="sec-title">${s.title}</div>
+      <div class="sec-desc">${s.desc}</div></div>
+      <div class="sec-status" id="${id}-stat-${i}">—</div>`;
+    div.onclick = () => {
+      if (state[id].audioBuffers[i] && state[id].isPlaying) playFrom(id, i);
+    };
+    list.appendChild(div);
+  });
+}
+
+function setStatus(id, i, text, cls) {
+  const el = document.getElementById(id + '-sec-' + i);
+  const st = document.getElementById(id + '-stat-' + i);
+  el.className = 'section-item ' + (cls || '');
+  if (st) st.textContent = text;
+}
+
+function setActive(id, i) {
+  CLIENT_SECTIONS[id].forEach((_, idx) => {
+    const el = document.getElementById(id + '-sec-' + idx);
+    if (!el) return;
+    if (idx === i) {
+      el.className = 'section-item active' + (state[id].audioBuffers[idx] ? ' loaded' : '');
+    } else if (idx < i) {
+      el.className = 'section-item done loaded';
+      const st = document.getElementById(id + '-stat-' + idx);
+      if (st) st.textContent = '✓';
+    }
+  });
+  state[id].currentSection = i;
+  const total = CLIENT_SECTIONS[id].length;
+  const pct = i < 0 ? 0 : Math.round(((i + 1) / total) * 100);
+  document.getElementById(id + '-progressBar').style.width = (i < 0 ? 0 : pct) + '%';
+  document.getElementById(id + '-progressLabel').textContent =
+    i < 0 ? 'Ready' : `Playing section ${i + 1} of ${total}`;
+  if (i >= 0) document.getElementById(id + '-sec-' + i).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function fetchAudio(text) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const voiceId = document.getElementById('voiceSelect').value;
+  const speed = parseFloat(document.getElementById('speedSelect').value);
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg'
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_turbo_v2_5',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.15, use_speaker_boost: true },
+      output_format: 'mp3_44100_128'
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(`ElevenLabs ${resp.status}: ${JSON.stringify(err)}`);
+  }
+  return await resp.arrayBuffer();
+}
+
+async function generateClient(id) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    document.getElementById(id + '-statusMsg').textContent = '⚠️ Paste your ElevenLabs API key in the config box above first.';
+    document.getElementById(id + '-statusMsg').className = 'status-msg error';
+    return;
+  }
+  const s = state[id];
+  document.getElementById(id + '-btnGenerate').disabled = true;
+  document.getElementById(id + '-btnStop').disabled = false;
+  document.getElementById(id + '-statusMsg').textContent = '';
+  document.getElementById(id + '-statusMsg').className = 'status-msg';
+  s.audioCtx = s.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  s.audioBuffers = new Array(CLIENT_SECTIONS[id].length).fill(null);
+  s.generationDone = false;
+  s.isPlaying = true;
+
+  const fetches = CLIENT_SECTIONS[id].map((sec, i) => {
+    setStatus(id, i, '⏳', '');
+    return fetchAudio(sec.text)
+      .then(buf => s.audioCtx.decodeAudioData(buf))
+      .then(decoded => {
+        s.audioBuffers[i] = decoded;
+        if (s.currentSection < i) setStatus(id, i, 'ready', 'loaded');
+      })
+      .catch(err => {
+        setStatus(id, i, '✗', '');
+        document.getElementById(id + '-statusMsg').className = 'status-msg error';
+        document.getElementById(id + '-statusMsg').textContent = `Error on section ${i + 1}: ${err.message}`;
+        throw err;
+      });
+  });
+
+  playFrom(id, 0);
+
+  Promise.all(fetches).then(() => {
+    s.generationDone = true;
+    document.getElementById(id + '-btnDownload').disabled = false;
+    document.getElementById(id + '-statusMsg').textContent = 'Generated ✓ — re-generate to use a different voice.';
+  }).catch(() => {
+    s.isPlaying = false;
+    document.getElementById(id + '-btnGenerate').disabled = false;
+    document.getElementById(id + '-btnStop').disabled = true;
+  });
+
+  return new Promise(resolve => {
+    const check = setInterval(() => {
+      if (s.generationDone && !s.isPlaying) { clearInterval(check); resolve(); }
+      if (!s.isPlaying && !s.generationDone) { clearInterval(check); resolve(); }
+    }, 500);
+  });
+}
+
+function playFrom(id, i) {
+  const s = state[id];
+  if (s.currentSource) { try { s.currentSource.stop(); } catch(e) {} }
+  if (i >= CLIENT_SECTIONS[id].length) {
+    s.isPlaying = false;
+    document.getElementById(id + '-btnGenerate').disabled = false;
+    document.getElementById(id + '-btnStop').disabled = true;
+    document.getElementById(id + '-progressLabel').textContent = 'Done ✓ — regenerate or download WAV';
+    return;
+  }
+  setActive(id, i);
+  if (s.audioBuffers[i]) {
+    const src = s.audioCtx.createBufferSource();
+    src.buffer = s.audioBuffers[i];
+    src.connect(s.audioCtx.destination);
+    src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
+    src.start();
+    s.currentSource = src;
+  } else {
+    const check = setInterval(() => {
+      if (s.audioBuffers[i]) {
+        clearInterval(check);
+        if (s.isPlaying) playFrom(id, i);
+      }
+    }, 200);
+  }
+}
+
+function stopClient(id) {
+  const s = state[id];
+  s.isPlaying = false;
+  if (s.currentSource) { try { s.currentSource.stop(); } catch(e) {} }
+  document.getElementById(id + '-btnGenerate').disabled = false;
+  document.getElementById(id + '-btnStop').disabled = true;
+}
+
+async function downloadClient(id) {
+  const s = state[id];
+  if (!s.generationDone) { alert('Still generating — wait for all sections to finish.'); return; }
+  const rendered = await Promise.all(s.audioBuffers.map(buf => {
+    const offline = new OfflineAudioContext(buf.numberOfChannels, buf.length, buf.sampleRate);
+    const src = offline.createBufferSource();
+    src.buffer = buf; src.connect(offline.destination); src.start();
+    return offline.startRendering();
+  }));
+  const totalLen = rendered.reduce((a, b) => a + b.length, 0);
+  const combined = s.audioCtx.createBuffer(1, totalLen, rendered[0].sampleRate);
+  let offset = 0;
+  rendered.forEach(buf => {
+    combined.copyToChannel(buf.getChannelData(0), 0, offset);
+    offset += buf.length;
+  });
+  const wavBuffer = toWav(combined);
+  const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (id === 'dn' ? 'daniel-nguyen' : 'vishaka-iyer') + '-briefing-may20.wav';
+  a.click();
+}
+
+async function playBothSequence() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    alert('Paste your ElevenLabs API key in the config box first.');
+    return;
+  }
+  // Generate Daniel first, wait, then Vishaka
+  stopClient('dn'); stopClient('vi');
+  await generateClient('dn');
+  await new Promise(r => setTimeout(r, 800));
+  generateClient('vi');
+}
+
+function toWav(buffer) {
+  const numCh = buffer.numberOfChannels;
+  const length = buffer.length * numCh * 2 + 44;
+  const out = new ArrayBuffer(length);
+  const view = new DataView(out);
+  const write = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+  write(0, 'RIFF'); view.setUint32(4, length - 8, true); write(8, 'WAVE');
+  write(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+  view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+  view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+  view.setUint16(34, 16, true); write(36, 'data'); view.setUint32(40, buffer.length * numCh * 2, true);
+  let offset = 44;
+  for (let i = 0; i < buffer.length; i++) {
+    for (let ch = 0; ch < numCh; ch++) {
+      const s = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  return out;
+}
+</script>
+</body>
+</html>
