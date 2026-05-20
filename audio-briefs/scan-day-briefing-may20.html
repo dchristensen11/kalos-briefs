@@ -109,8 +109,7 @@
       <option value="0.95">0.95×</option>
       <option value="1.0">1.0×</option>
       <option value="1.1">1.1×</option>
-      <option value="1.25" selected>1.25×</option>
-      <option value="1.5">1.5×</option>
+      <option value="1.2" selected>1.2×</option>
     </select>
   </div>
   <div class="cfg-note">Adam voice pre-loaded. Paste a different voice ID to swap. Key stays in your browser tab only.</div>
@@ -207,10 +206,6 @@ const CLIENT_SECTIONS = {
       text: `No major recovery flags are documented from Iris for Daniel. He's a full-time student, so his schedule has natural regularity which helps with recovery. His 5-day training frequency is high — especially for a home gym program — so watch whether his session quality is holding up toward the end of the week. If he ever dips below 75 percent effort on the later sessions, that's a flag for frequency or volume adjustment. For now, his consistency suggests he is recovering well enough to keep showing up.`
     },
     {
-      icon: "📊", title: "DEXA Baseline — Know Your Numbers", desc: "Scan 1 anchors",
-      text: `Here are his Scan 1 anchors. Body weight 161.9 pounds at time of scan, currently around 163.1. Body fat 26.4 percent. Lean mass 113.08 pounds. Fat mass 42.36 pounds. VAT area 78.1 square centimeters — that's in the healthy range, under 100. ALMI 8.1, at the 25th age-matched percentile. BMD 1.190 — T-score negative 0.1, Z-score positive 0.0, which is normal. Regional breakdown: arms fairly even, trunk is the biggest lean compartment at 55 pounds. Legs are 19 and 20 pounds lean each. These are your baseline anchors for today's delta calculation.`
-    },
-    {
       icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
       text: `Daniel is a young male, data-driven, motivated by seeing numbers move. He responds well to direct, concrete feedback. No sensitive flags — no body dysmorphia, no anxiety notes. Lead with the strength progress first, then anchor into the ALMI clinical picture as the reason we need to keep the lean mass trajectory going. He's going to want to know if his numbers improved, so frame the delta clearly. If lean mass went up even modestly, that's a win. If ALMI crossed closer to the 30th percentile, name it. He'll appreciate the precision.`
     },
@@ -244,10 +239,6 @@ const CLIENT_SECTIONS = {
     {
       icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
       text: `Recovery and sleep are flagged as orange in Iris. The details aren't specific in the notes, but this is a real contributor to the consistency drop — if recovery is poor, motivation and energy for training sessions decreases, and the cycle compounds. She also has the Las Vegas trip coming up immediately post-scan, which adds travel fatigue on top of an already challenged recovery window. The next block plan needs to account for this. Consider a deload or flexible home-training option for the travel week, and then rebuilding structure when she's back. Setting expectations for that transition today is important.`
-    },
-    {
-      icon: "📊", title: "DEXA Baseline — Know Your Numbers", desc: "Scan 1 anchors",
-      text: `Here are Vishaka's Scan 1 anchors. Her ALMI is at the 7th age-matched percentile — that is the primary clinical number to track. This places her in the bottom range for lean mass relative to height for her age group. Today's scan will show whether the strength and protein work has begun to shift that. Her protein intake at 159 grams per day is well-positioned to support lean tissue growth, assuming training volume is sufficient. The RDL improvement of 24 percent is a strong indicator that the muscle recruitment is improving. Keep the ALMI delta front and center when you review the results with her today.`
     },
     {
       icon: "🧠", title: "Coaching Frame", desc: "Sensitive flags and communication style",
@@ -339,7 +330,8 @@ async function fetchAudio(text) {
     body: JSON.stringify({
       text,
       model_id: 'eleven_turbo_v2_5',
-      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.15, use_speaker_boost: true }
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.15, use_speaker_boost: true },
+      speed: Math.min(1.2, parseFloat(document.getElementById('speedSelect').value) || 1.2)
     })
   });
   if (!resp.ok) {
@@ -421,8 +413,6 @@ function playFrom(id, i) {
   if (s.audioBuffers[i]) {
     const src = s.audioCtx.createBufferSource();
     src.buffer = s.audioBuffers[i];
-    const speed = parseFloat(document.getElementById('speedSelect').value) || 1.25;
-    src.playbackRate.value = speed;
     src.connect(s.audioCtx.destination);
     src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
     src.start();
