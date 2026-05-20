@@ -413,33 +413,34 @@ async function generateClient(id) {
   s.generationDone = false;
   s.isPlaying = true;
 
-  const fetches = CLIENT_SECTIONS[id].map((sec, i) => {
-    setStatus(id, i, '⏳', '');
-    return fetchAudio(sec.text)
-      .then(buf => s.audioCtx.decodeAudioData(buf))
-      .then(decoded => {
+  CLIENT_SECTIONS[id].forEach((_, i) => setStatus(id, i, '⏳', ''));
+  playFrom(id, 0);
+
+  // Sequential generation — avoids ElevenLabs rate limits when firing 9 at once
+  (async () => {
+    for (let i = 0; i < CLIENT_SECTIONS[id].length; i++) {
+      if (!s.isPlaying) break;
+      try {
+        const buf = await fetchAudio(CLIENT_SECTIONS[id][i].text);
+        const decoded = await s.audioCtx.decodeAudioData(buf);
         s.audioBuffers[i] = decoded;
         if (s.currentSection < i) setStatus(id, i, 'ready', 'loaded');
-      })
-      .catch(err => {
+      } catch (err) {
         setStatus(id, i, '✗', '');
         document.getElementById(id + '-statusMsg').className = 'status-msg error';
         document.getElementById(id + '-statusMsg').textContent = `Error on section ${i + 1}: ${err.message}`;
-        throw err;
-      });
-  });
-
-  playFrom(id, 0);
-
-  Promise.all(fetches).then(() => {
-    s.generationDone = true;
-    document.getElementById(id + '-btnDownload').disabled = false;
-    document.getElementById(id + '-statusMsg').textContent = 'Generated ✓ — re-generate to use a different voice.';
-  }).catch(() => {
-    s.isPlaying = false;
-    document.getElementById(id + '-btnGenerate').disabled = false;
-    document.getElementById(id + '-btnStop').disabled = true;
-  });
+        s.isPlaying = false;
+        document.getElementById(id + '-btnGenerate').disabled = false;
+        document.getElementById(id + '-btnStop').disabled = true;
+        return;
+      }
+    }
+    if (s.isPlaying) {
+      s.generationDone = true;
+      document.getElementById(id + '-btnDownload').disabled = false;
+      document.getElementById(id + '-statusMsg').textContent = 'Generated ✓ — re-generate to use a different voice.';
+    }
+  })();
 
   return new Promise(resolve => {
     const check = setInterval(() => {
