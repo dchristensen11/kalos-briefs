@@ -407,7 +407,11 @@ async function generateClient(id) {
 
 function playFrom(id, i) {
   const s = state[id];
-  if (s.currentSource) { try { s.currentSource.stop(); } catch(e) {} }
+  if (s.currentSource) {
+    s.currentSource.onended = null; // prevent stale callback from racing
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
   if (i >= CLIENT_SECTIONS[id].length) {
     s.isPlaying = false;
     document.getElementById(id + '-btnGenerate').disabled = false;
@@ -436,7 +440,11 @@ function playFrom(id, i) {
 function stopClient(id) {
   const s = state[id];
   s.isPlaying = false;
-  if (s.currentSource) { try { s.currentSource.stop(); } catch(e) {} }
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
   document.getElementById(id + '-btnGenerate').disabled = false;
   document.getElementById(id + '-btnStop').disabled = true;
 }
