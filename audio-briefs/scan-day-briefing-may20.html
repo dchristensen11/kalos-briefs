@@ -340,7 +340,7 @@ async function fetchAudio(text) {
       text,
       model_id: 'eleven_turbo_v2_5',
       voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.15, use_speaker_boost: true },
-      output_format: 'mp3_44100_128'
+      speed: parseFloat(document.getElementById('speedSelect').value) || 1.25
     })
   });
   if (!resp.ok) {
@@ -418,7 +418,6 @@ function playFrom(id, i) {
   if (s.audioBuffers[i]) {
     const src = s.audioCtx.createBufferSource();
     src.buffer = s.audioBuffers[i];
-    src.playbackRate.value = parseFloat(document.getElementById('speedSelect').value) || 1.25;
     src.connect(s.audioCtx.destination);
     src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
     src.start();
