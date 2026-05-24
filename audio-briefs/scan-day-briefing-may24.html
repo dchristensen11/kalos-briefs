@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing · May 24, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f13; color: #e8e8ee; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: flex-start; padding: 32px 20px;
+  }
+  .page-title {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 2px; color: #444; margin-bottom: 28px;
+  }
+  .card {
+    background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 16px;
+    padding: 36px 40px; max-width: 660px; width: 100%;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    margin-bottom: 24px;
+  }
+  .header { margin-bottom: 28px; }
+  .name { font-size: 22px; font-weight: 700; color: #fff; }
+  .sub { font-size: 13px; color: #888; margin-top: 4px; }
+  .scan-badge {
+    display: inline-block; background: #1e3a5f; color: #5ab4ff;
+    font-size: 11px; font-weight: 600; padding: 3px 10px;
+    border-radius: 20px; margin-top: 8px;
+  }
+  .alert-badge {
+    display: inline-block; background: #3a1e1e; color: #ff7070;
+    font-size: 11px; font-weight: 700; padding: 3px 10px;
+    border-radius: 20px; margin-top: 6px; margin-left: 6px;
+  }
+  .config-row {
+    display: flex; gap: 10px; align-items: center;
+    margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .config-row label { font-size: 11px; color: #666; white-space: nowrap; }
+  .config-row input {
+    background: #252530; border: 1px solid #333;
+    color: #ccc; font-size: 12px; padding: 7px 10px;
+    border-radius: 8px; flex: 1; min-width: 0;
+  }
+  .config-row input { font-family: monospace; letter-spacing: 0.5px; }
+  .progress-wrap {
+    background: #252530; border-radius: 6px; height: 6px;
+    margin: 20px 0 8px; overflow: hidden;
+  }
+  .progress-bar {
+    background: linear-gradient(90deg, #5ab4ff, #7c6fff);
+    height: 100%; width: 0%; border-radius: 6px;
+    transition: width 0.5s ease;
+  }
+  .progress-label { font-size: 11px; color: #555; margin-bottom: 20px; }
+  .controls {
+    display: flex; gap: 10px; align-items: center;
+    margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #4a9eff, #7c6fff);
+    border: none; border-radius: 50px; color: #fff;
+    font-size: 14px; font-weight: 600; padding: 12px 26px;
+    cursor: pointer; transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+  .btn-secondary {
+    background: #252530; border: 1px solid #333; border-radius: 50px;
+    color: #aaa; font-size: 13px; font-weight: 500;
+    padding: 11px 20px; cursor: pointer;
+  }
+  .btn-secondary:hover { background: #2e2e3d; }
+  .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+  .speed-wrap {
+    margin-left: auto; display: flex; align-items: center; gap: 8px;
+  }
+  .speed-wrap label { font-size: 11px; color: #666; }
+  .speed-wrap select {
+    background: #252530; border: 1px solid #333; color: #ccc;
+    font-size: 12px; padding: 5px 8px; border-radius: 6px; cursor: pointer;
+  }
+  .sections { display: flex; flex-direction: column; gap: 4px; }
+  .section-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 14px; border-radius: 8px; font-size: 13px;
+    color: #666; border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+  .section-item.active { background: #1c2640; border-color: #2a4070; color: #c8daff; }
+  .section-item.done { color: #3d6b3d; }
+  .section-item.loaded { cursor: pointer; }
+  .section-item.loaded:hover { background: #1f1f2a; color: #aaa; }
+  .sec-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .sec-title { font-weight: 600; }
+  .sec-desc { font-size: 11px; margin-top: 2px; opacity: 0.7; }
+  .sec-status {
+    margin-left: auto; font-size: 10px; color: #444;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .section-item.active .sec-status { color: #5ab4ff; }
+  .section-item.done .sec-status { color: #3d7a3d; }
+  .status-msg {
+    font-size: 12px; color: #666; margin-top: 16px;
+    text-align: center; line-height: 1.6;
+  }
+  .status-msg.error { color: #e05a5a; }
+  .github-note {
+    background: #1a2030; border: 1px solid #2a3a50; border-radius: 10px;
+    padding: 14px 18px; margin-top: 16px; font-size: 11.5px;
+    color: #7a9ac0; line-height: 1.6;
+  }
+  .github-note strong { color: #aac8e8; }
+  .github-note code {
+    background: #252535; padding: 1px 5px; border-radius: 4px;
+    font-size: 11px; color: #8ab4d8;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-title">Kalos · Scan Day Briefing · May 24, 2026</div>
+
+<div class="card" id="card-sue">
+  <div class="header">
+    <div class="name">Sue Filice</div>
+    <div class="sub">Coach briefing · Second DEXA Scan · F · 65 · LBM Build + Longevity</div>
+    <div class="scan-badge">📅 Sunday May 24, 2026 · 12:00 PM · Campbell</div>
+    <div class="alert-badge">⚠️ Read Section 3 & 6 Before Walking In</div>
+  </div>
+
+  <div class="config-row">
+    <label>API Key</label>
+    <input type="password" id="sue-apiKey" value="" placeholder="ElevenLabs API key" />
+  </div>
+  <div class="config-row">
+    <label>Voice ID</label>
+    <input type="text" id="sue-voiceId" value="gWaDC0oXAheKoZfljzuI" />
+    <div class="speed-wrap">
+      <label>Speed</label>
+      <select id="sue-speed">
+        <option value="0.9">0.9×</option>
+        <option value="1.0">1.0×</option>
+        <option value="1.1">1.1×</option>
+        <option value="1.2" selected>1.2×</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="sue-progressBar"></div>
+  </div>
+  <div class="progress-label" id="sue-progressLabel">Ready to generate</div>
+
+  <div class="controls">
+    <button class="btn-primary" id="sue-generateBtn" onclick="generateAll('sue')">▶ Generate &amp; Play</button>
+    <button class="btn-secondary" id="sue-stopBtn" onclick="stopAll('sue')" disabled>■ Stop</button>
+  </div>
+
+  <div class="sections" id="sue-sections">
+
+    <div class="section-item" id="sue-sec-0">
+      <div class="sec-icon">👋</div>
+      <div>
+        <div class="sec-title">Intro</div>
+        <div class="sec-desc">Sue Filice · 65F · LBM Build + Longevity · 12:00 PM Campbell</div>
+      </div>
+      <div class="sec-status" id="sue-stat-0">—</div>
+    </div>
+
+    <div class="section-item" id="sue-sec-1">
+      <div class="sec-icon">🏆</div>
+      <div>
+        <div class="sec-title">Wins — Lead With These</div>
+        <div class="sec-desc">75 lb maintained · BMD strong · InBody gain · She showed up</div>
+      </div>
+      <div class="sec-status" id="sue-stat-1">—</div>
+    </div>
+
+    <div class="section-item" id="sue-sec-2">
+      <div class="sec-icon">⚠️</div>
+      <div>
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-desc">Program cancellation risk — husband's Achilles, caregiver role</div>
+      </div>
+      <div class="sec-status" id="sue-stat-2">—</div>
+    </div>
+
+    <div class="section-item" id="sue-sec-3">
+      <div class="sec-icon">🦴</div>
+      <div>
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-desc">7% logged · DB program · sciatica active · real activity higher</div>
+      </div>
+      <div class="sec-status" id="sue-stat-3">—</div>
+    </div>
+
+    <div class="section-item" id="sue-sec-4">
+      <div class="sec-icon">😴</div>
+      <div>
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-desc">Husband's injury · caregiver mode · travel · cold · high life load</div>
+      </div>
+      <div class="sec-status" id="sue-stat-4">—</div>
+    </div>
+
+    <div class="section-item" id="sue-sec-5">
+      <div class="sec-icon">🧠</div>
+      <div>
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-desc">Relationship first · DEXA as gift · keep door open · no pressure</div>
+      </div>
+      <div class="sec-status" id="sue-stat-5">—</div>
+    </div>
+
+    <div class="section-item" id="sue-sec-6">
+      <div class="sec-icon">🎯</div>
+      <div>
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-desc">Caregiver-mode option · her data to keep · open door framing</div>
+      </div>
+      <div class="sec-status" id="sue-stat-6">—</div>
+    </div>
+
+    <div class="section-item" id="sue-sec-7">
+      <div class="sec-icon">✅</div>
+      <div>
+        <div class="sec-title">Closing</div>
+        <div class="sec-desc">Bottom line — she showed up, lead with that</div>
+      </div>
+      <div class="sec-status" id="sue-stat-7">—</div>
+    </div>
+
+  </div>
+
+  <div class="status-msg" id="sue-statusMsg">Press Generate &amp; Play to build the briefing.</div>
+
+  <div class="github-note">
+    <strong>To open on phone:</strong> Push to GitHub Pages → <code>https://dchristensen11.github.io/kalos-briefs/audio-briefs/scan-day-briefing-may24.html</code><br>
+    Run from terminal: <code>cd ~/kalos-briefs && cp ~/Kalos/cowork-workspace/scan-day-briefing-may24.html audio-briefs/ && git add . && git commit -m "Add may24 briefing" && git push</code>
+  </div>
+</div>
+
+<script>
+// ── Section texts (all data from Iris + Everfit DMs, gathered May 24 2026) ──
+const sueSections = [
+
+  // 0 — Intro
+  `Sue Filice. 65 years old. Second Kalos DEXA scan today at noon in Campbell.
+
+Sue's been in the program since late April — 34 days since her baseline scan. Her goal is LBM build and longevity: she wants to rebuild the muscle she worked so hard to keep after losing 75 pounds, protect bone density, and improve her ALMI, which came in at the 27th age-matched percentile at Scan 1. She works in senior living and leads wellness programs for the residents she serves — so muscle and bone health aren't just personal for her. They're professionally meaningful.
+
+Today's scan comes with some important context. Pause here and read section three before you walk in.`,
+
+  // 1 — Wins
+  `Lead with these wins. Every one of them is real.
+
+Win one: She maintained the 75-pound weight loss. She came in having held that loss and ready to pivot to building muscle. That's not nothing — most people regain. She didn't. That's the foundation everything else is built on.
+
+Win two: Her bone density is excellent — T-score plus 0.3, Z-score plus 0.9. For a 65-year-old woman walking in the door, that's ahead of average. The training is doing what it's supposed to do, even when life gets in the way.
+
+Win three: She did an InBody self-report on May 5th and saw plus 3.7 pounds of muscle and minus 3.3 percent body fat. That's a directional win moving the right way. The DEXA today will give us the real numbers.
+
+Win four — and this one matters most: She showed up. After everything that happened in the last month, she is in that building at noon today. That takes character. Lead with it.`,
+
+  // 2 — Biggest Concern
+  `Here's what you need to know before you walk in.
+
+On May 21st — four days ago — Sue sent you a text. Her husband had a fall and suffered a severe Achilles tendon tear. They don't know the full outcome yet. He's off work. She has stepped into a caregiver role. In that same message, she told you she can't commit to continuing the program after today. The expense and time commitment are more than she can realistically take on right now.
+
+And then she came anyway.
+
+This isn't a motivation problem. This isn't a money problem. This is a woman carrying her husband's recovery, her job, her own health, and the weight of the last 34 days — and she still showed up for this scan because she said she would.
+
+The number-one priority today is not the DEXA result. It's making sure she leaves feeling seen, supported, and proud. The data she gets today belongs to her regardless of what happens next. Frame it that way.`,
+
+  // 3 — Training and Movement
+  `Training consistency in Everfit logs came in at 7 percent — one session out of 14 logged. But that number dramatically understates what she actually did.
+
+Iris data shows she was active during travel to Oceanside and Chicago with hotel gym sessions, walks, and yoga. She came back, got sick, recovered, and then her 25-pound adjustable dumbbells arrived May 5th. The program was revised to 3 times a week full body. The zero-percent Everfit log is a logging problem, not a training problem.
+
+When she did train, intensity was 73 out of 100. Lunges scored 88 percent intensity. Shoulder press and squat were around 63 — she logged some zero-pound form sets, which suggests she was learning movement patterns.
+
+On movement flags: right sciatica is active and ongoing. Chiro and PT are in place. No back squats — she knows this. DB front squats and lunges are in the program and are fine. Left knee had a remote meniscus and patella surgery but is not symptomatic right now — no restrictions.`,
+
+  // 4 — Recovery Load
+  `The life load in the past 34 days has been unusually heavy, even by her standards.
+
+Her husband suffered a severe Achilles tendon tear. The outcome is still uncertain. He's off work, and she's managing his care alongside her own job, her senior living program responsibilities, and everything else. That's the biggest piece.
+
+On top of that: she traveled twice — Oceanside and Chicago. She caught a cold in April that disrupted training. She managed all of this while trying to hold a new exercise habit together with limited equipment and no established gym routine.
+
+Nutrition reflects the mental bandwidth available. Iris logged 28 grams of protein per day against a 120-gram target, with about 380 calories logged daily. That's almost certainly partial tracking — not a true picture of intake. But it tells you that food logging was not a priority during this stretch, and understandably so.
+
+The recovery picture: high life stress, disrupted sleep likely, high total load. She walked in today carrying a lot.`,
+
+  // 5 — Coaching Frame
+  `This one matters more than the numbers today.
+
+She sent that text on May 21st and still showed up four days later. That tells you who she is. Your job in the next 30 minutes is to make sure she feels that reflected back to her.
+
+Conversation flow: acknowledge what she's been carrying first. Not in a clinical way — just human recognition that she's been in a hard stretch and she's here anyway. Then let the data do the rest. The DEXA result is hers — it documents 34 days of effort under real-life conditions, and that story is worth telling regardless of what comes next.
+
+Do not push for renewal today. If there is a lighter option — a minimal program, lower investment, something that fits caregiver mode — have it ready to mention once, and let her decide. If she wants to pause or stop, the door stays open and she knows it. A warm exit is worth more than a reluctant stay.
+
+One more thing: she works with seniors every day. Her body is literally her professional credibility. That's a frame that might resonate if the door-stays-open conversation happens.`,
+
+  // 6 — Next Block Priorities
+  `Three things to have ready for this conversation.
+
+One: a caregiver-mode program option. What does 20 minutes, three times a week, at home with 25-pound dumbbells look like? If she's open to continuing in any form, having a concrete, low-friction option ready makes the decision easier.
+
+Two: frame the DEXA as a data point she owns permanently. The scan today is a checkpoint in her longer health story — the story that started with losing 75 pounds. It has value regardless of what program she's in next month.
+
+Three: if the conversation opens up, mention that the door stays open whenever life settles down. No pressure, no guilt. She knows where to find you.
+
+And four, regardless of everything: give her one thing she can take home and do. A single circuit, 20 minutes, three times a week. Something she can do alone with what she has. Not as a program pitch — just as a real gift for a person who's carrying a lot right now.`,
+
+  // 7 — Closing
+  `Bottom line going in.
+
+She showed up. That's the headline. Everything else is supporting detail.
+
+The DEXA numbers will be what they are — 34 days of effort under heavy life load. If lean mass held and fat moved in the right direction, that's a genuine win. If the numbers are flat, the story is that she held the 75-pound loss and protected her bone density through one of the harder months of her life. Either way, there's a real story to tell.
+
+Acknowledge the husband situation first. She needs to know you know. Don't skip past it to get to the numbers.
+
+Keep it warm. Keep it professional. Give her the data she came for. And if there's a path forward together — on her terms, in her time — she'll feel it.
+
+Good luck today.`
+
+];
+
+// ── State ──
+const state = {};
+
+function initState(slug) {
+  state[slug] = {
+    audioBuffers: new Array(8).fill(null),
+    currentSource: null,
+    currentIdx: -1,
+    generating: false,
+    playing: false
+  };
+}
+
+function setStatus(slug, idx, text) {
+  const el = document.getElementById(`${slug}-stat-${idx}`);
+  if (el) el.textContent = text;
+}
+
+function setActive(slug, idx) {
+  for (let i = 0; i < 8; i++) {
+    const el = document.getElementById(`${slug}-sec-${i}`);
+    if (!el) continue;
+    el.classList.remove('active');
+    if (state[slug].audioBuffers[i]) el.classList.add('loaded');
+  }
+  if (idx >= 0) {
+    const el = document.getElementById(`${slug}-sec-${idx}`);
+    if (el) { el.classList.add('active'); el.classList.remove('loaded'); }
+  }
+}
+
+function setProgress(slug, done, total, label) {
+  const bar = document.getElementById(`${slug}-progressBar`);
+  const lbl = document.getElementById(`${slug}-progressLabel`);
+  if (bar) bar.style.width = `${(done/total)*100}%`;
+  if (lbl) lbl.textContent = label;
+}
+
+async function generateSection(slug, idx, apiKey, voiceId, speed) {
+  const sections = slug === 'sue' ? sueSections : [];
+  const text = sections[idx];
+  if (!text) return false;
+
+  setStatus(slug, idx, 'generating…');
+  setProgress(slug, idx, 8, `Generating section ${idx+1} of 8…`);
+
+  const body = {
+    text: text.trim(),
+    model_id: 'eleven_monolingual_v1',
+    speed: parseFloat(speed),
+    voice_settings: { stability: 0.45, similarity_boost: 0.82 }
+  };
+
+  try {
+    const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+      method: 'POST',
+      headers: {
+        'xi-api-key': apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'audio/mpeg'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!resp.ok) {
+      const err = await resp.text();
+      setStatus(slug, idx, '✗ error');
+      document.getElementById(`${slug}-statusMsg`).textContent = `Error on section ${idx+1}: ${resp.status} — ${err.slice(0,120)}`;
+      document.getElementById(`${slug}-statusMsg`).className = 'status-msg error';
+      return false;
+    }
+
+    const arrayBuf = await resp.arrayBuffer();
+    state[slug].audioBuffers[idx] = arrayBuf;
+    setStatus(slug, idx, '✓ ready');
+    const el = document.getElementById(`${slug}-sec-${idx}`);
+    if (el) el.classList.add('loaded');
+    return true;
+  } catch(e) {
+    setStatus(slug, idx, '✗ failed');
+    document.getElementById(`${slug}-statusMsg`).textContent = `Network error: ${e.message}`;
+    document.getElementById(`${slug}-statusMsg`).className = 'status-msg error';
+    return false;
+  }
+}
+
+async function generateAll(slug) {
+  if (!state[slug]) initState(slug);
+  const s = state[slug];
+  if (s.generating) return;
+
+  const apiKey = document.getElementById(`${slug}-apiKey`).value.trim();
+  const voiceId = document.getElementById(`${slug}-voiceId`).value.trim();
+  const speed = document.getElementById(`${slug}-speed`).value;
+
+  if (!apiKey) {
+    document.getElementById(`${slug}-statusMsg`).textContent = 'Please enter your ElevenLabs API key.';
+    document.getElementById(`${slug}-statusMsg`).className = 'status-msg error';
+    return;
+  }
+
+  s.generating = true;
+  document.getElementById(`${slug}-generateBtn`).disabled = true;
+  document.getElementById(`${slug}-stopBtn`).disabled = false;
+  document.getElementById(`${slug}-statusMsg`).textContent = 'Generating audio…';
+  document.getElementById(`${slug}-statusMsg`).className = 'status-msg';
+
+  const sections = slug === 'sue' ? sueSections : [];
+
+  // Generate sequentially (avoids rate limits)
+  for (let i = 0; i < sections.length; i++) {
+    if (!s.generating) break;
+    const ok = await generateSection(slug, i, apiKey, voiceId, speed);
+    if (!ok) { s.generating = false; break; }
+
+    // Auto-play first section as soon as it's ready
+    if (i === 0 && s.generating) {
+      playSection(slug, 0);
+    }
+  }
+
+  s.generating = false;
+  document.getElementById(`${slug}-generateBtn`).disabled = false;
+  setProgress(slug, 8, 8, 'All sections ready');
+  document.getElementById(`${slug}-statusMsg`).textContent = 'All sections generated. Click any section to replay.';
+}
+
+async function playSection(slug, idx) {
+  const s = state[slug];
+  if (!s) return;
+  if (!s.audioBuffers[idx]) return;
+
+  // Stop any currently playing
+  if (s.currentSource) {
+    s.currentSource.onended = null; // Prevent race condition
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+
+  setActive(slug, idx);
+  s.currentIdx = idx;
+  s.playing = true;
+  setStatus(slug, idx, '▶ playing');
+
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const decoded = await audioCtx.decodeAudioData(s.audioBuffers[idx].slice(0));
+  const source = audioCtx.createBufferSource();
+  source.buffer = decoded;
+  source.connect(audioCtx.destination);
+
+  s.currentSource = source;
+
+  source.onended = () => {
+    if (s.currentSource !== source) return; // Was stopped externally
+    s.currentSource = null;
+    s.playing = false;
+    setStatus(slug, idx, '✓ done');
+    const el = document.getElementById(`${slug}-sec-${idx}`);
+    if (el) { el.classList.remove('active'); el.classList.add('done'); }
+
+    // Auto-advance to next section
+    const sections = slug === 'sue' ? sueSections : [];
+    const nextIdx = idx + 1;
+    if (nextIdx < sections.length && s.audioBuffers[nextIdx]) {
+      playSection(slug, nextIdx);
+    } else {
+      setActive(slug, -1);
+      document.getElementById(`${slug}-statusMsg`).textContent = 'Briefing complete.';
+      document.getElementById(`${slug}-stopBtn`).disabled = true;
+    }
+  };
+
+  source.start();
+}
+
+function stopAll(slug) {
+  const s = state[slug];
+  if (!s) return;
+  s.generating = false;
+  s.playing = false;
+
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+
+  setActive(slug, -1);
+  document.getElementById(`${slug}-generateBtn`).disabled = false;
+  document.getElementById(`${slug}-stopBtn`).disabled = true;
+  document.getElementById(`${slug}-statusMsg`).textContent = 'Stopped.';
+  document.getElementById(`${slug}-statusMsg`).className = 'status-msg';
+}
+
+// Allow clicking individual loaded sections to replay
+document.addEventListener('DOMContentLoaded', () => {
+  initState('sue');
+  for (let i = 0; i < 8; i++) {
+    const el = document.getElementById(`sue-sec-${i}`);
+    if (el) {
+      el.addEventListener('click', () => {
+        if (state['sue'] && state['sue'].audioBuffers[i]) {
+          playSection('sue', i);
+        }
+      });
+    }
+  }
+});
+</script>
+</body>
+</html>
