@@ -80,6 +80,18 @@
 
   .status-msg { font-size: 11px; color: #444; margin-top: 14px; text-align: center; line-height: 1.6; }
   .status-msg.error { color: #e05a5a; }
+  .audio-player-wrap { margin-top: 16px; display: none; }
+  .audio-player-wrap audio { width: 100%; border-radius: 8px; }
+  .cache-bar { display: flex; align-items: center; gap: 10px; margin-top: 14px;
+    padding: 12px 14px; background: #12121a; border: 1px solid #252530;
+    border-radius: 10px; flex-wrap: wrap; }
+  .cache-bar label { font-size: 11px; color: #555; flex-shrink: 0; }
+  .btn-load { background: #252530; border: 1px solid #333; border-radius: 8px;
+    color: #aaa; font-size: 11px; padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+  .btn-load:hover { background: #2e2e3d; color: #ccc; }
+  .cache-hint { font-size: 10px; color: #3a3a4a; flex: 1; min-width: 120px; line-height: 1.4; }
+  .cache-status { font-size: 10px; margin-top: 4px; width: 100%; }
+
 
   .play-both { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
     padding: 20px 24px; max-width: 680px; width: 100%; text-align: center; margin-bottom: 20px; }
@@ -147,6 +159,21 @@
   </div>
   <div class="sections" id="jb-sectionList"></div>
   <div class="status-msg" id="jb-statusMsg"></div>
+
+  <!-- Audio player (appears after generation or WAV load) -->
+  <div class="audio-player-wrap" id="jb-playerWrap">
+    <audio id="jb-audioEl" controls preload="auto" style="width:100%"></audio>
+  </div>
+
+  <!-- Cache / load bar -->
+  <div class="cache-bar">
+    <label>Replay without API:</label>
+    <button class="btn-load" onclick="document.getElementById('jb-fileIn').click()">&#8593; Load saved WAV</button>
+    <input type="file" id="jb-fileIn" accept="audio/wav,audio/*" style="display:none"
+      onchange="loadWavFile('jb', this)">
+    <span class="cache-hint">Download after first gen. Load it next time to replay free.</span>
+    <div class="cache-status" id="jb-cacheStatus"></div>
+  </div>
 </div>
 
 <!-- ===== DANIEL SWARTZ ===== -->
@@ -175,6 +202,21 @@
   </div>
   <div class="sections" id="ds-sectionList"></div>
   <div class="status-msg" id="ds-statusMsg"></div>
+
+  <!-- Audio player (appears after generation or WAV load) -->
+  <div class="audio-player-wrap" id="ds-playerWrap">
+    <audio id="ds-audioEl" controls preload="auto" style="width:100%"></audio>
+  </div>
+
+  <!-- Cache / load bar -->
+  <div class="cache-bar">
+    <label>Replay without API:</label>
+    <button class="btn-load" onclick="document.getElementById('ds-fileIn').click()">&#8593; Load saved WAV</button>
+    <input type="file" id="ds-fileIn" accept="audio/wav,audio/*" style="display:none"
+      onchange="loadWavFile('ds', this)">
+    <span class="cache-hint">Download after first gen. Load it next time to replay free.</span>
+    <div class="cache-status" id="ds-cacheStatus"></div>
+  </div>
 </div>
 
 <script>
@@ -485,6 +527,100 @@ function toWav(buffer) {
   }
   return out;
 }
+// ─── Audio player + WAV loader ───────────────────────────────────────────────
+
+function showPlayer(id, blobUrl) {
+  const wrap = document.getElementById(id + '-playerWrap');
+  const el   = document.getElementById(id + '-audioEl');
+  if (!wrap || !el) return;
+  el.src = blobUrl;
+  wrap.style.display = 'block';
+}
+
+function loadWavFile(id, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  showPlayer(id, url);
+  document.getElementById(id + '-cacheStatus').textContent =
+    '\u2713 ' + file.name + ' loaded — use the player above to replay.';
+  document.getElementById(id + '-cacheStatus').style.color = '#66bb6a';
+  input.value = '';
+}
+
+// Patch downloadClient to also show the audio player after download
+const _origDownload = downloadClient;
+downloadClient = async function(id) {
+  const s = state[id];
+  if (!s.generationDone) { alert('Still generating. Wait for all sections to finish.'); return; }
+  const rendered = await Promise.all(s.audioBuffers.map(buf => {
+    const offline = new OfflineAudioContext(buf.numberOfChannels, buf.length, buf.sampleRate);
+    const src = offline.createBufferSource();
+    src.buffer = buf; src.connect(offline.destination); src.start();
+    return offline.startRendering();
+  }));
+  const totalLen = rendered.reduce((a, b) => a + b.length, 0);
+  const combined = s.audioCtx.createBuffer(1, totalLen, rendered[0].sampleRate);
+  let offset = 0;
+  rendered.forEach(buf => {
+    combined.copyToChannel(buf.getChannelData(0), 0, offset);
+    offset += buf.length;
+  });
+  const wavBuffer = toWav(combined);
+  const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+  const blobUrl = URL.createObjectURL(blob);
+
+  // Show player
+  showPlayer(id, blobUrl);
+
+  // Trigger download
+  const a = document.createElement('a');
+  a.href = blobUrl;
+  a.download = (id === 'jb' ? 'joseph-brody' : 'daniel-swartz') + '-briefing-may25.wav';
+  a.click();
+
+  document.getElementById(id + '-cacheStatus').textContent =
+    '\u2713 Downloaded. Load this WAV next time to replay without using API credits.';
+  document.getElementById(id + '-cacheStatus').style.color = '#5ab4ff';
+};
+
+// After generation completes, auto-show the combined audio via blob
+const _origGenerateClient = generateClient;
+// Hook: after all sections load, create blob URL for player
+function hookGenerationComplete(id) {
+  const origInterval = setInterval(async () => {
+    const s = state[id];
+    if (!s || !s.generationDone) return;
+    clearInterval(origInterval);
+    if (!s.audioBuffers.every(b => b)) return;
+    try {
+      const rendered = await Promise.all(s.audioBuffers.map(buf => {
+        const offline = new OfflineAudioContext(buf.numberOfChannels, buf.length, buf.sampleRate);
+        const src = offline.createBufferSource();
+        src.buffer = buf; src.connect(offline.destination); src.start();
+        return offline.startRendering();
+      }));
+      const totalLen = rendered.reduce((a, b) => a + b.length, 0);
+      const combined = s.audioCtx.createBuffer(1, totalLen, rendered[0].sampleRate);
+      let offset = 0;
+      rendered.forEach(buf => {
+        combined.copyToChannel(buf.getChannelData(0), 0, offset);
+        offset += buf.length;
+      });
+      const wavBuffer = toWav(combined);
+      const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+      showPlayer(id, URL.createObjectURL(blob));
+      const cs = document.getElementById(id + '-cacheStatus');
+      if (cs && !cs.textContent) {
+        cs.textContent = 'Audio ready. Hit \u2B07 Download WAV to save for free replays.';
+        cs.style.color = '#5ab4ff';
+      }
+    } catch(e) { /* silently skip */ }
+  }, 600);
+}
+
+['jb', 'ds'].forEach(id => hookGenerationComplete(id));
+
 </script>
 </body>
 </html>
