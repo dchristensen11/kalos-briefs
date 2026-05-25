@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing · May 25, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f13; color: #e8e8ee; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 28px 16px 48px; }
+
+  .page-header { text-align: center; margin-bottom: 24px; }
+  .page-header h1 { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .page-header p { font-size: 12px; color: #555; margin-top: 4px; }
+
+  /* Shared config */
+  .shared-config { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; width: 100%; max-width: 680px; margin-bottom: 20px; }
+  .shared-config h3 { font-size: 12px; color: #555; letter-spacing: 0.6px;
+    text-transform: uppercase; margin-bottom: 12px; }
+  .cfg-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .cfg-row label { font-size: 11px; color: #666; white-space: nowrap; }
+  .cfg-row input, .cfg-row select {
+    background: #252530; border: 1px solid #333; color: #ccc;
+    font-size: 12px; padding: 8px 10px; border-radius: 8px; flex: 1; min-width: 0; }
+  .cfg-row input { font-family: monospace; letter-spacing: 0.5px; }
+  .cfg-note { font-size: 11px; color: #444; margin-top: 10px; line-height: 1.5; }
+
+  /* Client card */
+  .client-card { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 16px;
+    padding: 28px 32px; max-width: 680px; width: 100%;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4); margin-bottom: 20px; }
+  .card-header { margin-bottom: 20px; }
+  .name { font-size: 20px; font-weight: 700; color: #fff; }
+  .sub { font-size: 12px; color: #777; margin-top: 3px; }
+  .scan-badge { display: inline-block; background: #1e3a5f; color: #5ab4ff;
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 7px; }
+
+  .flag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .flag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 12px; }
+  .flag.red { background: rgba(198,40,40,0.15); color: #ef5350; border: 1px solid rgba(198,40,40,0.25); }
+  .flag.orange { background: rgba(230,81,0,0.15); color: #ff8a50; border: 1px solid rgba(230,81,0,0.25); }
+  .flag.green { background: rgba(46,125,50,0.15); color: #66bb6a; border: 1px solid rgba(46,125,50,0.25); }
+  .flag.blue { background: rgba(21,101,192,0.15); color: #64b5f6; border: 1px solid rgba(21,101,192,0.25); }
+  .flag.yellow { background: rgba(249,168,37,0.15); color: #ffcc02; border: 1px solid rgba(249,168,37,0.25); }
+
+  .progress-wrap { background: #252530; border-radius: 6px; height: 5px;
+    margin: 18px 0 6px; overflow: hidden; }
+  .progress-bar { background: linear-gradient(90deg, #5ab4ff, #7c6fff);
+    height: 100%; width: 0%; border-radius: 6px; transition: width 0.5s ease; }
+  .progress-label { font-size: 11px; color: #444; margin-bottom: 18px; }
+
+  .controls { display: flex; gap: 10px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+  .btn-primary { background: linear-gradient(135deg, #4a9eff, #7c6fff);
+    border: none; border-radius: 50px; color: #fff; font-size: 13px; font-weight: 600;
+    padding: 11px 22px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+  .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: #252530; border: 1px solid #333; border-radius: 50px;
+    color: #999; font-size: 12px; font-weight: 500; padding: 10px 18px; cursor: pointer; }
+  .btn-secondary:hover { background: #2e2e3d; }
+  .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .sections { display: flex; flex-direction: column; gap: 3px; }
+  .section-item { display: flex; align-items: flex-start; gap: 11px;
+    padding: 9px 12px; border-radius: 8px; font-size: 12px;
+    color: #555; border: 1px solid transparent; transition: all 0.2s; cursor: default; }
+  .section-item.active { background: #1c2640; border-color: #2a4070; color: #c8daff; }
+  .section-item.done { color: #3a6b3a; }
+  .section-item.loaded { cursor: pointer; }
+  .section-item.loaded:hover { background: #1f1f2a; color: #999; }
+  .sec-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .sec-title { font-weight: 600; }
+  .sec-desc { font-size: 10px; margin-top: 2px; opacity: 0.7; }
+  .sec-status { margin-left: auto; font-size: 10px; color: #333; flex-shrink: 0; margin-top: 2px; }
+  .section-item.active .sec-status { color: #5ab4ff; }
+  .section-item.done .sec-status { color: #3d7a3d; }
+
+  .status-msg { font-size: 11px; color: #444; margin-top: 14px; text-align: center; line-height: 1.6; }
+  .status-msg.error { color: #e05a5a; }
+
+  .play-both { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; max-width: 680px; width: 100%; text-align: center; margin-bottom: 20px; }
+  .play-both p { font-size: 12px; color: #555; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Scan Day Briefing · May 25, 2026</h1>
+  <p>Joseph Brody (9:00 AM) · Daniel Swartz (3:30 PM) · ElevenLabs TTS</p>
+</div>
+
+<!-- Shared API config -->
+<div class="shared-config">
+  <h3>ElevenLabs Config</h3>
+  <div class="cfg-row">
+    <label>API Key</label>
+    <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" />
+  </div>
+  <div class="cfg-row" style="margin-top:10px">
+    <label>Voice ID</label>
+    <input type="text" id="voiceSelect" value="gWaDC0oXAheKoZfljzuI" placeholder="ElevenLabs voice ID" style="font-family:monospace;letter-spacing:0.5px" />
+    <label style="margin-left:6px">Speed</label>
+    <select id="speedSelect" style="max-width:80px">
+      <option value="0.85">0.85x</option>
+      <option value="0.95">0.95x</option>
+      <option value="1.0">1.0x</option>
+      <option value="1.1">1.1x</option>
+      <option value="1.2" selected>1.2x</option>
+    </select>
+  </div>
+  <div class="cfg-note">Snap voice pre-loaded. Paste a different voice ID to swap. Key stays in your browser tab only.</div>
+</div>
+
+<!-- Play both in sequence -->
+<div class="play-both">
+  <p>Generate both briefings, then play them back-to-back for the full commute run.</p>
+  <button class="btn-primary" onclick="playBothSequence()">&#9654; Generate Both &amp; Play in Sequence</button>
+</div>
+
+<!-- ===== JOSEPH BRODY ===== -->
+<div class="client-card" id="card-jb">
+  <div class="card-header">
+    <div class="name">Joseph Brody</div>
+    <div class="sub">Male · 44 · Recomposition + LBM Build · Movement Gym, Santa Clara</div>
+    <div class="scan-badge">&#128197; May 25, 2026 · 9:00 AM</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Consistency 100%</span>
+    <span class="flag green">Squat Near Gold Standard</span>
+    <span class="flag green">Row Above Gold</span>
+    <span class="flag red">Protein Inconsistent</span>
+    <span class="flag orange">3-4 AM Wake-Ups</span>
+    <span class="flag orange">Sciatica (Managed)</span>
+    <span class="flag blue">8yo Child Logistics</span>
+    <span class="flag blue">Grip Limitation</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="jb-progressBar"></div></div>
+  <div class="progress-label" id="jb-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="jb-btnGenerate" onclick="generateClient('jb')">&#10024; Generate &amp; Play</button>
+    <button class="btn-secondary" id="jb-btnStop" onclick="stopClient('jb')" disabled>&#9632; Stop</button>
+    <button class="btn-secondary" id="jb-btnDownload" onclick="downloadClient('jb')" disabled>&#8595; Download WAV</button>
+  </div>
+  <div class="sections" id="jb-sectionList"></div>
+  <div class="status-msg" id="jb-statusMsg"></div>
+</div>
+
+<!-- ===== DANIEL SWARTZ ===== -->
+<div class="client-card" id="card-ds">
+  <div class="card-header">
+    <div class="name">Daniel Swartz</div>
+    <div class="sub">Male · 61 · Bone Density + ALMI Build + VAT Reduction · Dumbbell Program</div>
+    <div class="scan-badge">&#128197; May 25, 2026 · 3:30 PM</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Consistency 83%</span>
+    <span class="flag green">Gorilla Row Above Gold</span>
+    <span class="flag red">VAT 121 cm2 (Elevated)</span>
+    <span class="flag red">Alcohol Main Recovery Risk</span>
+    <span class="flag orange">L3 Back History</span>
+    <span class="flag orange">Travel Disrupts Sleep + Nutrition</span>
+    <span class="flag blue">Moving Oakland to SJ in June</span>
+    <span class="flag blue">Dumbbells Only</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="ds-progressBar"></div></div>
+  <div class="progress-label" id="ds-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="ds-btnGenerate" onclick="generateClient('ds')">&#10024; Generate &amp; Play</button>
+    <button class="btn-secondary" id="ds-btnStop" onclick="stopClient('ds')" disabled>&#9632; Stop</button>
+    <button class="btn-secondary" id="ds-btnDownload" onclick="downloadClient('ds')" disabled>&#8595; Download WAV</button>
+  </div>
+  <div class="sections" id="ds-sectionList"></div>
+  <div class="status-msg" id="ds-statusMsg"></div>
+</div>
+
+<script>
+const CLIENT_SECTIONS = {
+  jb: [
+    {
+      icon: "👋", title: "Intro", desc: "Who he is and today's goal",
+      text: `Joseph Brody, 44 years old, second DEXA scan at 9 AM. He trains at Movement Gym in Santa Clara, three days a week on a push, pull, leg split. He's been in the program since late April, so just under a month. Primary goal is recomposition: add lean mass, reduce body fat percentage, improve his ALMI percentile, and stay strong for mountain biking. He's a communicative, curious member who asks good questions and follows through on coaching guidance. Today's scan is measuring the first 4 weeks of training and nutrition work.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Lead with these wins before anything else. First, 100 percent consistency: 11 out of 11 sessions completed. That includes managing the every-other-week week where he has his 8-year-old with him at the gym. He has not missed a session. That's elite adherence for a 3-day-a-week program. Second, his squat hit 245 pounds as a personal record. The gold standard for a 40s male his size is around 259 pounds. He is right at the doorstep. Third, his bent-over row at 125 by 8 is already above the gold standard for his stats. His deadlift is at 225 by 8, putting his estimated max near 285. These are real, measurable strength wins from the very first month.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `The biggest concern is nutrition, specifically protein consistency. The coaching note from May 8 calls it the main limiter directly. His target is 125 grams of protein per day, and hitting that number consistently has been a challenge. His training adherence is outstanding, but if protein is not landing at target most days, the lean mass gains from this first 4-week scan may be limited. Watch the lean mass delta carefully today. His ALMI came in at the 18th age-matched percentile at Scan 1, which means there's significant runway. Moving that marker over time is the clinical priority, and it only happens with enough protein and progressive overload.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Form, injuries, what to watch",
+      text: `Two movement flags to have on your radar. First, sciatica. He's been working with a chiropractor named Charlie for care and traction. The sciatica is managed, but it's a live consideration for heavy deadlift loading. The explicit program instruction is: if any movement increases sciatic pain, switch to the alternate, and if the alternate also causes pain, skip the movement entirely. He's been following this well. Second, grip strength is a limiting factor on Romanian deadlifts and heavy rows. Versa Gripps or lifting straps were recommended to help deload the forearms and keep the posterior chain as the limiting factor, not the grip. Check whether he's using them yet.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `His main recovery challenge is sleep disruption from 3 to 4 AM wake-ups. This has been ongoing. The coaching response has been to add magnesium glycinate before bed and emphasize daily sunlight exposure in the morning to help anchor the circadian rhythm. There's no excessive life stress documented, but every-other-week is harder due to child care logistics. He adapts, and his consistency proves it. His training frequency is 3 days a week, which is appropriate and sustainable. The wake-up pattern is the one thing worth checking in on today: is it improving, the same, or getting worse?`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `No sensitive flags on file. No body dysmorphia, no anxiety notes. Joseph is data-driven and engaged. He asks detailed questions in the app about exercise selection and equipment, and he's receptive to direct feedback. Lead with the strength wins clearly, then bring in the ALMI percentile as the clinical goal to build toward. He'll want to know the exact delta on lean mass and body fat. Give him the numbers directly. If lean mass went up, name it. If it didn't move as much as expected, point to protein as the lever and be specific about what needs to change. He responds well to concrete, precise instructions.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3-4 concrete things to set today",
+      text: `Four things to lock in coming out of today's scan. One: protein. Set a daily non-negotiable at 125 grams. Give him a concrete day-structure: protein source at breakfast, lunch, and dinner, plus the pre and post-workout shake protocol. Two: sleep. Check in on the wake-up pattern and confirm whether magnesium is helping. If not, consider timing or dosing adjustments. Three: strength targets for the next block. His squat is near gold standard, so pushing it past 259 is a real milestone within reach. His bench and shoulder press have runway. Set specific numbers. Four: discuss Phase 2 programming and whether anything changes with equipment access, training days, or rep ranges.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Joseph Brody going into this scan. He has delivered 100 percent training adherence over 11 sessions in month one. His squat is near the gold standard. His row is above it. His deadlift is progressing strongly. The number to watch on the scan today is lean mass delta. If protein was inconsistent, the gain may be modest. If it was solid, you should see meaningful lean tissue addition. Either way, the foundation is excellent. Nutrition is the primary coaching lever for the next phase. Walk in with energy and anchor the conversation in the strength wins before going into the composition numbers.`
+    }
+  ],
+
+  ds: [
+    {
+      icon: "👋", title: "Intro", desc: "Who he is and today's goal",
+      text: `Daniel Swartz, 61 years old, second DEXA scan at 3:30 PM. He's been training with a dumbbell-only program, 3 times a week, since late April. Primary goals are longevity and resilience: specifically building bone density and appendicular lean mass to avoid the hip fracture and cognitive decline pattern he watched his father and grandmother go through. Secondary goal is recomposition with a focus on visceral fat reduction. He's a highly engaged member who travels frequently for work, is currently in the middle of a move from Oakland to San Jose, and has shown strong self-directed training habits in hotel gyms throughout this first block.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Lead with these wins. First, 83 percent consistency: 10 out of 12 sessions completed. That's through a move, multiple business trips, and hotel gym training across time zones. Strong result. Second, his Gorilla Row is at 80 pounds for 10 reps. For a 61-year-old male at his body weight, that exceeds the gold standard benchmark. It's a genuine win and a meaningful indicator of functional strength. Third, after the May 5 check-in he was directed to go heavier, work near failure, and reduce warm-up sets. He implemented that guidance immediately and acknowledged it. He's coachable and he's doing the work. Fourth, he honored the mostly dry period over the 4-week block, including during travel, which directly affects visceral fat trajectory and sleep quality.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `The primary clinical concern is visceral fat. His Scan 1 VAT area came in at 121 point 3 square centimeters. Healthy range is under 100. That number is the top metabolic priority for his longevity goal. The main driver keeping it elevated is alcohol, which disrupts sleep architecture, raises cortisol, and is directly linked to visceral fat accumulation. The coaching note from Iris flags alcohol as the main recovery threat. He's been mostly dry for 4 weeks, which is the right move. The key conversation today is whether the scan shows a downward trend in VAT, and what the 6-month trajectory looks like if he maintains the mostly dry standard. This is not a lecture, it's a data conversation: here's the number, here's what moves it, here's how we track it.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Form, injuries, what to watch",
+      text: `His history includes a chronic lower right back issue at the L3 level, with cortisone injections around 20 and 8 years ago. Currently well managed, no acute issues reported. All hinge patterns, particularly Romanian deadlifts, require solid bracing and cautious load progression. The programming guideline is clear: if a lift causes back pain, switch to the alternate. If the alternate also hurts, skip it and redistribute volume. He's been compliant with this. Equipment is consistently limited to dumbbells and benches due to hotel gyms. Resistance bands are often unavailable, so band-based accessory work is frequently skipped. After the move to San Jose, he may gain access to a more fully equipped commercial gym, which could open up barbell and cable work in Phase 2.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `Travel across time zones is the main recovery disruptor. He's had a busy block: frequent work travel, a move in progress, and hotel gym training. His sleep is likely variable due to time zone changes and the logistical stress of relocating. Alcohol is the other lever here, and he's been mostly dry, which is the right call. The move to San Jose happens in June, so there's a transitional period coming up where structure may get disrupted again. This is worth acknowledging today so expectations are set. A concrete plan for what training looks like during the move week should be part of the scan conversation.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `No sensitive flags. Lead with data. Daniel is motivated by his family history and a clear long-term vision of staying active with his 21-year-old son. He responds to concrete targets and brief explanations of why. He's communicative in the app, thanks the coach for guidance, and volunteers context when life disrupts his schedule. The most important framing today is around VAT and the long game. The 4-week window is too short to expect major compositional shifts, but the direction of the trend matters. If VAT moved down even modestly, that's a signal that the program is working. If lean mass held or increased slightly, given the 4-week timeline, that's also a win. Set expectations for what the 6-month and 12-month trajectory looks like, because that's the timeframe where the numbers he cares about most will actually move.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3-4 concrete things to set today",
+      text: `Four priorities to lock in at the scan. One: alcohol boundary. Align on a specific, practical standard for drinks during travel and social events. Not abstinence, but a real rule he can follow consistently, because this is the main lever for both VAT and sleep quality. Two: protein target. Confirm 150 grams per day is being hit consistently. Reinforce the pre and post workout fueling protocol as non-negotiable. Three: new gym access. After the San Jose move, assess what equipment becomes available and whether the program can evolve to include barbell or cable work for more mechanical load on bone and muscle. Four: plan the move week explicitly. What does training look like when he's in logistics mode? Even two sessions during a hectic week is a win.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Daniel Swartz going into this scan. He showed up 10 out of 12 sessions through a move, business travel, and hotel gyms. His Gorilla Row is above gold standard. He honored the mostly dry commitment. The primary watch metrics today are VAT, which was at 121 and needs to trend down over time, and ALMI, which came in at the 30th age-matched percentile, a solid starting point with meaningful room to build. The coaching lever with the highest impact is alcohol moderation combined with consistent heavy loading. Walk in with genuine appreciation for what he's built in month one. He's doing it right for someone who's managing real-life complexity.`
+    }
+  ]
+};
+
+// Engine
+const state = {};
+['jb', 'ds'].forEach(id => {
+  state[id] = {
+    audioBuffers: new Array(CLIENT_SECTIONS[id].length).fill(null),
+    audioCtx: null,
+    currentSource: null,
+    currentSection: -1,
+    isPlaying: false,
+    generationDone: false
+  };
+  buildSections(id);
+});
+
+function buildSections(id) {
+  const list = document.getElementById(id + '-sectionList');
+  CLIENT_SECTIONS[id].forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'section-item';
+    div.id = id + '-sec-' + i;
+    div.innerHTML = '<span class="sec-icon">' + s.icon + '</span>'
+      + '<div style="flex:1"><div class="sec-title">' + s.title + '</div>'
+      + '<div class="sec-desc">' + s.desc + '</div></div>'
+      + '<div class="sec-status" id="' + id + '-stat-' + i + '">&#8212;</div>';
+    div.onclick = () => {
+      if (state[id].audioBuffers[i] && state[id].isPlaying) playFrom(id, i);
+    };
+    list.appendChild(div);
+  });
+}
+
+function setStatus(id, i, text, cls) {
+  const el = document.getElementById(id + '-sec-' + i);
+  const st = document.getElementById(id + '-stat-' + i);
+  el.className = 'section-item ' + (cls || '');
+  if (st) st.textContent = text;
+}
+
+function setActive(id, i) {
+  CLIENT_SECTIONS[id].forEach((_, idx) => {
+    const el = document.getElementById(id + '-sec-' + idx);
+    if (!el) return;
+    if (idx === i) {
+      el.className = 'section-item active' + (state[id].audioBuffers[idx] ? ' loaded' : '');
+    } else if (idx < i) {
+      el.className = 'section-item done loaded';
+      const st = document.getElementById(id + '-stat-' + idx);
+      if (st) st.textContent = '&#10003;';
+    }
+  });
+  state[id].currentSection = i;
+  const total = CLIENT_SECTIONS[id].length;
+  const pct = i < 0 ? 0 : Math.round(((i + 1) / total) * 100);
+  document.getElementById(id + '-progressBar').style.width = (i < 0 ? 0 : pct) + '%';
+  document.getElementById(id + '-progressLabel').textContent =
+    i < 0 ? 'Ready' : 'Playing section ' + (i + 1) + ' of ' + total;
+  if (i >= 0) document.getElementById(id + '-sec-' + i).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function fetchAudio(text) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const voiceId = document.getElementById('voiceSelect').value.trim();
+  const speed = Math.min(1.2, parseFloat(document.getElementById('speedSelect').value) || 1.2);
+  const resp = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + voiceId, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg'
+    },
+    body: JSON.stringify({
+      text: text,
+      model_id: 'eleven_turbo_v2_5',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.15, use_speaker_boost: true },
+      speed: speed
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error('ElevenLabs ' + resp.status + ': ' + JSON.stringify(err));
+  }
+  return await resp.arrayBuffer();
+}
+
+async function generateClient(id) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    document.getElementById(id + '-statusMsg').textContent = 'Paste your ElevenLabs API key in the config box above first.';
+    document.getElementById(id + '-statusMsg').className = 'status-msg error';
+    return;
+  }
+  const s = state[id];
+  document.getElementById(id + '-btnGenerate').disabled = true;
+  document.getElementById(id + '-btnStop').disabled = false;
+  document.getElementById(id + '-statusMsg').textContent = '';
+  document.getElementById(id + '-statusMsg').className = 'status-msg';
+  s.audioCtx = s.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  s.audioBuffers = new Array(CLIENT_SECTIONS[id].length).fill(null);
+  s.generationDone = false;
+  s.isPlaying = true;
+
+  CLIENT_SECTIONS[id].forEach((_, i) => setStatus(id, i, '...', ''));
+  playFrom(id, 0);
+
+  (async () => {
+    for (let i = 0; i < CLIENT_SECTIONS[id].length; i++) {
+      if (!s.isPlaying) break;
+      try {
+        const buf = await fetchAudio(CLIENT_SECTIONS[id][i].text);
+        const decoded = await s.audioCtx.decodeAudioData(buf);
+        s.audioBuffers[i] = decoded;
+        if (s.currentSection < i) setStatus(id, i, 'ready', 'loaded');
+      } catch (err) {
+        setStatus(id, i, 'X', '');
+        document.getElementById(id + '-statusMsg').className = 'status-msg error';
+        document.getElementById(id + '-statusMsg').textContent = 'Error on section ' + (i + 1) + ': ' + err.message;
+        s.isPlaying = false;
+        document.getElementById(id + '-btnGenerate').disabled = false;
+        document.getElementById(id + '-btnStop').disabled = true;
+        return;
+      }
+    }
+    if (s.isPlaying) {
+      s.generationDone = true;
+      document.getElementById(id + '-btnDownload').disabled = false;
+      document.getElementById(id + '-statusMsg').textContent = 'Generated. Re-generate to use a different voice.';
+    }
+  })();
+
+  return new Promise(resolve => {
+    const check = setInterval(() => {
+      if (s.generationDone && !s.isPlaying) { clearInterval(check); resolve(); }
+      if (!s.isPlaying && !s.generationDone) { clearInterval(check); resolve(); }
+    }, 500);
+  });
+}
+
+function playFrom(id, i) {
+  const s = state[id];
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  if (i >= CLIENT_SECTIONS[id].length) {
+    s.isPlaying = false;
+    document.getElementById(id + '-btnGenerate').disabled = false;
+    document.getElementById(id + '-btnStop').disabled = true;
+    document.getElementById(id + '-progressLabel').textContent = 'Done. Regenerate or download WAV.';
+    return;
+  }
+  setActive(id, i);
+  if (s.audioBuffers[i]) {
+    const src = s.audioCtx.createBufferSource();
+    src.buffer = s.audioBuffers[i];
+    src.connect(s.audioCtx.destination);
+    src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
+    src.start();
+    s.currentSource = src;
+  } else {
+    const check = setInterval(() => {
+      if (s.audioBuffers[i]) {
+        clearInterval(check);
+        if (s.isPlaying) playFrom(id, i);
+      }
+    }, 200);
+  }
+}
+
+function stopClient(id) {
+  const s = state[id];
+  s.isPlaying = false;
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  document.getElementById(id + '-btnGenerate').disabled = false;
+  document.getElementById(id + '-btnStop').disabled = true;
+}
+
+async function downloadClient(id) {
+  const s = state[id];
+  if (!s.generationDone) { alert('Still generating. Wait for all sections to finish.'); return; }
+  const rendered = await Promise.all(s.audioBuffers.map(buf => {
+    const offline = new OfflineAudioContext(buf.numberOfChannels, buf.length, buf.sampleRate);
+    const src = offline.createBufferSource();
+    src.buffer = buf; src.connect(offline.destination); src.start();
+    return offline.startRendering();
+  }));
+  const totalLen = rendered.reduce((a, b) => a + b.length, 0);
+  const combined = s.audioCtx.createBuffer(1, totalLen, rendered[0].sampleRate);
+  let offset = 0;
+  rendered.forEach(buf => {
+    combined.copyToChannel(buf.getChannelData(0), 0, offset);
+    offset += buf.length;
+  });
+  const wavBuffer = toWav(combined);
+  const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (id === 'jb' ? 'joseph-brody' : 'daniel-swartz') + '-briefing-may25.wav';
+  a.click();
+}
+
+async function playBothSequence() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) { alert('Paste your ElevenLabs API key in the config box first.'); return; }
+  stopClient('jb'); stopClient('ds');
+  await generateClient('jb');
+  await new Promise(r => setTimeout(r, 800));
+  generateClient('ds');
+}
+
+function toWav(buffer) {
+  const numCh = buffer.numberOfChannels;
+  const length = buffer.length * numCh * 2 + 44;
+  const out = new ArrayBuffer(length);
+  const view = new DataView(out);
+  const write = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+  write(0, 'RIFF'); view.setUint32(4, length - 8, true); write(8, 'WAVE');
+  write(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+  view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+  view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+  view.setUint16(34, 16, true); write(36, 'data'); view.setUint32(40, buffer.length * numCh * 2, true);
+  let offset = 44;
+  for (let i = 0; i < buffer.length; i++) {
+    for (let ch = 0; ch < numCh; ch++) {
+      const s = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  return out;
+}
+</script>
+</body>
+</html>
