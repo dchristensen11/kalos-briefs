@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing · May 28, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f13; color: #e8e8ee; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 28px 16px 48px; }
+
+  .page-header { text-align: center; margin-bottom: 24px; }
+  .page-header h1 { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .page-header p { font-size: 12px; color: #555; margin-top: 4px; }
+
+  .shared-config { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; width: 100%; max-width: 680px; margin-bottom: 20px; }
+  .shared-config h3 { font-size: 12px; color: #555; letter-spacing: 0.6px;
+    text-transform: uppercase; margin-bottom: 12px; }
+  .cfg-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .cfg-row label { font-size: 11px; color: #666; white-space: nowrap; }
+  .cfg-row input, .cfg-row select {
+    background: #252530; border: 1px solid #333; color: #ccc;
+    font-size: 12px; padding: 8px 10px; border-radius: 8px; flex: 1; min-width: 0; }
+  .cfg-row input { font-family: monospace; letter-spacing: 0.5px; }
+  .cfg-note { font-size: 11px; color: #444; margin-top: 10px; line-height: 1.5; }
+
+  .client-card { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 16px;
+    padding: 28px 32px; max-width: 680px; width: 100%;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4); margin-bottom: 20px; }
+  .card-header { margin-bottom: 20px; }
+  .name { font-size: 20px; font-weight: 700; color: #fff; }
+  .sub { font-size: 12px; color: #777; margin-top: 3px; }
+  .scan-badge { display: inline-block; background: #1e3a5f; color: #5ab4ff;
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 7px; }
+
+  .flag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .flag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 12px; }
+  .flag.red { background: rgba(198,40,40,0.15); color: #ef5350; border: 1px solid rgba(198,40,40,0.25); }
+  .flag.orange { background: rgba(230,81,0,0.15); color: #ff8a50; border: 1px solid rgba(230,81,0,0.25); }
+  .flag.green { background: rgba(46,125,50,0.15); color: #66bb6a; border: 1px solid rgba(46,125,50,0.25); }
+  .flag.blue { background: rgba(21,101,192,0.15); color: #64b5f6; border: 1px solid rgba(21,101,192,0.25); }
+  .flag.yellow { background: rgba(249,168,37,0.15); color: #ffcc02; border: 1px solid rgba(249,168,37,0.25); }
+
+  .progress-wrap { background: #252530; border-radius: 6px; height: 5px;
+    margin: 18px 0 6px; overflow: hidden; }
+  .progress-bar { background: linear-gradient(90deg, #5ab4ff, #7c6fff);
+    height: 100%; width: 0%; border-radius: 6px; transition: width 0.5s ease; }
+  .progress-label { font-size: 11px; color: #444; margin-bottom: 18px; }
+
+  .controls { display: flex; gap: 10px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+  .btn-primary { background: linear-gradient(135deg, #4a9eff, #7c6fff);
+    border: none; border-radius: 50px; color: #fff; font-size: 13px; font-weight: 600;
+    padding: 11px 22px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+  .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: #252530; border: 1px solid #333; border-radius: 50px;
+    color: #999; font-size: 12px; font-weight: 500; padding: 10px 18px; cursor: pointer; }
+  .btn-secondary:hover { background: #2e2e3d; }
+  .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .sections { display: flex; flex-direction: column; gap: 3px; }
+  .section-item { display: flex; align-items: flex-start; gap: 11px;
+    padding: 9px 12px; border-radius: 8px; font-size: 12px;
+    color: #555; border: 1px solid transparent; transition: all 0.2s; cursor: default; }
+  .section-item.active { background: #1c2640; border-color: #2a4070; color: #c8daff; }
+  .section-item.done { color: #3a6b3a; }
+  .section-item.loaded { cursor: pointer; }
+  .section-item.loaded:hover { background: #1f1f2a; color: #999; }
+  .sec-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .sec-title { font-weight: 600; }
+  .sec-desc { font-size: 10px; margin-top: 2px; opacity: 0.7; }
+  .sec-status { margin-left: auto; font-size: 10px; color: #333; flex-shrink: 0; margin-top: 2px; }
+  .section-item.active .sec-status { color: #5ab4ff; }
+  .section-item.done .sec-status { color: #3d7a3d; }
+
+  .status-msg { font-size: 11px; color: #444; margin-top: 14px; text-align: center; line-height: 1.6; }
+  .status-msg.error { color: #e05a5a; }
+
+  .play-all { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; max-width: 680px; width: 100%; text-align: center; margin-bottom: 20px; }
+  .play-all p { font-size: 12px; color: #555; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Scan Day Briefing · May 28, 2026</h1>
+  <p>Ryan Young · Priyal Mehta · Mihir Patel · ElevenLabs TTS</p>
+</div>
+
+<!-- Shared API config -->
+<div class="shared-config">
+  <h3>ElevenLabs Config</h3>
+  <div class="cfg-row">
+    <label>API Key</label>
+    <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" />
+  </div>
+  <div class="cfg-row" style="margin-top:10px">
+    <label>Voice ID</label>
+    <input type="text" id="voiceSelect" value="gWaDC0oXAheKoZfljzuI" placeholder="ElevenLabs voice ID" style="font-family:monospace;letter-spacing:0.5px" />
+    <label style="margin-left:6px">Speed</label>
+    <select id="speedSelect" style="max-width:80px">
+      <option value="0.85">0.85x</option>
+      <option value="0.95">0.95x</option>
+      <option value="1.0">1.0x</option>
+      <option value="1.1">1.1x</option>
+      <option value="1.2" selected>1.2x</option>
+    </select>
+  </div>
+  <div class="cfg-note">Snap voice pre-loaded. Paste a different voice ID to swap. Key stays in your browser tab only.</div>
+</div>
+
+<!-- Generate all 3 in sequence -->
+<div class="play-all">
+  <p>Generate all three briefings, then play them back-to-back for the full commute run.</p>
+  <button class="btn-primary" onclick="playAllSequence()">&#9654; Generate All 3 &amp; Play in Sequence</button>
+</div>
+
+<!-- ===== RYAN YOUNG ===== -->
+<div class="client-card" id="card-ry">
+  <div class="card-header">
+    <div class="name">Ryan Young</div>
+    <div class="sub">Male · Phase 2 Growth | 3-Day · Gym + Athletics</div>
+    <div class="scan-badge">&#128197; May 28, 2026</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Consistency 91%</span>
+    <span class="flag green">315 lb Sumo DL x6</span>
+    <span class="flag green">Bench 165x5 PR</span>
+    <span class="flag orange">Nutrition Not Tracked</span>
+    <span class="flag orange">Missed Session May 27</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="ry-progressBar"></div></div>
+  <div class="progress-label" id="ry-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="ry-btnGenerate" onclick="generateClient('ry')">&#10024; Generate &amp; Play</button>
+    <button class="btn-secondary" id="ry-btnStop" onclick="stopClient('ry')" disabled>&#9632; Stop</button>
+    <button class="btn-secondary" id="ry-btnDownload" onclick="downloadClient('ry')" disabled>&#11015; Download WAV</button>
+  </div>
+  <div class="sections" id="ry-sectionList"></div>
+  <div class="status-msg" id="ry-statusMsg"></div>
+</div>
+
+<!-- ===== PRIYAL MEHTA ===== -->
+<div class="client-card" id="card-pr">
+  <div class="card-header">
+    <div class="name">Priyal Mehta</div>
+    <div class="sub">Female · Phase 2 · DB Only 3x/wk · Home · Toe Fracture (recovering)</div>
+    <div class="scan-badge">&#128197; May 28, 2026</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Consistency 78% · 17/21</span>
+    <span class="flag red">Nutrition Not Tracked</span>
+    <span class="flag orange">Toe Fracture (recovering)</span>
+    <span class="flag orange">L/R Arm Asymmetry ~20%</span>
+    <span class="flag orange">BMD Z-score -0.7</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="pr-progressBar"></div></div>
+  <div class="progress-label" id="pr-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="pr-btnGenerate" onclick="generateClient('pr')">&#10024; Generate &amp; Play</button>
+    <button class="btn-secondary" id="pr-btnStop" onclick="stopClient('pr')" disabled>&#9632; Stop</button>
+    <button class="btn-secondary" id="pr-btnDownload" onclick="downloadClient('pr')" disabled>&#11015; Download WAV</button>
+  </div>
+  <div class="sections" id="pr-sectionList"></div>
+  <div class="status-msg" id="pr-statusMsg"></div>
+</div>
+
+<!-- ===== MIHIR PATEL ===== -->
+<div class="client-card" id="card-mh">
+  <div class="card-header">
+    <div class="name">Mihir Patel</div>
+    <div class="sub">Male · Phase 2 · DB Only 4x/wk · Home · Perfect Adherence</div>
+    <div class="scan-badge">&#128197; May 28, 2026</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Consistency 100% · 21/21</span>
+    <span class="flag green">DB Row PR 40x12 x3</span>
+    <span class="flag green">DB RDL 80x15</span>
+    <span class="flag orange">Protein 150g/day Inconsistent</span>
+    <span class="flag orange">Knee Family History</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="mh-progressBar"></div></div>
+  <div class="progress-label" id="mh-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="mh-btnGenerate" onclick="generateClient('mh')">&#10024; Generate &amp; Play</button>
+    <button class="btn-secondary" id="mh-btnStop" onclick="stopClient('mh')" disabled>&#9632; Stop</button>
+    <button class="btn-secondary" id="mh-btnDownload" onclick="downloadClient('mh')" disabled>&#11015; Download WAV</button>
+  </div>
+  <div class="sections" id="mh-sectionList"></div>
+  <div class="status-msg" id="mh-statusMsg"></div>
+</div>
+
+<script>
+const CLIENT_SECTIONS = {
+  ry: [
+    {
+      icon: "👋", title: "Intro", desc: "Who he is and today's goal",
+      text: `Ryan Young is coming in for his second DEXA scan today. He's in his early twenties, male, focused on lean body mass development. He trains on a 3-day-per-week Phase 2 program at the gym, with volleyball and basketball 2 to 3 times per week stacked on top of that. He completed his first full month of Phase 2 going into today. His primary goal is building lean mass and improving body composition, with athletic performance as the secondary driver. Today is about reading the delta from his baseline scan and calibrating the next block.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Open with these before anything else. Ryan hit 315 pounds on the sumo deadlift for 6 reps. That is a three-plate total in his first month of Phase 2, and it is worth naming out loud. His bench press reached 165 pounds for 5 reps, a personal record. His cable pulldown hit 175 pounds for 9 reps, the strongest upper pull he has logged. And his training consistency is 91 percent, 10 out of 11 sessions completed. For someone running a gym program on top of 2 to 3 recreational sport sessions per week, that is strong adherence. Lead with the deadlift milestone, it is the headline.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `The primary coaching flag going into this scan is nutrition tracking. His food journal has been largely unfilled across the block, which means there is no visibility into his caloric or protein intake. For a young male building lean mass with his training volume, fueling is as important as the sessions themselves. If he is under-eating protein relative to his training load, the lean mass gains will not reflect his actual effort. The second flag is the missed Phase 2 A session on May 27, the day before the scan. That is worth a brief mention in the conversation, not as a negative, but to understand if the schedule needs adjusting.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Form, load, what to watch",
+      text: `Ryan's total weekly load is meaningful: three structured gym sessions plus 2 to 3 recreational sport sessions. His compound lifts are tracking well across the board. Sumo deadlift at 315 for 6, bench at 165 for 5, cable pulldown at 175 for 9. No documented injuries or mobility restrictions. His form video submissions have been solid. The main thing to watch going into the next block is whether his gym session quality holds up toward the end of the week when sport sessions accumulate. If the later sessions start to slip on intensity or quality, that is a signal for scheduling adjustment, not volume reduction.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `The total weekly load here is higher than a typical gym-only client. Three structured sessions plus 2 to 3 sport sessions means Ryan's body is under consistent physical stress. His 91 percent gym consistency suggests he is managing recovery well enough to keep showing up, which is a good sign. But the unanswered question is nutrition. If he is not eating enough protein and total calories for his activity level, the training output will not convert to lean mass at the rate it should. That is the central coaching lever. Recovery load capacity is there. The fueling is the gap.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `Ryan is young, athletic, and clearly motivated by performance milestones. He responds well to concrete numbers and specific targets. No sensitive flags. Lead with the strength progress first, particularly the three-plate sumo deadlift, then anchor into the body composition picture. The framing that lands well with athletes is this: the work is there, the question is whether the fueling is supporting it. That puts nutrition in a performance context rather than a diet context, which tends to resonate better. He will want to know if his lean mass numbers moved, so be direct about the delta when you pull it up.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3-4 concrete things to set today",
+      text: `Three things to lock in coming out of this scan. First, get nutrition tracked. Even a rough estimate of daily protein for two weeks would give you a baseline. His target should be around 175 to 190 grams per day given his combined training volume and lean mass goal. Second, clarify the weekly schedule. Where do the gym days sit relative to volleyball and basketball, and is there a recovery gap built in between high-demand days. Third, set the ALMI target for the next scan. If his percentile moved today, name the next rung. If it held flat, the message is clear: training is solid, fueling is the lever.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Ryan going into today. His strength numbers are moving. Three-plate sumo deadlift in month one of Phase 2 is the headline. Consistency at 91 percent is strong given his total athletic load. The gap is nutrition visibility, which is the one thing that could be capping his lean mass gains. Today is about reading the delta, celebrating the strength milestones, and locking in a fueling target for the next block. He has got the work ethic. The food is the lever. Walk in with energy.`
+    }
+  ],
+
+  pr: [
+    {
+      icon: "👋", title: "Intro", desc: "Who she is and today's goal",
+      text: `Priyal Mehta's second DEXA scan is today. She trains at home on a dumbbell-only program, 3 days per week, and she is in Phase 2 of her program. This block had an additional challenge: she has been dealing with a toe fracture that required lower body modifications for part of the training window. She re-established structured training after years away from consistent exercise, and today's scan is the first real measurement of what this block produced.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Open with these wins. Despite an active toe fracture, Priyal completed 17 out of 21 scheduled sessions. That is 78 percent adherence under real physical constraint. That is the headline, lead with it. Her dumbbell bench press has progressed this block, targeting 35 pounds for 12 reps going into the scan. She re-established a structured training routine after years away, which is the foundational win the entire program is built on. And she has maintained momentum into Phase 2 despite the injury complication. The 17 out of 21 number is exceptional given what she was dealing with, and she should hear that clearly.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flags with data",
+      text: `The primary coaching flag is nutrition tracking. Her food journal has been largely unfilled across this block, which means there is no clear picture of her protein or caloric intake going into the scan. For a lean mass building goal, that is a meaningful gap. The second flag is her BMD Z-score, which came in at negative 0.7 at her baseline scan. That is not alarming on its own, but it is a trend to monitor. Bone loading through resistance training is exactly the right intervention, and the lower body modifications during the fracture recovery mean that loading has been reduced this block. The scan will tell us whether BMD held or shifted.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Form flags, injury status, what to watch",
+      text: `Three things to be aware of. First, left-right arm asymmetry: Priyal has roughly a 20 percent difference between her left and right arm strength. Always cue starting with the left arm on any unilateral upper body work. That is a standing coaching note and should be in the next program's cuing as well. Second, the toe fracture: she is recovering, completed a lower body session on May 22, so she is not fully sidelined, but impact and heavy toe loading should still be avoided until cleared. Third, her upper body program has been progressing well through the block. Bench, rows, and overhead work are intact and moving forward.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `Priyal trains from home, which helps with consistency but also means the accountability structure is largely internal. Her 78 percent adherence through a fracture shows that internal motivation is genuine. The recovery picture is relatively clean: no active sleep or stress flags documented. The main load consideration going forward is the fracture recovery timeline. Once the toe is cleared, there is a significant training lever available on the lower body side that has not been fully utilized yet. That is a real upside for the next block.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Sensitive flags and communication style",
+      text: `One important framing note. Her BMD Z-score of negative 0.7 makes bone health a real clinical priority, not just a number to mention in passing. The framing that works here is positive: resistance training is the most evidence-based intervention for BMD, and her program is directly addressing this. Do not frame the Z-score as alarming, but make it concrete and connect it to why the lower body loading matters so much as the fracture heals. The left-right asymmetry is worth a brief mention so she understands why the left-arm-first cuing exists. No body dysmorphia or anxiety flags documented.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3-4 concrete things to set today",
+      text: `Three priorities for the next block. First, get nutrition tracked. Even a rough estimate of daily protein for the next two weeks gives you a baseline to work with. Protein supports both lean mass gains and bone health, so it directly serves both clinical priorities. Second, as the toe recovers, gradually reintroduce bilateral lower body loading starting with low-impact patterns: RDL variations, leg press, and goblet squats with low toe stress. Third, address the left-right asymmetry intentionally with unilateral upper body work where the left side does equal or slightly more volume than the right for the next 4 to 6 weeks.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Priyal going into today. She completed 17 out of 21 sessions with a toe fracture. That number is the lead, and she should hear it first. The clinical priorities are nutrition visibility and keeping an eye on BMD as lower body loading comes back online. Once the toe is cleared, her program opens up significantly on the lower body side, which is a genuine source of lean mass upside. Today is about reading the body composition delta, recognizing the adherence achievement, and setting a clear path for the next phase. She is doing the hard thing. Make sure she knows it.`
+    }
+  ],
+
+  mh: [
+    {
+      icon: "👋", title: "Intro", desc: "Who he is and today's goal",
+      text: `Mihir Patel is coming in for his second DEXA scan today. He trains at home on a dumbbell-only program, 4 days per week, and is in Phase 2 of the program. He has been training for two full phases now. His primary goal is lean body mass development. Today's scan is the first body composition measurement after a full training block, and the question is whether the training output has translated into lean mass gains.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Lead with this first: 21 out of 21 sessions. Perfect adherence across both phases. That is the single most important thing to name before anything else, because it is the foundation everything else is built on. His dumbbell row hit 40 pounds for 12, for 3 sets, which represented two PRs in a single training session. His DB RDL reached 80 pounds for 15, 15, and 13 reps, showing real posterior chain development. And visible shoulder and arm definition was noted by the coach on May 13. The visual change is real, and it happened because of perfect consistency. Make that connection explicit.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top coaching flag with data",
+      text: `The primary flag going into this scan is protein intake. His daily target is 150 grams, and it has been inconsistently hit. For a male building lean mass with 21 out of 21 training sessions, the fueling needs to match the effort. If his body has not had consistent protein to support muscle protein synthesis, the lean mass gains may be lower than his training output would otherwise support. That is the gap. The scan will tell us how well his nutrition tracked against his training. If lean mass gains are solid despite the protein inconsistency, that is a strong signal. If they are modest, the protein piece is the clear next lever.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Form flags and what to watch",
+      text: `Two things to be aware of. First, Mihir has a family history of knee replacements. That means form quality on all lower body work is non-negotiable. Goblet squat mechanics, RDL hip hinge, and any lunge or split squat variations should always be cued precisely. This is a long-term priority. Second, he had intermittent back sensitivity in week 1 of Phase 2, which resolved after that first week and is no longer active. Monitor RDL form as load increases. Do not push weight at the expense of hip hinge mechanics. His upper body is tracking well: DB row at 40 for 12 is solid, and shoulder work is progressing.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `Mihir's recovery picture is positive. He is doing 4 dumbbell sessions per week from home, his energy has improved, sleep is decent, and there are no active pain complaints. The back sensitivity from week 1 is fully resolved. This is a clean recovery profile. The one refinement available on the recovery side is nutrition timing: if he can front-load protein earlier in the day, particularly before or after his training session, that will support muscle protein synthesis more effectively. That is a refinement for the next block, not a problem to address today.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `Twenty-one out of twenty-one sessions tells you everything you need to know about Mihir's motivation and buy-in. He is doing everything right on the training side. The coaching conversation today should celebrate that explicitly, then anchor the next phase in the nutrition piece. The training is there, the food needs to catch up. That framing works well here: it is not a criticism, it is an opportunity. He will respond well to precise, actionable feedback. Tell him what the protein number is, tell him why it matters for his goal, and give him one simple way to make it more consistent. He will act on it.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3-4 concrete things to set today",
+      text: `Three priorities for the next block. First, lock in protein tracking: 150 grams per day minimum, ideally 165 to 175 given his training volume. Even logging consistently for two weeks to establish a baseline pattern would be valuable. Second, continue the DB program progression with an emphasis on load increases on the row and RDL, which are his strongest and most productive patterns. Third, maintain precise lower body form with the family history of knee replacements in mind. If he is ready for increased lower body volume in Phase 2, add it gradually with strong form checkpoints.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Mihir going into today's scan. Twenty-one out of twenty-one. Perfect. His lifts are progressing on every compound pattern. His recovery is solid. The one gap is protein consistency, which is the lever that converts this training output into lean mass on the DEXA. Today is about reading the delta, celebrating elite adherence out loud, and setting a protein target that matches what he is already doing in the gym. He is doing the hard part. Make sure he hears that clearly.`
+    }
+  ]
+};
+
+// ─── Engine ─────────────────────────────────────────────────────────────────
+
+const state = {};
+
+['ry', 'pr', 'mh'].forEach(id => {
+  state[id] = {
+    audioBuffers: new Array(CLIENT_SECTIONS[id].length).fill(null),
+    audioCtx: null,
+    currentSource: null,
+    currentSection: -1,
+    isPlaying: false,
+    generationDone: false
+  };
+  buildSections(id);
+});
+
+function buildSections(id) {
+  const list = document.getElementById(id + '-sectionList');
+  CLIENT_SECTIONS[id].forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'section-item';
+    div.id = id + '-sec-' + i;
+    div.innerHTML = `<span class="sec-icon">${s.icon}</span>
+      <div style="flex:1"><div class="sec-title">${s.title}</div>
+      <div class="sec-desc">${s.desc}</div></div>
+      <div class="sec-status" id="${id}-stat-${i}">—</div>`;
+    div.onclick = () => {
+      if (state[id].audioBuffers[i] && state[id].isPlaying) playFrom(id, i);
+    };
+    list.appendChild(div);
+  });
+}
+
+function setStatus(id, i, text, cls) {
+  const el = document.getElementById(id + '-sec-' + i);
+  const st = document.getElementById(id + '-stat-' + i);
+  el.className = 'section-item ' + (cls || '');
+  if (st) st.textContent = text;
+}
+
+function setActive(id, i) {
+  CLIENT_SECTIONS[id].forEach((_, idx) => {
+    const el = document.getElementById(id + '-sec-' + idx);
+    if (!el) return;
+    if (idx === i) {
+      el.className = 'section-item active' + (state[id].audioBuffers[idx] ? ' loaded' : '');
+    } else if (idx < i) {
+      el.className = 'section-item done loaded';
+      const st = document.getElementById(id + '-stat-' + idx);
+      if (st) st.textContent = '✓';
+    }
+  });
+  state[id].currentSection = i;
+  const total = CLIENT_SECTIONS[id].length;
+  const pct = i < 0 ? 0 : Math.round(((i + 1) / total) * 100);
+  document.getElementById(id + '-progressBar').style.width = (i < 0 ? 0 : pct) + '%';
+  document.getElementById(id + '-progressLabel').textContent =
+    i < 0 ? 'Ready' : `Playing section ${i + 1} of ${total}`;
+  if (i >= 0) document.getElementById(id + '-sec-' + i).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function fetchAudio(text) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const voiceId = document.getElementById('voiceSelect').value;
+  const speed = Math.min(1.2, parseFloat(document.getElementById('speedSelect').value) || 1.2);
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg'
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_turbo_v2_5',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.15, use_speaker_boost: true },
+      speed
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(`ElevenLabs ${resp.status}: ${JSON.stringify(err)}`);
+  }
+  return await resp.arrayBuffer();
+}
+
+async function generateClient(id) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    document.getElementById(id + '-statusMsg').textContent = 'Paste your ElevenLabs API key in the config box above first.';
+    document.getElementById(id + '-statusMsg').className = 'status-msg error';
+    return;
+  }
+  const s = state[id];
+  document.getElementById(id + '-btnGenerate').disabled = true;
+  document.getElementById(id + '-btnStop').disabled = false;
+  document.getElementById(id + '-statusMsg').textContent = '';
+  document.getElementById(id + '-statusMsg').className = 'status-msg';
+  s.audioCtx = s.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  s.audioBuffers = new Array(CLIENT_SECTIONS[id].length).fill(null);
+  s.generationDone = false;
+  s.isPlaying = true;
+
+  CLIENT_SECTIONS[id].forEach((_, i) => setStatus(id, i, '...', ''));
+  playFrom(id, 0);
+
+  (async () => {
+    for (let i = 0; i < CLIENT_SECTIONS[id].length; i++) {
+      if (!s.isPlaying) break;
+      try {
+        const buf = await fetchAudio(CLIENT_SECTIONS[id][i].text);
+        const decoded = await s.audioCtx.decodeAudioData(buf);
+        s.audioBuffers[i] = decoded;
+        if (s.currentSection < i) setStatus(id, i, 'ready', 'loaded');
+      } catch (err) {
+        setStatus(id, i, 'ERR', '');
+        document.getElementById(id + '-statusMsg').className = 'status-msg error';
+        document.getElementById(id + '-statusMsg').textContent = `Error on section ${i + 1}: ${err.message}`;
+        s.isPlaying = false;
+        document.getElementById(id + '-btnGenerate').disabled = false;
+        document.getElementById(id + '-btnStop').disabled = true;
+        return;
+      }
+    }
+    if (s.isPlaying) {
+      s.generationDone = true;
+      document.getElementById(id + '-btnDownload').disabled = false;
+      document.getElementById(id + '-statusMsg').textContent = 'Generated — re-generate to use a different voice.';
+    }
+  })();
+
+  return new Promise(resolve => {
+    const check = setInterval(() => {
+      if (s.generationDone && !s.isPlaying) { clearInterval(check); resolve(); }
+      if (!s.isPlaying && !s.generationDone) { clearInterval(check); resolve(); }
+    }, 500);
+  });
+}
+
+function playFrom(id, i) {
+  const s = state[id];
+  if (s.currentSource) {
+    s.currentSource.onended = null; // prevent stale callback from racing
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  if (i >= CLIENT_SECTIONS[id].length) {
+    s.isPlaying = false;
+    document.getElementById(id + '-btnGenerate').disabled = false;
+    document.getElementById(id + '-btnStop').disabled = true;
+    document.getElementById(id + '-progressLabel').textContent = 'Done — regenerate or download WAV';
+    return;
+  }
+  setActive(id, i);
+  if (s.audioBuffers[i]) {
+    const src = s.audioCtx.createBufferSource();
+    src.buffer = s.audioBuffers[i];
+    src.connect(s.audioCtx.destination);
+    src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
+    src.start();
+    s.currentSource = src;
+  } else {
+    const check = setInterval(() => {
+      if (s.audioBuffers[i]) {
+        clearInterval(check);
+        if (s.isPlaying) playFrom(id, i);
+      }
+    }, 200);
+  }
+}
+
+function stopClient(id) {
+  const s = state[id];
+  s.isPlaying = false;
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  document.getElementById(id + '-btnGenerate').disabled = false;
+  document.getElementById(id + '-btnStop').disabled = true;
+}
+
+async function downloadClient(id) {
+  const s = state[id];
+  if (!s.generationDone) { alert('Still generating — wait for all sections to finish.'); return; }
+  const names = { ry: 'ryan-young', pr: 'priyal-mehta', mh: 'mihir-patel' };
+  const rendered = await Promise.all(s.audioBuffers.map(buf => {
+    const offline = new OfflineAudioContext(buf.numberOfChannels, buf.length, buf.sampleRate);
+    const src = offline.createBufferSource();
+    src.buffer = buf; src.connect(offline.destination); src.start();
+    return offline.startRendering();
+  }));
+  const totalLen = rendered.reduce((a, b) => a + b.length, 0);
+  const combined = s.audioCtx.createBuffer(1, totalLen, rendered[0].sampleRate);
+  let offset = 0;
+  rendered.forEach(buf => {
+    combined.copyToChannel(buf.getChannelData(0), 0, offset);
+    offset += buf.length;
+  });
+  const wavBuffer = toWav(combined);
+  const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (names[id] || id) + '-briefing-may28.wav';
+  a.click();
+}
+
+async function playAllSequence() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    alert('Paste your ElevenLabs API key in the config box first.');
+    return;
+  }
+  // Generate sequentially to avoid rate limits
+  stopClient('ry'); stopClient('pr'); stopClient('mh');
+  await generateClient('ry');
+  await new Promise(r => setTimeout(r, 800));
+  await generateClient('pr');
+  await new Promise(r => setTimeout(r, 800));
+  generateClient('mh');
+}
+
+function toWav(buffer) {
+  const numCh = buffer.numberOfChannels;
+  const length = buffer.length * numCh * 2 + 44;
+  const out = new ArrayBuffer(length);
+  const view = new DataView(out);
+  const write = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+  write(0, 'RIFF'); view.setUint32(4, length - 8, true); write(8, 'WAVE');
+  write(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+  view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+  view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+  view.setUint16(34, 16, true); write(36, 'data'); view.setUint32(40, buffer.length * numCh * 2, true);
+  let offset = 44;
+  for (let i = 0; i < buffer.length; i++) {
+    for (let ch = 0; ch < numCh; ch++) {
+      const s = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  return out;
+}
+</script>
+</body>
+</html>
