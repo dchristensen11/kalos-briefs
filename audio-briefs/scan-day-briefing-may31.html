@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing · May 31, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f13; color: #e8e8ee; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 28px 16px 48px; }
+
+  .page-header { text-align: center; margin-bottom: 24px; }
+  .page-header h1 { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .page-header p { font-size: 12px; color: #555; margin-top: 4px; }
+
+  /* Shared config */
+  .shared-config { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; width: 100%; max-width: 680px; margin-bottom: 20px; }
+  .shared-config h3 { font-size: 12px; color: #555; letter-spacing: 0.6px;
+    text-transform: uppercase; margin-bottom: 12px; }
+  .cfg-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .cfg-row label { font-size: 11px; color: #666; white-space: nowrap; }
+  .cfg-row input, .cfg-row select {
+    background: #252530; border: 1px solid #333; color: #ccc;
+    font-size: 12px; padding: 8px 10px; border-radius: 8px; flex: 1; min-width: 0; }
+  .cfg-row input { font-family: monospace; letter-spacing: 0.5px; }
+  .cfg-note { font-size: 11px; color: #444; margin-top: 10px; line-height: 1.5; }
+
+  /* Client card */
+  .client-card { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 16px;
+    padding: 28px 32px; max-width: 680px; width: 100%;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4); margin-bottom: 20px; }
+  .card-header { margin-bottom: 20px; }
+  .name { font-size: 20px; font-weight: 700; color: #fff; }
+  .sub { font-size: 12px; color: #777; margin-top: 3px; }
+  .scan-badge { display: inline-block; background: #1e3a5f; color: #5ab4ff;
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 7px; }
+
+  .flag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .flag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 12px; }
+  .flag.red { background: rgba(198,40,40,0.15); color: #ef5350; border: 1px solid rgba(198,40,40,0.25); }
+  .flag.orange { background: rgba(230,81,0,0.15); color: #ff8a50; border: 1px solid rgba(230,81,0,0.25); }
+  .flag.green { background: rgba(46,125,50,0.15); color: #66bb6a; border: 1px solid rgba(46,125,50,0.25); }
+  .flag.blue { background: rgba(21,101,192,0.15); color: #64b5f6; border: 1px solid rgba(21,101,192,0.25); }
+  .flag.yellow { background: rgba(249,168,37,0.15); color: #ffcc02; border: 1px solid rgba(249,168,37,0.25); }
+
+  .progress-wrap { background: #252530; border-radius: 6px; height: 5px;
+    margin: 18px 0 6px; overflow: hidden; }
+  .progress-bar { background: linear-gradient(90deg, #5ab4ff, #7c6fff);
+    height: 100%; width: 0%; border-radius: 6px; transition: width 0.5s ease; }
+  .progress-label { font-size: 11px; color: #444; margin-bottom: 18px; }
+
+  .controls { display: flex; gap: 10px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+  .btn-primary { background: linear-gradient(135deg, #4a9eff, #7c6fff);
+    border: none; border-radius: 50px; color: #fff; font-size: 13px; font-weight: 600;
+    padding: 11px 22px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+  .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: #252530; border: 1px solid #333; border-radius: 50px;
+    color: #999; font-size: 12px; font-weight: 500; padding: 10px 18px; cursor: pointer; }
+  .btn-secondary:hover { background: #2e2e3d; }
+  .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .sections { display: flex; flex-direction: column; gap: 3px; }
+  .section-item { display: flex; align-items: flex-start; gap: 11px;
+    padding: 9px 12px; border-radius: 8px; font-size: 12px;
+    color: #555; border: 1px solid transparent; transition: all 0.2s; cursor: default; }
+  .section-item.active { background: #1c2640; border-color: #2a4070; color: #c8daff; }
+  .section-item.done { color: #3a6b3a; }
+  .section-item.loaded { cursor: pointer; }
+  .section-item.loaded:hover { background: #1f1f2a; color: #999; }
+  .sec-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .sec-title { font-weight: 600; }
+  .sec-desc { font-size: 10px; margin-top: 2px; opacity: 0.7; }
+  .sec-status { margin-left: auto; font-size: 10px; color: #333; flex-shrink: 0; margin-top: 2px; }
+  .section-item.active .sec-status { color: #5ab4ff; }
+  .section-item.done .sec-status { color: #3d7a3d; }
+
+  .status-msg { font-size: 11px; color: #444; margin-top: 14px; text-align: center; line-height: 1.6; }
+  .status-msg.error { color: #e05a5a; }
+
+  .play-both { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; max-width: 680px; width: 100%; text-align: center; margin-bottom: 20px; }
+  .play-both p { font-size: 12px; color: #555; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Scan Day Briefing · May 31, 2026</h1>
+  <p>Jenna Welton · Scott Welton · ElevenLabs TTS</p>
+</div>
+
+<!-- Shared API config -->
+<div class="shared-config">
+  <h3>ElevenLabs Config</h3>
+  <div class="cfg-row">
+    <label>API Key</label>
+    <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" />
+  </div>
+  <div class="cfg-row" style="margin-top:10px">
+    <label>Voice ID</label>
+    <input type="text" id="voiceSelect" value="gWaDC0oXAheKoZfljzuI" placeholder="ElevenLabs voice ID" style="font-family:monospace;letter-spacing:0.5px" />
+    <label style="margin-left:6px">Speed</label>
+    <select id="speedSelect" style="max-width:80px">
+      <option value="0.85">0.85×</option>
+      <option value="0.95">0.95×</option>
+      <option value="1.0">1.0×</option>
+      <option value="1.1">1.1×</option>
+      <option value="1.2" selected>1.2×</option>
+    </select>
+  </div>
+  <div class="cfg-note">Snap voice pre-loaded. Paste a different voice ID to swap. Key stays in your browser tab only.</div>
+</div>
+
+<!-- Play both in sequence -->
+<div class="play-both">
+  <p>Generate both briefings, then play them back-to-back for the full commute run.</p>
+  <button class="btn-primary" onclick="playBothSequence()">▶ Generate Both &amp; Play in Sequence</button>
+</div>
+
+<!-- ===== JENNA WELTON ===== -->
+<div class="client-card" id="card-jw">
+  <div class="card-header">
+    <div class="name">Jenna Welton</div>
+    <div class="sub">Female · 42 · LBM Build + Bone Density</div>
+    <div class="scan-badge">📅 May 31, 2026 · 12:45 PM · Campbell · Duo with Scott</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Consistency 92%</span>
+    <span class="flag green">Progression +14.2%</span>
+    <span class="flag green">Hip Thrust +23.5%</span>
+    <span class="flag green">Sleep/Recovery ✓</span>
+    <span class="flag red">BMD T-1.9 Osteopenia</span>
+    <span class="flag red">Protein 104g vs 120g target</span>
+    <span class="flag orange">Intensity Dip 5/28</span>
+    <span class="flag orange">Bench -2.7%</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="jw-progressBar"></div></div>
+  <div class="progress-label" id="jw-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="jw-btnGenerate" onclick="generateClient('jw')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="jw-btnStop" onclick="stopClient('jw')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="jw-btnDownload" onclick="downloadClient('jw')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="jw-sectionList"></div>
+  <div class="status-msg" id="jw-statusMsg"></div>
+</div>
+
+<!-- ===== SCOTT WELTON ===== -->
+<div class="client-card" id="card-sw">
+  <div class="card-header">
+    <div class="name">Scott Welton</div>
+    <div class="sub">Male · 48 · LBM Build · SI Joint Constraint</div>
+    <div class="scan-badge">📅 May 31, 2026 · 12:45 PM · Campbell · Duo with Jenna</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Consistency 88%</span>
+    <span class="flag green">Pull Up +63.2%</span>
+    <span class="flag green">BMD T+0.3 Excellent</span>
+    <span class="flag red">Active SI Joint — No Squats/Deadlifts</span>
+    <span class="flag red">Intensity 66/100</span>
+    <span class="flag orange">Calories 1,228/day Under-fueled</span>
+    <span class="flag orange">Baseball Interference · June Cruise</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="sw-progressBar"></div></div>
+  <div class="progress-label" id="sw-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="sw-btnGenerate" onclick="generateClient('sw')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="sw-btnStop" onclick="stopClient('sw')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="sw-btnDownload" onclick="downloadClient('sw')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="sw-sectionList"></div>
+  <div class="status-msg" id="sw-statusMsg"></div>
+</div>
+
+<script>
+// ─── Section content ────────────────────────────────────────────────────────
+
+const CLIENT_SECTIONS = {
+  jw: [
+    {
+      icon: "👋", title: "Intro", desc: "Who she is and today's goal",
+      text: `Jenna Welton is a 42-year-old female focused on lean body mass building and bone density. Today is her second DEXA scan at 12:45 PM in Campbell, alongside her husband Scott — a duo session. She's been in the Kalos program since her first scan, and the two primary clinical objectives are building lean tissue and improving bone density. Her BMD T-score of negative 1.9 puts her at the low end of the osteopenia range, making every training session a bone density investment, not just a physique goal. That framing is central to today's conversation.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Lead with these wins and be specific. Her training consistency is 92 percent — 11 out of 12 scheduled sessions completed. That is outstanding adherence. Her overall progression score is up 14.2 percent across the block, which is a meaningful movement on compound lifts. Her hip thrust is up 23.5 percent — that is directly loading the posterior chain and is relevant to both her bone density and lean mass goals. Her squat is up 13.9 percent. She even trained the day before the scan. That level of commitment going into a major evaluation day says a lot. She is doing the work, and she deserves to hear it.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `The primary clinical concern is bone density. Her T-score at Scan 1 was negative 1.9, which lands in the osteopenia range. At 42, this is a critical window. Bone density responds to mechanical loading — compound lifts, ground reaction force, progressive resistance. Every session she completes where she squats, hip thrusts, or deadlifts is a clinical bone density intervention, not just a workout. Today's scan will not reflect a BMD change — that takes six to twelve months to measure meaningfully — but this framing sets the stage for why her compound lift protocol is non-negotiable long-term. The message is that building lean mass and protecting bone density are the same goal. Her training is the treatment.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Form, injuries, what to watch",
+      text: `No joint injury flags documented in Iris — confirm her back status at the start of the session to rule out anything unreported. Her major compound lifts are progressing well: hip thrust up 23.5 percent, squat up 13.9 percent, seated row solid. One minor flag: her bench press is down 2.7 percent. That's a small dip, not a red flag, but worth exploring. Check whether it's a volume issue, a fatigue pattern on pressing days, or a movement cue that needs adjustment. It's a conversation for the next block rather than an alarm. No restrictions on her current program.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `Sleep and overall recovery are excellent — no red flags in Iris on that front. One notable dip to flag: on May 28th, her session intensity dropped to 71.4 out of 100. That same day her logged nutrition showed 1,173 calories total and only 41 grams of carbohydrates. That is not enough fuel for a training session, and the intensity drop tracks directly with it. This is the recovery story: her average protein is 104 grams per day against a 120 gram target, and her total calories are running low on some days. That gap is suppressing her output on lower-fuel sessions. Overall recovery is strong, but the nutrition floor needs to come up.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `No sensitive psychological flags documented for Jenna. She is motivated, consistent, and executing the program. The most important coaching frame today is alignment between the clinical picture and the training goal. BMD at negative 1.9 is not alarming — it's actionable. And the program she's been running — compound loading, progressive overload, protein prioritization — these are exactly the right interventions. Lead with strength first: her compound lifts are moving, which means she is applying the right mechanical stimulus to bone. Then connect the dots: the protein gap of about 16 grams per day is the next lever. More fuel means more lean mass. More lean mass means more bone loading benefit. It is a clean, positive frame with a clear next step.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
+      text: `Three priorities to lock in coming out of today's scan. First, raise daily protein to 120 grams minimum — she is averaging 104, and the gap is real. Connect this directly to lean mass gain and bone density: more protein means more tissue, and more tissue means more mechanical loading benefit on the skeleton. Second, bring total daily calories up to support the training load — on low-carb days like May 28th her intensity is visibly dropping, which limits the training stimulus for both muscle and bone. Calories need to be calibrated to her lean mass goal, not just weight maintenance. Third, investigate and address the bench press dip — small but consistent at negative 2.7 percent, and worth building into the next program block. Everything else in her compound lift protocol should be protected and progressed.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Jenna Welton going into this scan. 92 percent consistency. 14.2 percent overall progression. Hip thrust up 23.5 percent. Squat up 13.9 percent. She trained the day before. She is doing exactly what the program requires. The clinical story is positive: strength is progressing, which means the bone loading stimulus is high. Today is about reading the lean mass delta and anchoring the protein and calorie conversation as the clear next step. Walk in with energy — she has earned a strong session, and the numbers should reflect the work she has done.`
+    }
+  ],
+
+  sw: [
+    {
+      icon: "👋", title: "Intro", desc: "Who he is and today's goal",
+      text: `Scott Welton is a 48-year-old male focused on lean body mass building. Today is his second DEXA scan at 12:45 PM in Campbell, as a duo with his wife Jenna. The single most important context going into this session is his active SI joint strain — his physician has cleared him for upper-body training but has prohibited squats and deadlifts. That constraint has shaped the entire past block of training and needs to be front of mind walking in. On the bright side, his BMD T-score is positive 0.3, which is excellent for his age and a genuine clinical win.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Lead with these wins and be specific. His training consistency is 88 percent — and that's with an active SI joint strain, baseball season interference, and a documented period of under-fueling. Showing up at 88 percent through all of that is genuinely impressive. His pull-up has improved 63.2 percent over the block — that is a massive upper-body strength gain and directly reflects lean mass accrual in the lats and arms. His bicep curl is up 21.8 percent. His keto-aligned nutrition and no-alcohol adherence have held throughout — that's dietary discipline in a complicated life. And his BMD T-score of positive 0.3 is outstanding for a 48-year-old male. Lead with what he has done right.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `The biggest concern is his active SI joint strain. His physician has said no squats and no deadlifts — the two primary posterior chain loading movements for lean mass and metabolic performance in a male program. The lower body is currently a constraint, not a capability. This has a direct impact on his ALMI potential this block — much of the lean mass he would build in a standard program lives in the glutes, hamstrings, and quads. His upper body has been compensating, and you'll see that reflected in his pull-up and arm numbers. The conversation today needs to include what the modified lower-body plan looks like in the next block: hip thrusts, leg press, supported movements — everything that loads the lower body without compressing the SI joint.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Form, injuries, what to watch",
+      text: `His lower body was formally modified on May 15th and May 22nd — both sessions documented in Everfit with adjusted movements to protect the SI joint. Hip thrusts have been cleared by his physician and are a viable loading tool for the next block. His upper body has been performing well: pull-up up 63.2 percent is remarkable, and bicep up 21.8 percent confirms the upper body is responding to the increased loading demand. One scheduling flag: baseball games on Sundays are creating a recovery interference pattern. After his May 18th Sunday game, he was documented as gassed in the following session. For the next block, consider shifting heavy training away from Mondays to account for that recurring pattern.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `Two recovery flags. First, baseball fatigue is real and recurring — his May 18th Sunday game was followed by a documented low-energy session, and this will likely continue through the rest of baseball season. Second, his calories are averaging 1,228 per day. For a 175-pound male with a lean mass building goal, that is under-fueling. At that intake level, his body may be in a mild catabolic state, which limits lean mass accrual and slows recovery. His keto adherence has been strong, which is a positive, but the calorie floor needs to come up significantly. There is also a June cruise coming — that will be a maintenance window at best, and planning for it explicitly today sets realistic expectations.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `Scott is direct and results-oriented — no sensitive psychological flags documented in Iris. He responds to data. The most important coaching frame today is an honest acknowledgment of the intensity gap. His intensity score is 66 out of 100 — that is a low effort score relative to his program's expectations. Some of that is attributable to the SI joint constraint removing lower-body loading. Some of it is the under-fueling. But he needs to hear it directly and constructively, and the forward message is clear: fix the fuel, build a smart lower-body modification plan, and push the upper body to RPE 8 or above. He is capable of more — the pull-up result proves it. Frame the next block as removing the constraints that have been holding him back.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
+      text: `Four priorities to lock in today. First, build a formal modified lower-body protocol: hip thrusts, leg press, leg curl, supported split squats — movements that load the legs and glutes without SI compression. This is the most important clinical intervention for his next block. Second, raise the calorie and protein floor — 1,228 calories is not enough to support lean mass building at 175 pounds. Set a target in the range of 1,600 to 1,800 calories minimum, with protein at 150 grams or above. Third, push upper-body intensity to RPE 8 or above on every primary lift — the pull-up result shows he has headroom. Fourth, plan explicitly for the June cruise: a maintenance protocol, minimum session commitment, and a nutrition framework that holds keto structure without being rigid while traveling.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Scott Welton going into this scan. He showed up at 88 percent consistency through an active SI joint strain, baseball season, and documented under-fueling. His pull-up is up 63.2 percent. His BMD is excellent at T positive 0.3. He held his dietary discipline through all of it. The primary challenge is the intensity gap — 66 out of 100 — which is a direct function of the physical constraint and the fuel deficit, not a lack of commitment. Today is about reading the lean mass delta from the upper body response, having an honest conversation about intensity, and sending him into the next block with a lower-body modification plan that lets him attack it fully. He is resilient. The plan just needs to catch up to his situation.`
+    }
+  ]
+};
+
+// ─── Engine ─────────────────────────────────────────────────────────────────
+
+const state = {};
+
+['jw', 'sw'].forEach(id => {
+  state[id] = {
+    audioBuffers: new Array(CLIENT_SECTIONS[id].length).fill(null),
+    audioCtx: null,
+    currentSource: null,
+    currentSection: -1,
+    isPlaying: false,
+    generationDone: false
+  };
+  buildSections(id);
+});
+
+function buildSections(id) {
+  const list = document.getElementById(id + '-sectionList');
+  CLIENT_SECTIONS[id].forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'section-item';
+    div.id = id + '-sec-' + i;
+    div.innerHTML = `<span class="sec-icon">${s.icon}</span>
+      <div style="flex:1"><div class="sec-title">${s.title}</div>
+      <div class="sec-desc">${s.desc}</div></div>
+      <div class="sec-status" id="${id}-stat-${i}">—</div>`;
+    div.onclick = () => {
+      if (state[id].audioBuffers[i] && state[id].isPlaying) playFrom(id, i);
+    };
+    list.appendChild(div);
+  });
+}
+
+function setStatus(id, i, text, cls) {
+  const el = document.getElementById(id + '-sec-' + i);
+  const st = document.getElementById(id + '-stat-' + i);
+  el.className = 'section-item ' + (cls || '');
+  if (st) st.textContent = text;
+}
+
+function setActive(id, i) {
+  CLIENT_SECTIONS[id].forEach((_, idx) => {
+    const el = document.getElementById(id + '-sec-' + idx);
+    if (!el) return;
+    if (idx === i) {
+      el.className = 'section-item active' + (state[id].audioBuffers[idx] ? ' loaded' : '');
+    } else if (idx < i) {
+      el.className = 'section-item done loaded';
+      const st = document.getElementById(id + '-stat-' + idx);
+      if (st) st.textContent = '✓';
+    }
+  });
+  state[id].currentSection = i;
+  const total = CLIENT_SECTIONS[id].length;
+  const pct = i < 0 ? 0 : Math.round(((i + 1) / total) * 100);
+  document.getElementById(id + '-progressBar').style.width = (i < 0 ? 0 : pct) + '%';
+  document.getElementById(id + '-progressLabel').textContent =
+    i < 0 ? 'Ready' : `Playing section ${i + 1} of ${total}`;
+  if (i >= 0) document.getElementById(id + '-sec-' + i).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function fetchAudio(text) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const voiceId = document.getElementById('voiceSelect').value;
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg'
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_turbo_v2_5',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.15, use_speaker_boost: true },
+      speed: Math.min(1.2, parseFloat(document.getElementById('speedSelect').value) || 1.2)
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(`ElevenLabs ${resp.status}: ${JSON.stringify(err)}`);
+  }
+  return await resp.arrayBuffer();
+}
+
+async function generateClient(id) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    document.getElementById(id + '-statusMsg').textContent = '⚠️ Paste your ElevenLabs API key in the config box above first.';
+    document.getElementById(id + '-statusMsg').className = 'status-msg error';
+    return;
+  }
+  const s = state[id];
+  document.getElementById(id + '-btnGenerate').disabled = true;
+  document.getElementById(id + '-btnStop').disabled = false;
+  document.getElementById(id + '-statusMsg').textContent = '';
+  document.getElementById(id + '-statusMsg').className = 'status-msg';
+  s.audioCtx = s.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  s.audioBuffers = new Array(CLIENT_SECTIONS[id].length).fill(null);
+  s.generationDone = false;
+  s.isPlaying = true;
+
+  CLIENT_SECTIONS[id].forEach((_, i) => setStatus(id, i, '⏳', ''));
+  playFrom(id, 0);
+
+  // Sequential generation — avoids ElevenLabs rate limits
+  (async () => {
+    for (let i = 0; i < CLIENT_SECTIONS[id].length; i++) {
+      if (!s.isPlaying) break;
+      try {
+        const buf = await fetchAudio(CLIENT_SECTIONS[id][i].text);
+        const decoded = await s.audioCtx.decodeAudioData(buf);
+        s.audioBuffers[i] = decoded;
+        if (s.currentSection < i) setStatus(id, i, 'ready', 'loaded');
+      } catch (err) {
+        setStatus(id, i, '✗', '');
+        document.getElementById(id + '-statusMsg').className = 'status-msg error';
+        document.getElementById(id + '-statusMsg').textContent = `Error on section ${i + 1}: ${err.message}`;
+        s.isPlaying = false;
+        document.getElementById(id + '-btnGenerate').disabled = false;
+        document.getElementById(id + '-btnStop').disabled = true;
+        return;
+      }
+    }
+    if (s.isPlaying) {
+      s.generationDone = true;
+      document.getElementById(id + '-btnDownload').disabled = false;
+      document.getElementById(id + '-statusMsg').textContent = 'Generated ✓ — re-generate to use a different voice.';
+    }
+  })();
+
+  return new Promise(resolve => {
+    const check = setInterval(() => {
+      if (s.generationDone && !s.isPlaying) { clearInterval(check); resolve(); }
+      if (!s.isPlaying && !s.generationDone) { clearInterval(check); resolve(); }
+    }, 500);
+  });
+}
+
+function playFrom(id, i) {
+  const s = state[id];
+  if (s.currentSource) {
+    s.currentSource.onended = null; // prevent stale callback from racing
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  if (i >= CLIENT_SECTIONS[id].length) {
+    s.isPlaying = false;
+    document.getElementById(id + '-btnGenerate').disabled = false;
+    document.getElementById(id + '-btnStop').disabled = true;
+    document.getElementById(id + '-progressLabel').textContent = 'Done ✓ — regenerate or download WAV';
+    return;
+  }
+  setActive(id, i);
+  if (s.audioBuffers[i]) {
+    const src = s.audioCtx.createBufferSource();
+    src.buffer = s.audioBuffers[i];
+    src.connect(s.audioCtx.destination);
+    src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
+    src.start();
+    s.currentSource = src;
+  } else {
+    const check = setInterval(() => {
+      if (s.audioBuffers[i]) {
+        clearInterval(check);
+        if (s.isPlaying) playFrom(id, i);
+      }
+    }, 200);
+  }
+}
+
+function stopClient(id) {
+  const s = state[id];
+  s.isPlaying = false;
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  document.getElementById(id + '-btnGenerate').disabled = false;
+  document.getElementById(id + '-btnStop').disabled = true;
+}
+
+async function downloadClient(id) {
+  const s = state[id];
+  if (!s.generationDone) { alert('Still generating — wait for all sections to finish.'); return; }
+  const rendered = await Promise.all(s.audioBuffers.map(buf => {
+    const offline = new OfflineAudioContext(buf.numberOfChannels, buf.length, buf.sampleRate);
+    const src = offline.createBufferSource();
+    src.buffer = buf; src.connect(offline.destination); src.start();
+    return offline.startRendering();
+  }));
+  const totalLen = rendered.reduce((a, b) => a + b.length, 0);
+  const combined = s.audioCtx.createBuffer(1, totalLen, rendered[0].sampleRate);
+  let offset = 0;
+  rendered.forEach(buf => {
+    combined.copyToChannel(buf.getChannelData(0), 0, offset);
+    offset += buf.length;
+  });
+  const wavBuffer = toWav(combined);
+  const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (id === 'jw' ? 'jenna-welton' : 'scott-welton') + '-briefing-may31.wav';
+  a.click();
+}
+
+async function playBothSequence() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    alert('Paste your ElevenLabs API key in the config box first.');
+    return;
+  }
+  // Generate Jenna first, wait, then Scott
+  stopClient('jw'); stopClient('sw');
+  await generateClient('jw');
+  await new Promise(r => setTimeout(r, 800));
+  generateClient('sw');
+}
+
+function toWav(buffer) {
+  const numCh = buffer.numberOfChannels;
+  const length = buffer.length * numCh * 2 + 44;
+  const out = new ArrayBuffer(length);
+  const view = new DataView(out);
+  const write = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+  write(0, 'RIFF'); view.setUint32(4, length - 8, true); write(8, 'WAVE');
+  write(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+  view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+  view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+  view.setUint16(34, 16, true); write(36, 'data'); view.setUint32(40, buffer.length * numCh * 2, true);
+  let offset = 44;
+  for (let i = 0; i < buffer.length; i++) {
+    for (let ch = 0; ch < numCh; ch++) {
+      const s = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  return out;
+}
+</script>
+</body>
+</html>
