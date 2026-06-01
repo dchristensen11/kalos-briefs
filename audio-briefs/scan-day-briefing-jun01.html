@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing · June 1, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f13; color: #e8e8ee; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 28px 16px 48px; }
+
+  .page-header { text-align: center; margin-bottom: 24px; }
+  .page-header h1 { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .page-header p { font-size: 12px; color: #555; margin-top: 4px; }
+
+  .shared-config { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; width: 100%; max-width: 680px; margin-bottom: 20px; }
+  .shared-config h3 { font-size: 12px; color: #555; letter-spacing: 0.6px;
+    text-transform: uppercase; margin-bottom: 12px; }
+  .cfg-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .cfg-row label { font-size: 11px; color: #666; white-space: nowrap; }
+  .cfg-row input, .cfg-row select {
+    background: #252530; border: 1px solid #333; color: #ccc;
+    font-size: 12px; padding: 8px 10px; border-radius: 8px; flex: 1; min-width: 0; }
+  .cfg-row input { font-family: monospace; letter-spacing: 0.5px; }
+  .cfg-note { font-size: 11px; color: #444; margin-top: 10px; line-height: 1.5; }
+
+  .client-card { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 16px;
+    padding: 28px 32px; max-width: 680px; width: 100%;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4); margin-bottom: 20px; }
+  .card-header { margin-bottom: 20px; }
+  .name { font-size: 20px; font-weight: 700; color: #fff; }
+  .sub { font-size: 12px; color: #777; margin-top: 3px; }
+  .scan-badge { display: inline-block; background: #1e3a5f; color: #5ab4ff;
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 7px; }
+
+  .flag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .flag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 12px; }
+  .flag.red { background: rgba(198,40,40,0.15); color: #ef5350; border: 1px solid rgba(198,40,40,0.25); }
+  .flag.orange { background: rgba(230,81,0,0.15); color: #ff8a50; border: 1px solid rgba(230,81,0,0.25); }
+  .flag.green { background: rgba(46,125,50,0.15); color: #66bb6a; border: 1px solid rgba(46,125,50,0.25); }
+  .flag.blue { background: rgba(21,101,192,0.15); color: #64b5f6; border: 1px solid rgba(21,101,192,0.25); }
+  .flag.yellow { background: rgba(249,168,37,0.15); color: #ffcc02; border: 1px solid rgba(249,168,37,0.25); }
+
+  .progress-wrap { background: #252530; border-radius: 6px; height: 5px;
+    margin: 18px 0 6px; overflow: hidden; }
+  .progress-bar { background: linear-gradient(90deg, #5ab4ff, #7c6fff);
+    height: 100%; width: 0%; border-radius: 6px; transition: width 0.5s ease; }
+  .progress-label { font-size: 11px; color: #444; margin-bottom: 18px; }
+
+  .controls { display: flex; gap: 10px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+  .btn-primary { background: linear-gradient(135deg, #4a9eff, #7c6fff);
+    border: none; border-radius: 50px; color: #fff; font-size: 13px; font-weight: 600;
+    padding: 11px 22px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+  .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: #252530; border: 1px solid #333; border-radius: 50px;
+    color: #999; font-size: 12px; font-weight: 500; padding: 10px 18px; cursor: pointer; }
+  .btn-secondary:hover { background: #2e2e3d; }
+  .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .sections { display: flex; flex-direction: column; gap: 3px; }
+  .section-item { display: flex; align-items: flex-start; gap: 11px;
+    padding: 9px 12px; border-radius: 8px; font-size: 12px;
+    color: #555; border: 1px solid transparent; transition: all 0.2s; cursor: default; }
+  .section-item.active { background: #1c2640; border-color: #2a4070; color: #c8daff; }
+  .section-item.done { color: #3a6b3a; }
+  .section-item.loaded { cursor: pointer; }
+  .section-item.loaded:hover { background: #1f1f2a; color: #999; }
+  .sec-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .sec-title { font-weight: 600; }
+  .sec-desc { font-size: 10px; margin-top: 2px; opacity: 0.7; }
+  .sec-status { margin-left: auto; font-size: 10px; color: #333; flex-shrink: 0; margin-top: 2px; }
+  .section-item.active .sec-status { color: #5ab4ff; }
+  .section-item.done .sec-status { color: #3d7a3d; }
+
+  .status-msg { font-size: 11px; color: #444; margin-top: 14px; text-align: center; line-height: 1.6; }
+  .status-msg.error { color: #e05a5a; }
+
+  .play-all { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; max-width: 680px; width: 100%; text-align: center; margin-bottom: 20px; }
+  .play-all p { font-size: 12px; color: #555; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Scan Day Briefing · June 1, 2026</h1>
+  <p>Juhi Khanna · Aridaman Tripathi · Natalie Nguyen · ElevenLabs TTS</p>
+</div>
+
+<!-- Shared API config -->
+<div class="shared-config">
+  <h3>ElevenLabs Config</h3>
+  <div class="cfg-row">
+    <label>API Key</label>
+    <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" />
+  </div>
+  <div class="cfg-row" style="margin-top:10px">
+    <label>Voice ID</label>
+    <input type="text" id="voiceSelect" value="gWaDC0oXAheKoZfljzuI" placeholder="ElevenLabs voice ID" style="font-family:monospace;letter-spacing:0.5px" />
+    <label style="margin-left:6px">Speed</label>
+    <select id="speedSelect" style="max-width:80px">
+      <option value="0.85">0.85×</option>
+      <option value="0.95">0.95×</option>
+      <option value="1.0">1.0×</option>
+      <option value="1.1">1.1×</option>
+      <option value="1.2" selected>1.2×</option>
+    </select>
+  </div>
+  <div class="cfg-note">Snap voice pre-loaded. Paste a different voice ID to swap. Key stays in your browser tab only.</div>
+</div>
+
+<!-- Generate all in sequence -->
+<div class="play-all">
+  <p>Generate all three briefings and play them back-to-back for the full commute run. Juhi and Aridaman are the duo at 9:45 AM, Natalie is at 2:30 PM.</p>
+  <button class="btn-primary" onclick="playAllSequence()">▶ Generate All &amp; Play in Sequence</button>
+</div>
+
+<!-- ===== JUHI KHANNA ===== -->
+<div class="client-card" id="card-jk">
+  <div class="card-header">
+    <div class="name">Juhi Khanna</div>
+    <div class="sub">Female · Perimenopause · Recomposition + Bone Density</div>
+    <div class="scan-badge">📅 June 1, 2026 · 9:45 AM · Campbell · Duo with Aridaman</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Goblet Squat +34.4%</span>
+    <span class="flag green">DB Bench +10.8%</span>
+    <span class="flag green">BMD Normal Z-0.2</span>
+    <span class="flag red">Protein 86g vs 120g target</span>
+    <span class="flag red">Consistency 77% (10/13)</span>
+    <span class="flag orange">Knee Pain + Leg Stiffness</span>
+    <span class="flag orange">Medical Procedure 5/28</span>
+    <span class="flag orange">Sleep 5–7 hrs · High Stress</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="jk-progressBar"></div></div>
+  <div class="progress-label" id="jk-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="jk-btnGenerate" onclick="generateClient('jk')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="jk-btnStop" onclick="stopClient('jk')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="jk-btnDownload" onclick="downloadClient('jk')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="jk-sectionList"></div>
+  <div class="status-msg" id="jk-statusMsg"></div>
+</div>
+
+<!-- ===== ARIDAMAN TRIPATHI ===== -->
+<div class="client-card" id="card-at">
+  <div class="card-header">
+    <div class="name">Aridaman Tripathi</div>
+    <div class="sub">Male · 49 · Recomposition + Bone Density + VAT Reduction</div>
+    <div class="scan-badge">📅 June 1, 2026 · 9:45 AM · Campbell · Duo with Juhi</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Consistency 93% (13/14)</span>
+    <span class="flag green">Progression +53.9%</span>
+    <span class="flag green">DB RDL 70 lb × 15</span>
+    <span class="flag red">Protein 67g vs 150g target</span>
+    <span class="flag red">VAT 138.8 cm² Elevated</span>
+    <span class="flag orange">Left Shoulder Weaker</span>
+    <span class="flag orange">BMD Z-1.0 Borderline Low</span>
+    <span class="flag orange">Recovery — Stomach Bug + Antibiotics</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="at-progressBar"></div></div>
+  <div class="progress-label" id="at-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="at-btnGenerate" onclick="generateClient('at')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="at-btnStop" onclick="stopClient('at')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="at-btnDownload" onclick="downloadClient('at')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="at-sectionList"></div>
+  <div class="status-msg" id="at-statusMsg"></div>
+</div>
+
+<!-- ===== NATALIE NGUYEN ===== -->
+<div class="client-card" id="card-nn">
+  <div class="card-header">
+    <div class="name">Natalie Nguyen</div>
+    <div class="sub">Female · 32 · Recomposition · Hourglass Shape + Longevity</div>
+    <div class="scan-badge">📅 June 1, 2026 · 2:30 PM · Campbell</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Consistency 92% (11/12)</span>
+    <span class="flag green">Hip Thrust +21.3%</span>
+    <span class="flag green">BSS Bodyweight → 34 lb</span>
+    <span class="flag red">Protein 78g vs 110g target</span>
+    <span class="flag red">Calories Only 891/day</span>
+    <span class="flag orange">Upper Body Lagging</span>
+    <span class="flag orange">BMD Z-1.2 Slightly Low</span>
+    <span class="flag yellow">Lower Back Sensitivity</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="nn-progressBar"></div></div>
+  <div class="progress-label" id="nn-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="nn-btnGenerate" onclick="generateClient('nn')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="nn-btnStop" onclick="stopClient('nn')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="nn-btnDownload" onclick="downloadClient('nn')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="nn-sectionList"></div>
+  <div class="status-msg" id="nn-statusMsg"></div>
+</div>
+
+<script>
+const CLIENT_SECTIONS = {
+
+  jk: [
+    {
+      icon: "👋", title: "Intro", desc: "Who she is and today's goal",
+      text: `Juhi Khanna is a perimenopausal female on hormone replacement therapy, focused on recomposition and bone density. Today is her second DEXA scan at 9:45 AM in Campbell, alongside her husband Aridaman — a duo session. They've both been training at home on a dumbbell-only program three times per week plus a weekly trainer session. Juhi's primary clinical goals are building lean tissue from a baseline of 82.75 pounds, reducing body fat from 39.9 percent, and supporting bone health. Her VAT at Scan 1 was 83.1 square centimeters — within the healthy range but approaching the elevated threshold of 100, making it a secondary target. This is a complex coaching picture: perimenopause, joint limitations, high work stress, and a nutrition gap. But there are genuine wins to lead with.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, lead strong",
+      text: `Lead with these wins and be specific. Her goblet squat is up 34.4 percent — that is the biggest strength jump in her entire program and a direct lower-body loading win. Her dumbbell bench press is up 10.8 percent — steady, consistent upper-body progress. On May 27th, she logged 151 grams of protein in a single day — that proves the nutrition target is biologically achievable when the day is structured correctly. And her bone density is completely normal at a Z-score of negative 0.2 — despite being perimenopausal. HRT plus consistent resistance training have held her bone density in the normal range. That is a genuine clinical win that often gets overlooked in the composition conversation, and she should hear it clearly.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `The primary concern is protein intake. She is averaging 86 grams per day against a 120 gram target across four logged days. That 34-gram daily gap is the single largest limiter on recomposition in her situation. Protein drives lean tissue synthesis, and at her body weight and training load, hitting 120 grams is the most impactful intervention available. The secondary concern is training consistency, which came in at 77 percent — 10 of 13 scheduled sessions. She missed sessions on May 20th and May 23rd, and then missed May 30th following a medical procedure on the 28th. The May 30th miss is forgivable in context — coming two days after a medical procedure, that should be weighted charitably. But the earlier misses are worth understanding: was it work stress, knee pain, or scheduling? The conversation about a minimum effective dose week is worth having so future disruptions have a clear fallback plan.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Limitations and what to watch",
+      text: `Two movement constraints are active and ongoing. First, right-leg stiffness and left knee pain — both present for about six months and directly relevant because lower-body training is central to her recomposition and bone density goals. Grip and forearms are also limiting her dumbbell deadlift performance rather than leg strength itself, which contributes to the RDL regression. Consider grip support — straps or Versa Gripps — as a practical fix that would unlock her hinge progression without asking her legs to do something different. Second, her overall progression score was negative 3.6 percent on average. Dumbbell RDL was down 25.6 percent — likely the grip issue — and reverse lunge, single-arm row, and shoulder press also declined. The goblet squat and bench press are the bright spots. Going into the next block, the hinge pattern needs a grip solution, and the lower-body substitution library needs to be ready for days when the knee is limiting.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total picture",
+      text: `Recovery is genuinely compromised right now. Work stress is high, sleep ranges from under five hours to around seven, with eight hours being rare. She had a medical procedure on May 28th — the exact nature isn't documented — but it disrupted the final training week and almost certainly reduced recovery capacity going into today's scan. That context matters for reading the DEXA result: if lean mass didn't move as much as expected, under-fueling plus disrupted sleep plus the procedure are the most likely explanations — not a training failure. Ask how recovery has been since the procedure before deciding whether to hold or increase lower-body volume in the next block. The recovery picture is the hidden variable in her result today.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `No sensitive psychological flags documented for Juhi in Iris — no body dysmorphia, anxiety notes, or clinical framing requirements. She is motivated by longevity, perimenopause support, and regaining a sense of control over her body. The coaching frame that will land best is one that acknowledges the complexity of her situation — the stress, the joint issues, the procedure week — while keeping the focus on the levers she can actually move. The goblet squat result is a great anchor: a 34 percent jump on a foundational movement is not something that happens without real effort and consistent training. Lead with evidence of her capability, and use the protein conversation as a practical, manageable next step. The May 27th day where she hit 151 grams is your proof point — build the structure around that day, not around the average days.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
+      text: `Three priorities to lock in coming out of today's scan. First, protein structure: the goal is 120 grams per day using two primary anchors plus a shake. The May 27th day showed it's possible — the goal is to replicate that structure on the other days. Set a simple default plan in Everfit and make it the daily check-in for the first two weeks. Second, grip support for the hinge: straps or Versa Gripps unlocks the RDL and deadlift pattern without any additional joint strain. If she is not already using them, that is a quick win. Third, a minimum effective dose protocol: two full sessions plus one scaled session for disrupted weeks — so the next medical appointment, high-stress period, or travel window has a clear fallback that keeps the training habit alive. Fourth, build out the knee-tolerant lower-body substitution library in Everfit so any movement can be swapped immediately without a coaching conversation in the moment.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Juhi Khanna going into this scan. Goblet squat up 34.4 percent. Bench up 10.8 percent. One clean nutrition day hit 151 grams of protein — the target is achievable. Bone density normal at Z-score negative 0.2 despite perimenopause. She is managing a genuinely difficult combination of factors — joint limitations, high work stress, poor sleep, and a medical procedure week — and she still showed up 10 out of 13 times. That is real grit. The result today will reflect those constraints, but the conversation is about removing them one by one. Protein is the unlock. Grip support is the quick win. And the bone density story is already a win she should walk in knowing.`
+    }
+  ],
+
+  at: [
+    {
+      icon: "👋", title: "Intro", desc: "Who he is and today's goal",
+      text: `Aridaman Tripathi is a 49-year-old male focused on recomposition, bone density improvement, and visceral fat reduction. Today is his second DEXA scan at 9:45 AM in Campbell, as a duo with his wife Juhi. He has been training at home on a dumbbell-only program three times per week — no rack, no barbell. His clinical priorities are clear: VAT at 138.8 square centimeters puts him in the elevated range, above the healthy threshold of 100. His ALMI is at the 15th percentile for his age, and his bone density has a Z-score of negative 1.0 — borderline low. All three of these numbers are connected to the same lever: build lean tissue, reduce body fat, and consistently apply mechanical loading to the skeleton. His Iris data shows he has been doing exactly the right things on the training side. The gap is entirely on the nutrition side.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, lead strong",
+      text: `Lead with these wins and be very specific. His consistency is 93 percent — 13 out of 14 scheduled sessions completed. The only missed session is today's May 31st workout, which doesn't count as a true miss. On a home dumbbell program, with a medical recovery week, that is elite adherence. His overall progression score is plus 53.9 percent — massive strength gains across the board in a constrained setup. His single-arm row and dumbbell Romanian deadlift both scored 100 out of 100 on intensity — that means he was working at maximum effort on those movements. And his dumbbell RDL hit 70 pounds for 15 repetitions — that exceeds the pre-scan target he was given, which means he walked into this scan having already delivered on the lift goal. That is the kind of thing you open with.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `Two equally important red flags today. First, protein. He is averaging 67 grams per day against a 150 gram target, across four logged days. Calories are averaging 1,250 per day. At his body weight and with a lean mass building goal, that intake is significantly below what's needed to support muscle synthesis, training recovery, or meaningful composition change. Food quality is actually decent at 7.3 out of 10 — the issue is not food choices, it is total volume and total protein. Second, his VAT at 138.8 square centimeters is the primary health number. VAT in this range is associated with insulin resistance and cardiovascular risk. The path to bringing it down — which is the goal — runs directly through protein adequacy and consistent resistance training. He is nailing the training. Protein is the missing piece, and it is holding back progress on both the composition and the metabolic health goals simultaneously.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Limitations and what to watch",
+      text: `Two movement constraints to be aware of. First, his left shoulder is weaker than the right and tends to fail or collapse on pressing movements — bench press and shoulder press both show this pattern. There is no pain reported, but there is a clear asymmetry. This means loading on presses should be capped by the left side, and unilateral work with a focus on left-side stability and control should be part of the next block. Do not let the right side run ahead of the left on any overhead or horizontal press. Second, chronic knee issues have been worse for six to eight months, particularly with running — but since running is not the priority, this is manageable. Confirm in the session which lower-body movements are fully pain-free and which need substitution. The dumbbell hinge pattern at 70 pounds appears to be safe and working well. That is your anchor lower-body movement for the next block.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total picture",
+      text: `Recovery has been challenged recently. He had a stomach bug followed by antibiotics — sleep was disrupted, and a possible strength dip was documented on May 22nd. Some of the performance variability in the data likely reflects this rather than true strength loss. His calories at 1,250 per day are too low to support the training load he's been carrying, which compounds the recovery issue — low calories plus an illness recovery is a hard combination for muscular adaptation. Ask how he's feeling going into today's scan. If energy and digestion are still off, acknowledge that the scan result may reflect the recovery context. Going forward, bringing calories up gradually — prioritizing protein first, then overall intake — is the single most important recovery intervention. The training discipline is already there. The fuel is not.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `No sensitive psychological flags documented for Aridaman — no body dysmorphia, anxiety notes, or clinical framing requirements. He is goal-oriented, long-term focused, and committed to the metabolic and bone health picture. The coaching frame that will land best is one that matches his discipline: he has done everything right on the training side, and the data will show it. The 53.9 percent progression score and 93 percent consistency are evidence of that. The conversation about protein and calories is not a criticism — it is identifying the one remaining lever that has not been pulled. And it is a lever he can pull. He is vegetarian navigating a high protein target, which is genuinely hard. Acknowledge that directly, and then build a concrete plan: two shakes per day gets him to roughly 50 grams right there, plus high-protein whole foods for the rest. The goal is a structure he can execute, not a target that feels out of reach.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
+      text: `Four priorities to lock in today. First, protein structure: 150 grams per day using two shakes plus three to four whole-food protein anchors. Build this as a daily default meal plan in Everfit, not just a target number. Make it as specific as possible — which shake, when, with what. Second, calorie floor: bring total intake up toward 1,800 to 2,000 per day to support lean mass accrual. Right now the body is in a mild energy deficit that is limiting muscle protein synthesis even on the days when training is excellent. Third, left shoulder stability: add unilateral pressing work with controlled tempo and explicit form notes in Everfit — the goal is to close the left-right gap before increasing load on bilateral press movements. Fourth, VAT tracking frame: every scan result should be read against the journey from 138.8 toward below 100. Frame the next block as the second chapter in that story. Protein plus training plus improving sleep are the three variables that move VAT — and he is already winning on training.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Aridaman Tripathi going into this scan. 93 percent consistency on a home dumbbell program. Progression plus 53.9 percent. DB RDL hitting 70 pounds for 15 reps — past the pre-scan target. Single-arm row and RDL both at maximum intensity effort. He has been exceptional on the training side through a stomach bug, antibiotics, and a disrupted recovery week. The scan result will tell the composition story, and the VAT number is the one to watch most closely. But whatever the numbers show, the message is the same: the training discipline is already there, protein is the unlock, and the next block is where those two things come together. He walked in doing the work. Now we add the fuel.`
+    }
+  ],
+
+  nn: [
+    {
+      icon: "👋", title: "Intro", desc: "Who she is and today's goal",
+      text: `Natalie Nguyen is a 32-year-old female focused on recomposition — building a strong, muscular hourglass shape with longevity as the long-term frame. Today is her second DEXA scan at 2:30 PM in Campbell. Her Scan 1 baseline from April 22nd showed a body weight of 120.4 pounds, body fat at 32.5 percent in the 42nd age-matched percentile, soft lean mass at 76.36 pounds, and VAT at 40.6 square centimeters, which is healthy. Her ALMI was at the 14th percentile — room to build — and her bone density had a Z-score of negative 1.2, slightly below average for her age. Her 4-week target was to add roughly one pound of lean tissue while keeping fat flat and body fat trending under 31.5 percent. The session today should align the scan result against that target and set the next block.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, lead strong",
+      text: `Lead with these wins. Her training consistency is 92 percent — 11 out of 12 scheduled sessions completed. The only missed session was during her Hawaii trip from May 8th to the 13th, and she still trained around the travel with hiking and walking. That is rock-solid adherence and says a lot about how seriously she is taking this. Her lower body progression is strong: barbell hip thrust is up 21.3 percent, Bulgarian split squat progressed from bodyweight all the way to 34 pounds, hamstring curl is up 20.3 percent, and leg extension is up 22.6 percent. Her top working set on hip thrust is now 225 pounds for 8 reps, which puts her well above the gold standard equivalent for her body weight. These are meaningful numbers, and they directly support the lean mass and bone density goals she cares about.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `The biggest concern — and the most important coaching conversation today — is protein intake. She is averaging 78 grams per day against a 110 gram target, across five logged days. Her calories are averaging only 891 per day. This is a significant under-fueling situation. At 891 calories, she is not eating enough to support the lean tissue gain she came here for, even with excellent training. The protein gap is not subtle — 78 grams is only 71 percent of the target. Every day that protein stays at 78 grams is a day where the training stimulus is present but the building material is not. This needs to be addressed directly but constructively. The framing is: the training is excellent, and the food is the limiting factor. If she raises protein and total calories, the next scan result will look very different.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Limitations and what to watch",
+      text: `Her lower body movement is progressing well and remains the foundation of the program. One movement flag to be aware of: her lower back can get achey with barbell work and long sitting, while dumbbell and machine work generally feels better. This has not stopped her hip thrust progress, which is encouraging — but it's worth checking at the start of the session whether any recent sets caused lower-back aching. Have a clear stop rule in mind: controlled barbell movements stay in the program as long as the discomfort is muscular, but sharp pain or symptoms that worsen across sets should trigger a substitution. The bigger programming flag is upper-body lagging: bench press is flat at 58 pounds, shoulder press is flat at 43 pounds, cable row is actually down 59.7 percent. Her lower body is far outpacing her upper. The next block needs deliberate upper-body targets with real load progressions — not just the same weights she has been hitting.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total picture",
+      text: `No significant recovery flags documented in Iris for Natalie. Her single missed session was during the Hawaii trip and was appropriately explained by travel — she offset it with hiking and walking, which shows good recovery instincts. One thing worth noting: she has a tendency to schedule back-to-back training sessions, which compresses recovery between hard lower-body days. When back-to-back sessions happen on big compound days — hip thrusts, split squats, leg extensions — the stimulus is present but the recovery window shrinks. For the next block, building in at least one full day between heavy lower-body sessions will support better muscular adaptation. Ask about sleep, soreness duration, and how the back felt coming into today — especially given the lower-back sensitivity flag.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `No sensitive psychological flags documented for Natalie in Iris — no body dysmorphia, anxiety notes, or clinical framing requirements. She has a clear, confident goal: hourglass shape, real strength, and the long game of bone density and muscle for decades. She trains at Villa Sport with her cousin, who spots her on big compound lifts — a genuine support system that supports progressive loading. The coaching frame today is straightforward: her consistency and lower-body effort have been excellent. The scan result will reflect that effort. But the nutrition gap is real, and it needs to be part of the conversation. She is leaving gains on the table every day that protein stays at 78 grams. The message is not that she is doing something wrong — it is that she is working hard, and if she brings the food up to match the training, the next scan will look significantly better.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
+      text: `Four priorities to lock in today. First, protein and calories: a daily minimum of 110 grams of protein with a total calorie floor that actually supports lean mass building — 891 calories is not enough. Connect this directly to her goal: more protein means more lean tissue, and more lean tissue means the hourglass shape she is building plus better bone loading. Second, deliberate upper-body progression plan: bench press, shoulder press, and rowing movements all need specific load and rep targets for the next block, not just maintained weights. Her lower body is strong — the upper body needs to catch up. Third, working set intensity: she has more capacity than her current working weights reflect. Logging warm-up and ramp-up sets as working sets is masking the picture. True RPE 8 to 9 effort on glute, leg, and shoulder working sets is the target. Fourth, session spacing: at least one full rest day between heavy lower-body sessions to allow the posterior chain to recover and adapt properly.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Natalie Nguyen going into this scan. 92 percent consistency including training through a Hawaii trip. Hip thrust up 21.3 percent. Bulgarian split squat from bodyweight to 34 pounds. Top set 225 pounds for 8 reps on hip thrust — she is strong. The lower body foundation is building exactly as planned, and the ALMI is moving in the right direction. The scan result will tell the composition story. The primary message is: the training is working, the lower body is responding, and protein is the single lever that needs to move in the next block. Bring her food up to match her training effort, and the next scan will show what she is actually capable of. Walk in with energy — she has earned it.`
+    }
+  ]
+};
+
+// ─── Engine ─────────────────────────────────────────────────────────────────
+
+const state = {};
+
+['jk', 'at', 'nn'].forEach(id => {
+  state[id] = {
+    audioBuffers: new Array(CLIENT_SECTIONS[id].length).fill(null),
+    audioCtx: null,
+    currentSource: null,
+    currentSection: -1,
+    isPlaying: false,
+    generationDone: false
+  };
+  buildSections(id);
+});
+
+function buildSections(id) {
+  const list = document.getElementById(id + '-sectionList');
+  CLIENT_SECTIONS[id].forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'section-item';
+    div.id = id + '-sec-' + i;
+    div.innerHTML = `<span class="sec-icon">${s.icon}</span>
+      <div style="flex:1"><div class="sec-title">${s.title}</div>
+      <div class="sec-desc">${s.desc}</div></div>
+      <div class="sec-status" id="${id}-stat-${i}">—</div>`;
+    div.onclick = () => {
+      if (state[id].audioBuffers[i] && state[id].isPlaying) playFrom(id, i);
+    };
+    list.appendChild(div);
+  });
+}
+
+function setStatus(id, i, text, cls) {
+  const el = document.getElementById(id + '-sec-' + i);
+  const st = document.getElementById(id + '-stat-' + i);
+  el.className = 'section-item ' + (cls || '');
+  if (st) st.textContent = text;
+}
+
+function setActive(id, i) {
+  CLIENT_SECTIONS[id].forEach((_, idx) => {
+    const el = document.getElementById(id + '-sec-' + idx);
+    if (!el) return;
+    if (idx === i) {
+      el.className = 'section-item active' + (state[id].audioBuffers[idx] ? ' loaded' : '');
+    } else if (idx < i) {
+      el.className = 'section-item done loaded';
+      const st = document.getElementById(id + '-stat-' + idx);
+      if (st) st.textContent = '✓';
+    }
+  });
+  state[id].currentSection = i;
+  const total = CLIENT_SECTIONS[id].length;
+  const pct = i < 0 ? 0 : Math.round(((i + 1) / total) * 100);
+  document.getElementById(id + '-progressBar').style.width = (i < 0 ? 0 : pct) + '%';
+  document.getElementById(id + '-progressLabel').textContent =
+    i < 0 ? 'Ready' : `Playing section ${i + 1} of ${total}`;
+  if (i >= 0) document.getElementById(id + '-sec-' + i).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function fetchAudio(text) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const voiceId = document.getElementById('voiceSelect').value;
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg'
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_turbo_v2_5',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.15, use_speaker_boost: true },
+      speed: Math.min(1.2, parseFloat(document.getElementById('speedSelect').value) || 1.2)
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(`ElevenLabs ${resp.status}: ${JSON.stringify(err)}`);
+  }
+  return await resp.arrayBuffer();
+}
+
+async function generateClient(id) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    document.getElementById(id + '-statusMsg').textContent = '⚠️ Paste your ElevenLabs API key in the config box above first.';
+    document.getElementById(id + '-statusMsg').className = 'status-msg error';
+    return;
+  }
+  const s = state[id];
+  document.getElementById(id + '-btnGenerate').disabled = true;
+  document.getElementById(id + '-btnStop').disabled = false;
+  document.getElementById(id + '-statusMsg').textContent = '';
+  document.getElementById(id + '-statusMsg').className = 'status-msg';
+  s.audioCtx = s.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  s.audioBuffers = new Array(CLIENT_SECTIONS[id].length).fill(null);
+  s.generationDone = false;
+  s.isPlaying = true;
+
+  CLIENT_SECTIONS[id].forEach((_, i) => setStatus(id, i, '⏳', ''));
+  playFrom(id, 0);
+
+  // Sequential generation — avoids ElevenLabs rate limits
+  (async () => {
+    for (let i = 0; i < CLIENT_SECTIONS[id].length; i++) {
+      if (!s.isPlaying) break;
+      try {
+        const buf = await fetchAudio(CLIENT_SECTIONS[id][i].text);
+        const decoded = await s.audioCtx.decodeAudioData(buf);
+        s.audioBuffers[i] = decoded;
+        if (s.currentSection < i) setStatus(id, i, 'ready', 'loaded');
+      } catch (err) {
+        setStatus(id, i, '✗', '');
+        document.getElementById(id + '-statusMsg').className = 'status-msg error';
+        document.getElementById(id + '-statusMsg').textContent = `Error on section ${i + 1}: ${err.message}`;
+        s.isPlaying = false;
+        document.getElementById(id + '-btnGenerate').disabled = false;
+        document.getElementById(id + '-btnStop').disabled = true;
+        return;
+      }
+    }
+    if (s.isPlaying) {
+      s.generationDone = true;
+      document.getElementById(id + '-btnDownload').disabled = false;
+      document.getElementById(id + '-statusMsg').textContent = 'Generated ✓ — re-generate to use a different voice.';
+    }
+  })();
+
+  return new Promise(resolve => {
+    const check = setInterval(() => {
+      if (s.generationDone && !s.isPlaying) { clearInterval(check); resolve(); }
+      if (!s.isPlaying && !s.generationDone) { clearInterval(check); resolve(); }
+    }, 500);
+  });
+}
+
+function playFrom(id, i) {
+  const s = state[id];
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  if (i >= CLIENT_SECTIONS[id].length) {
+    s.isPlaying = false;
+    document.getElementById(id + '-btnGenerate').disabled = false;
+    document.getElementById(id + '-btnStop').disabled = true;
+    document.getElementById(id + '-progressLabel').textContent = 'Done ✓ — regenerate or download WAV';
+    return;
+  }
+  setActive(id, i);
+  if (s.audioBuffers[i]) {
+    const src = s.audioCtx.createBufferSource();
+    src.buffer = s.audioBuffers[i];
+    src.connect(s.audioCtx.destination);
+    src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
+    src.start();
+    s.currentSource = src;
+  } else {
+    const check = setInterval(() => {
+      if (s.audioBuffers[i]) {
+        clearInterval(check);
+        if (s.isPlaying) playFrom(id, i);
+      }
+    }, 200);
+  }
+}
+
+function stopClient(id) {
+  const s = state[id];
+  s.isPlaying = false;
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  document.getElementById(id + '-btnGenerate').disabled = false;
+  document.getElementById(id + '-btnStop').disabled = true;
+}
+
+async function downloadClient(id) {
+  const s = state[id];
+  if (!s.generationDone) { alert('Still generating — wait for all sections to finish.'); return; }
+  const rendered = await Promise.all(s.audioBuffers.map(buf => {
+    const offline = new OfflineAudioContext(buf.numberOfChannels, buf.length, buf.sampleRate);
+    const src = offline.createBufferSource();
+    src.buffer = buf; src.connect(offline.destination); src.start();
+    return offline.startRendering();
+  }));
+  const totalLen = rendered.reduce((a, b) => a + b.length, 0);
+  const combined = s.audioCtx.createBuffer(1, totalLen, rendered[0].sampleRate);
+  let offset = 0;
+  rendered.forEach(buf => {
+    combined.copyToChannel(buf.getChannelData(0), 0, offset);
+    offset += buf.length;
+  });
+  const wavBuffer = toWav(combined);
+  const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+  const names = { jk: 'juhi-khanna', at: 'aridaman-tripathi', nn: 'natalie-nguyen' };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = names[id] + '-briefing-jun01.wav';
+  a.click();
+}
+
+async function playAllSequence() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) { alert('Paste your ElevenLabs API key in the config box first.'); return; }
+  stopClient('jk'); stopClient('at'); stopClient('nn');
+  await generateClient('jk');
+  await new Promise(r => setTimeout(r, 800));
+  await generateClient('at');
+  await new Promise(r => setTimeout(r, 800));
+  generateClient('nn');
+}
+
+function toWav(buffer) {
+  const numCh = buffer.numberOfChannels;
+  const length = buffer.length * numCh * 2 + 44;
+  const out = new ArrayBuffer(length);
+  const view = new DataView(out);
+  const write = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+  write(0, 'RIFF'); view.setUint32(4, length - 8, true); write(8, 'WAVE');
+  write(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+  view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+  view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+  view.setUint16(34, 16, true); write(36, 'data'); view.setUint32(40, buffer.length * numCh * 2, true);
+  let offset = 44;
+  for (let i = 0; i < buffer.length; i++) {
+    for (let ch = 0; ch < numCh; ch++) {
+      const s = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  return out;
+}
+</script>
+</body>
+</html>
