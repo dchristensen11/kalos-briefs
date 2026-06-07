@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing · Jun 7, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f13; color: #e8e8ee; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 28px 16px 48px; }
+
+  .page-header { text-align: center; margin-bottom: 24px; }
+  .page-header h1 { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .page-header p { font-size: 12px; color: #555; margin-top: 4px; }
+
+  .shared-config { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; width: 100%; max-width: 680px; margin-bottom: 20px; }
+  .shared-config h3 { font-size: 12px; color: #555; letter-spacing: 0.6px;
+    text-transform: uppercase; margin-bottom: 12px; }
+  .cfg-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .cfg-row label { font-size: 11px; color: #666; white-space: nowrap; }
+  .cfg-row input, .cfg-row select {
+    background: #252530; border: 1px solid #333; color: #ccc;
+    font-size: 12px; padding: 8px 10px; border-radius: 8px; flex: 1; min-width: 0; }
+  .cfg-row input { font-family: monospace; letter-spacing: 0.5px; }
+  .cfg-note { font-size: 11px; color: #444; margin-top: 10px; line-height: 1.5; }
+
+  .client-card { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 16px;
+    padding: 28px 32px; max-width: 680px; width: 100%;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4); margin-bottom: 20px; }
+  .card-header { margin-bottom: 20px; }
+  .name { font-size: 20px; font-weight: 700; color: #fff; }
+  .sub { font-size: 12px; color: #777; margin-top: 3px; }
+  .scan-badge { display: inline-block; background: #1e3a5f; color: #5ab4ff;
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 7px; }
+
+  .flag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .flag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 12px; }
+  .flag.red { background: rgba(198,40,40,0.15); color: #ef5350; border: 1px solid rgba(198,40,40,0.25); }
+  .flag.orange { background: rgba(230,81,0,0.15); color: #ff8a50; border: 1px solid rgba(230,81,0,0.25); }
+  .flag.green { background: rgba(46,125,50,0.15); color: #66bb6a; border: 1px solid rgba(46,125,50,0.25); }
+  .flag.blue { background: rgba(21,101,192,0.15); color: #64b5f6; border: 1px solid rgba(21,101,192,0.25); }
+
+  .progress-wrap { background: #252530; border-radius: 6px; height: 5px;
+    margin: 18px 0 6px; overflow: hidden; }
+  .progress-bar { background: linear-gradient(90deg, #5ab4ff, #7c6fff);
+    height: 100%; width: 0%; border-radius: 6px; transition: width 0.5s ease; }
+  .progress-label { font-size: 11px; color: #444; margin-bottom: 18px; }
+
+  .controls { display: flex; gap: 10px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+  .btn-primary { background: linear-gradient(135deg, #4a9eff, #7c6fff);
+    border: none; border-radius: 50px; color: #fff; font-size: 13px; font-weight: 600;
+    padding: 11px 22px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+  .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: #252530; border: 1px solid #333; border-radius: 50px;
+    color: #999; font-size: 12px; font-weight: 500; padding: 10px 18px; cursor: pointer; }
+  .btn-secondary:hover { background: #2e2e3d; }
+  .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .sections { display: flex; flex-direction: column; gap: 3px; }
+  .section-item { display: flex; align-items: flex-start; gap: 11px;
+    padding: 9px 12px; border-radius: 8px; font-size: 12px;
+    color: #555; border: 1px solid transparent; transition: all 0.2s; cursor: default; }
+  .section-item.active { background: #1c2640; border-color: #2a4070; color: #c8daff; }
+  .section-item.done { color: #3a6b3a; }
+  .section-item.loaded { cursor: pointer; }
+  .section-item.loaded:hover { background: #1f1f2a; color: #999; }
+  .sec-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .sec-title { font-weight: 600; }
+  .sec-desc { font-size: 10px; margin-top: 2px; opacity: 0.7; }
+  .sec-status { margin-left: auto; font-size: 10px; color: #333; flex-shrink: 0; margin-top: 2px; }
+  .section-item.active .sec-status { color: #5ab4ff; }
+  .section-item.done .sec-status { color: #3d7a3d; }
+
+  .status-msg { font-size: 11px; color: #444; margin-top: 14px; text-align: center; line-height: 1.6; }
+  .status-msg.error { color: #e05a5a; }
+
+  .play-both { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; max-width: 680px; width: 100%; text-align: center; margin-bottom: 20px; }
+  .play-both p { font-size: 12px; color: #555; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Scan Day Briefing · Jun 7, 2026</h1>
+  <p>Anuj Chakrapani &amp; Sunitha Tyagavalli Krishnaswamy · 12:00 PM · ElevenLabs TTS</p>
+</div>
+
+<!-- Shared API config -->
+<div class="shared-config">
+  <h3>ElevenLabs Config</h3>
+  <div class="cfg-row">
+    <label>API Key</label>
+    <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" />
+  </div>
+  <div class="cfg-row" style="margin-top:10px">
+    <label>Voice ID</label>
+    <input type="text" id="voiceSelect" value="gWaDC0oXAheKoZfljzuI" style="max-width:260px" />
+    <label>Speed</label>
+    <select id="speedSelect" style="max-width:80px">
+      <option value="1.0">1.0×</option>
+      <option value="1.1">1.1×</option>
+      <option value="1.2" selected>1.2×</option>
+    </select>
+  </div>
+  <p class="cfg-note">API key and voice ID are pre-filled. Speed is capped at 1.2× per ElevenLabs limits.</p>
+</div>
+
+<!-- Generate both in sequence -->
+<div class="play-both">
+  <p>Generate and play both clients back-to-back, or generate individually below.</p>
+  <button class="btn-primary" onclick="playBothSequence()">▶ Generate All &amp; Play in Sequence</button>
+</div>
+
+<!-- ─── ANUJ CHAKRAPANI ─────────────────────────────────────── -->
+<div class="client-card">
+  <div class="card-header">
+    <div class="name">Anuj Chakrapani</div>
+    <div class="sub">48yo male · Duo Second Scan · 12:00 PM</div>
+    <div class="scan-badge">Scan 2 · Jun 7, 2026</div>
+  </div>
+
+  <div class="flag-row">
+    <span class="flag red">BMD T-1.6 / Z-1.4</span>
+    <span class="flag red">ALMI 4th %ile AM</span>
+    <span class="flag orange">Elbow/Wrist Pain</span>
+    <span class="flag orange">Calories Too Low</span>
+    <span class="flag blue">VAT 90.8 cm²</span>
+    <span class="flag green">+34.6% Progression</span>
+  </div>
+
+  <div class="controls">
+    <button class="btn-primary" id="anuj-btnGenerate" onclick="generateClient('anuj')">▶ Generate &amp; Play</button>
+    <button class="btn-secondary" id="anuj-btnStop" onclick="stopClient('anuj')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="anuj-btnDownload" onclick="downloadClient('anuj')" disabled>↓ WAV</button>
+  </div>
+
+  <div class="progress-wrap"><div class="progress-bar" id="anuj-progressBar"></div></div>
+  <div class="progress-label" id="anuj-progressLabel">Ready</div>
+
+  <div class="sections" id="anuj-sectionList"></div>
+  <div class="status-msg" id="anuj-statusMsg"></div>
+</div>
+
+<!-- ─── SUNITHA TYAGAVALLI KRISHNASWAMY ───────────────────── -->
+<div class="client-card">
+  <div class="card-header">
+    <div class="name">Sunitha Tyagavalli Krishnaswamy</div>
+    <div class="sub">Anuj's partner · Duo Second Scan · 12:00 PM</div>
+    <div class="scan-badge">Scan 2 · Jun 7, 2026</div>
+  </div>
+
+  <div class="flag-row">
+    <span class="flag red">0% Consistency</span>
+    <span class="flag red">VAT 149.3 cm²</span>
+    <span class="flag orange">ALMI 13th %ile AM</span>
+    <span class="flag orange">No Everfit Program</span>
+    <span class="flag green">BMD Normal</span>
+  </div>
+
+  <div class="controls">
+    <button class="btn-primary" id="sunitha-btnGenerate" onclick="generateClient('sunitha')">▶ Generate &amp; Play</button>
+    <button class="btn-secondary" id="sunitha-btnStop" onclick="stopClient('sunitha')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="sunitha-btnDownload" onclick="downloadClient('sunitha')" disabled>↓ WAV</button>
+  </div>
+
+  <div class="progress-wrap"><div class="progress-bar" id="sunitha-progressBar"></div></div>
+  <div class="progress-label" id="sunitha-progressLabel">Ready</div>
+
+  <div class="sections" id="sunitha-sectionList"></div>
+  <div class="status-msg" id="sunitha-statusMsg"></div>
+</div>
+
+<script>
+const CLIENT_SECTIONS = {
+  anuj: [
+    {
+      icon: "👋", title: "Intro", desc: "Who he is and today's goal",
+      text: `Anuj Chakrapani is a 48-year-old male coming in for his second DEXA scan at 12 PM today. He joined Kalos in early April and completed a 4-week Foundation Phase 1 program at Rush Fitness — a machine-based setup designed around a right elbow and wrist limitation. His primary goals are to build lean tissue aggressively, reduce body fat toward 60 square centimeters of VAT, and improve long-term health and longevity. He trains 3 times per week. Today we find out if the program is moving the clinical markers that matter.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Lead with these wins before you touch anything else. First, his training volume progression is up 34.6 percent over the 4-week window — that is a meaningful jump in total workload capacity. Second, his lat pulldown went up 126 percent and his cable seated row went up nearly 60 percent — his back strength nearly doubled in 4 weeks. Third, his chest press improved 26 percent. Fourth, he logged 9 of 13 sessions at 69 percent consistency despite a trip to India and ongoing equipment confusion at his gym. He was working around real obstacles and still showed up. Start there.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `The biggest clinical concern going into this scan is bone mineral density. At Scan 1, his BMD was already at T-score negative 1.6 and Z-score negative 1.4. That puts him in osteopenia territory and is a meaningful flag for a 48-year-old male. This is the number you want to be prepared to discuss with context — it is addressable through resistance training load and adequate protein, both of which his program is targeting. Don't let this catch you off guard when the Scan 2 result comes up on screen. The secondary concern is his ALMI, which came in at the 4th age-matched percentile — critically low lean mass for his age and height. These two markers together mean lean mass building is the non-negotiable priority for the next block.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Form, injuries, what to watch",
+      text: `The primary movement flag is a right elbow and wrist limitation that has been active throughout the 4-week program. Because of this, his DB bench press dropped 44 percent — likely from pain-based substitution or load reduction rather than a true strength regression. His leg press also dropped 21.5 percent, which is worth checking — was this intentional, was it substituted away, or is there an underlying lower-body issue? The Rush Fitness gym setup has also been a source of confusion for him — equipment availability and setup unfamiliarity have added friction to his sessions. His intensity score was 74 out of 100 on Iris, trending up to 81.5 on June 3rd, so his effort in the sessions he completed is increasing. That's a good sign going into today.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `No major recovery flags are documented for Anuj. His 3-times-per-week schedule at Rush Fitness gives him adequate rest between sessions. The India travel earlier in the program window created some consistency gaps but he returned and got back on track. The main recovery concern is nutritional — he's averaging approximately 1,900 calories per day, which is likely too low for someone trying to build lean tissue while doing consistent resistance training. Protein is averaging 116 grams per day against a 121-gram target, which is close. But total energy may be suppressing his recovery capacity and limiting muscle protein synthesis. This is worth addressing directly in the post-scan conversation.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `No sensitive flags for Anuj — no body dysmorphia, no anxiety notes. He is motivated by health and longevity, not aesthetics per se, which means you can lead with clinical data directly. Start with the strength wins — 34 percent volume progression, back strength nearly doubled — before moving into the clinical conversation on bone density and lean mass percentile. The BMD result may come as a surprise; frame it as something the program is already addressing through progressive resistance training. He responded well to the program despite travel and equipment challenges, so there's a foundation of buy-in. The post-scan conversation should feel like calibration, not correction.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
+      text: `Four things to set coming out of today's scan. First, increase total caloric intake to at least 2,200 calories per day — protein is close at 116 grams, but total energy needs to come up to support lean tissue growth and recovery. Second, address the right elbow and wrist limitation directly — identify substitutions that protect the joint while still loading the pressing pattern. The 44 percent drop in DB bench is a flag that the current setup isn't working. Third, investigate the leg press regression — is this substituted away, is there pain, or is it a programming gap? Fourth, set a specific lean mass target for Scan 3. Given his ALMI is at the 4th percentile, moving it even a few points over the next 8-week block should be the anchor metric for everything downstream.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Anuj Chakrapani going into this scan. Consistency is 69 percent, training volume is up 34.6 percent, and back strength nearly doubled — these are real training wins. The clinical picture has two watchpoints: bone mineral density at T-score negative 1.6, and lean mass at the 4th age-matched percentile. Both are addressable with the program he's on, but the next block needs to come with more calories, a cleaner solution for the elbow limitation, and sharper consistency. Today's scan will tell us whether the training stimulus was enough to move the needle on lean tissue. Walk in energized — this is a 48-year-old man who showed up every week through travel and gym friction. That deserves acknowledgment.`
+    }
+  ],
+
+  sunitha: [
+    {
+      icon: "👋", title: "Intro", desc: "Who she is and today's goal",
+      text: `Sunitha Tyagavalli Krishnaswamy is coming in for her second DEXA scan at 12 PM today alongside her partner Anuj. She joined Kalos as part of a duo in early April. The most important context for today's scan is this: she traveled to Italy from May 11th through approximately May 29th, which consumed nearly the entire 4-week training window. She completed one session before leaving on May 10th, and then the program was effectively on hold. She's coming in to scan with practically a zero-training baseline since Scan 1. Whatever the numbers show today is a read on diet and natural body composition changes, not a trained response.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Lead with wins because there are real ones here even in a challenging window. First, she showed up. After 3 weeks in Italy and returning home, she came in for the second scan. That is not guaranteed — many people bail on the follow-up after a disrupted block. She didn't. Second, she completed her one pre-travel session on May 10th — she was ready to train before the trip took over. Third, her membership has been renewed for the next block — her partner Anuj paid, and she is committed to continuing. The first real training window starts now.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `The primary clinical concern for Sunitha is visceral adipose tissue. At Scan 1, her VAT came in at 149.3 square centimeters — that is elevated above the clinical threshold and is the most important risk metric on her profile. VAT is not purely a cosmetic concern; it is the fat depot most directly associated with metabolic and cardiovascular risk. Reducing VAT is the number one outcome target for the next training block. The second concern is her lean mass, which came in at the 13th age-matched percentile — low, and in need of a consistent resistance training stimulus she hasn't had yet. Both of these markers are movable, but they require actual training weeks on the board.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Form, injuries, what to watch",
+      text: `There are no documented injury flags for Sunitha — no joint pain, no movement limitations noted in Iris. However, she does not yet have her own Everfit program independent of Anuj. She is not currently linked to the Everfit system as an individual client, which means she hasn't had personalized programming running during this window. This is an operational gap to close immediately after today's scan. She needs her own program — training frequency, movement selection, and progression tracking designed for her numbers and her schedule. Without that infrastructure, consistency will remain low regardless of motivation.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `Recovery context for Sunitha is dominated by the Italy trip. Three weeks of international travel — time zone shifts, different diet, different activity patterns — followed by a scan the week she's back. There are no documented sleep or stress flags in Iris, but travel recovery is real. The good news is she's back, the scan is happening, and the next block starts fresh. There's no accumulated training fatigue to recover from — she's been resting for three weeks whether she planned to or not. That means the first few weeks of consistent training in the next block should feel manageable rather than piled onto existing load.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `No sensitive flags for Sunitha — no body dysmorphia, no anxiety notes documented. You can lead with data directly. The most important framing choice today is around the 0 percent consistency number. Do not let her feel like she failed the program. The Italy trip was a real and known constraint, not avoidance. Frame it as: this scan is the true baseline — we finally know what her body looks like before a real training block begins. Whatever the Scan 2 numbers show, the next 8 weeks are the first actual intervention. The VAT number and the lean mass percentile are what we're going to move, and now we have the infrastructure in place to do it. Walk in with that forward framing established.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
+      text: `Four priorities to establish coming out of today's scan. First and most important: set up her own Everfit program. She needs independent programming separate from Anuj — her own training days, her own exercise selection based on her numbers, her own progression tracking. Second, establish a nutrition baseline. She doesn't have a documented caloric or protein target yet. Given her VAT level and lean mass status, getting protein above body-weight in grams per day and moderating total caloric intake is the starting point. Third, set a concrete training frequency — 3 sessions per week minimum, in a format that can survive real life including the occasional travel week. Fourth, make VAT the anchor metric for Scan 3. Getting that number below 120 square centimeters would be a meaningful clinical win and gives her a concrete target beyond aesthetics.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Sunitha going into this scan. Italy travel defined this window — practically zero training stimulus since May 6th. The scan results reflect that reality. Her primary clinical watchpoints are VAT at 149.3 square centimeters — elevated and the top priority to reduce — and lean mass at the 13th age-matched percentile. Her BMD is normal, which is one fewer thing to manage. Today is about establishing a clean baseline after a disrupted window and walking out with a real plan: her own Everfit program, a protein target, a training frequency she can commit to, and VAT as the metric that anchors the next 8 weeks. This is the start, not the reckoning.`
+    }
+  ]
+};
+
+// ─── Engine ─────────────────────────────────────────────────────────────────
+
+const state = {};
+
+['anuj', 'sunitha'].forEach(id => {
+  state[id] = {
+    audioBuffers: new Array(CLIENT_SECTIONS[id].length).fill(null),
+    audioCtx: null,
+    currentSource: null,
+    currentSection: -1,
+    isPlaying: false,
+    generationDone: false
+  };
+  buildSections(id);
+});
+
+function buildSections(id) {
+  const list = document.getElementById(id + '-sectionList');
+  CLIENT_SECTIONS[id].forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'section-item';
+    div.id = id + '-sec-' + i;
+    div.innerHTML = `<span class="sec-icon">${s.icon}</span>
+      <div style="flex:1"><div class="sec-title">${s.title}</div>
+      <div class="sec-desc">${s.desc}</div></div>
+      <div class="sec-status" id="${id}-stat-${i}">—</div>`;
+    div.onclick = () => {
+      if (state[id].audioBuffers[i] && state[id].isPlaying) playFrom(id, i);
+    };
+    list.appendChild(div);
+  });
+}
+
+function setStatus(id, i, text, cls) {
+  const el = document.getElementById(id + '-sec-' + i);
+  const st = document.getElementById(id + '-stat-' + i);
+  el.className = 'section-item ' + (cls || '');
+  if (st) st.textContent = text;
+}
+
+function setActive(id, i) {
+  CLIENT_SECTIONS[id].forEach((_, idx) => {
+    const el = document.getElementById(id + '-sec-' + idx);
+    if (!el) return;
+    if (idx === i) {
+      el.className = 'section-item active' + (state[id].audioBuffers[idx] ? ' loaded' : '');
+    } else if (idx < i) {
+      el.className = 'section-item done loaded';
+      const st = document.getElementById(id + '-stat-' + idx);
+      if (st) st.textContent = '✓';
+    }
+  });
+  state[id].currentSection = i;
+  const total = CLIENT_SECTIONS[id].length;
+  const pct = i < 0 ? 0 : Math.round(((i + 1) / total) * 100);
+  document.getElementById(id + '-progressBar').style.width = (i < 0 ? 0 : pct) + '%';
+  document.getElementById(id + '-progressLabel').textContent =
+    i < 0 ? 'Ready' : `Playing section ${i + 1} of ${total}`;
+  if (i >= 0) document.getElementById(id + '-sec-' + i).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function fetchAudio(text) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const voiceId = document.getElementById('voiceSelect').value.trim();
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg'
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_turbo_v2_5',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.15, use_speaker_boost: true },
+      speed: Math.min(1.2, parseFloat(document.getElementById('speedSelect').value) || 1.2)
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(`ElevenLabs ${resp.status}: ${JSON.stringify(err)}`);
+  }
+  return await resp.arrayBuffer();
+}
+
+async function generateClient(id) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    document.getElementById(id + '-statusMsg').textContent = '⚠️ Paste your ElevenLabs API key in the config box above first.';
+    document.getElementById(id + '-statusMsg').className = 'status-msg error';
+    return;
+  }
+  const s = state[id];
+  document.getElementById(id + '-btnGenerate').disabled = true;
+  document.getElementById(id + '-btnStop').disabled = false;
+  document.getElementById(id + '-statusMsg').textContent = '';
+  document.getElementById(id + '-statusMsg').className = 'status-msg';
+  s.audioCtx = s.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  s.audioBuffers = new Array(CLIENT_SECTIONS[id].length).fill(null);
+  s.generationDone = false;
+  s.isPlaying = true;
+
+  CLIENT_SECTIONS[id].forEach((_, i) => setStatus(id, i, '⏳', ''));
+  playFrom(id, 0);
+
+  // Sequential generation — avoids rate limits
+  (async () => {
+    for (let i = 0; i < CLIENT_SECTIONS[id].length; i++) {
+      if (!s.isPlaying) break;
+      try {
+        const buf = await fetchAudio(CLIENT_SECTIONS[id][i].text);
+        const decoded = await s.audioCtx.decodeAudioData(buf);
+        s.audioBuffers[i] = decoded;
+        if (s.currentSection < i) setStatus(id, i, 'ready', 'loaded');
+      } catch (err) {
+        setStatus(id, i, '✗', '');
+        document.getElementById(id + '-statusMsg').className = 'status-msg error';
+        document.getElementById(id + '-statusMsg').textContent = `Error on section ${i + 1}: ${err.message}`;
+        s.isPlaying = false;
+        document.getElementById(id + '-btnGenerate').disabled = false;
+        document.getElementById(id + '-btnStop').disabled = true;
+        return;
+      }
+    }
+    if (s.isPlaying) {
+      s.generationDone = true;
+      document.getElementById(id + '-btnDownload').disabled = false;
+      document.getElementById(id + '-statusMsg').textContent = 'Generated ✓ — click WAV to download.';
+    }
+  })();
+
+  return new Promise(resolve => {
+    const check = setInterval(() => {
+      if (s.generationDone && !s.isPlaying) { clearInterval(check); resolve(); }
+      if (!s.isPlaying && !s.generationDone) { clearInterval(check); resolve(); }
+    }, 500);
+  });
+}
+
+function playFrom(id, i) {
+  const s = state[id];
+  if (s.currentSource) {
+    s.currentSource.onended = null; // prevent stale callback from racing
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  if (i >= CLIENT_SECTIONS[id].length) {
+    s.isPlaying = false;
+    document.getElementById(id + '-btnGenerate').disabled = false;
+    document.getElementById(id + '-btnStop').disabled = true;
+    document.getElementById(id + '-progressLabel').textContent = 'Done ✓ — regenerate or download WAV';
+    return;
+  }
+  setActive(id, i);
+  if (s.audioBuffers[i]) {
+    const src = s.audioCtx.createBufferSource();
+    src.buffer = s.audioBuffers[i];
+    src.connect(s.audioCtx.destination);
+    src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
+    src.start();
+    s.currentSource = src;
+  } else {
+    const check = setInterval(() => {
+      if (s.audioBuffers[i]) {
+        clearInterval(check);
+        if (s.isPlaying) playFrom(id, i);
+      }
+    }, 200);
+  }
+}
+
+function stopClient(id) {
+  const s = state[id];
+  s.isPlaying = false;
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  document.getElementById(id + '-btnGenerate').disabled = false;
+  document.getElementById(id + '-btnStop').disabled = true;
+}
+
+async function downloadClient(id) {
+  const s = state[id];
+  if (!s.generationDone) { alert('Still generating — wait for all sections to finish.'); return; }
+  const rendered = await Promise.all(s.audioBuffers.map(buf => {
+    const offline = new OfflineAudioContext(buf.numberOfChannels, buf.length, buf.sampleRate);
+    const src = offline.createBufferSource();
+    src.buffer = buf; src.connect(offline.destination); src.start();
+    return offline.startRendering();
+  }));
+  const totalLen = rendered.reduce((a, b) => a + b.length, 0);
+  const combined = s.audioCtx.createBuffer(1, totalLen, rendered[0].sampleRate);
+  let offset = 0;
+  rendered.forEach(buf => {
+    combined.copyToChannel(buf.getChannelData(0), 0, offset);
+    offset += buf.length;
+  });
+  const wavBuffer = toWav(combined);
+  const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = id + '-briefing-jun07.wav';
+  a.click();
+}
+
+async function playBothSequence() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) { alert('Paste your ElevenLabs API key in the config box first.'); return; }
+  stopClient('anuj'); stopClient('sunitha');
+  await generateClient('anuj');
+  await new Promise(r => setTimeout(r, 800));
+  generateClient('sunitha');
+}
+
+function toWav(buffer) {
+  const numCh = buffer.numberOfChannels;
+  const length = buffer.length * numCh * 2 + 44;
+  const out = new ArrayBuffer(length);
+  const view = new DataView(out);
+  const write = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+  write(0, 'RIFF'); view.setUint32(4, length - 8, true); write(8, 'WAVE');
+  write(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+  view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+  view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+  view.setUint16(34, 16, true); write(36, 'data'); view.setUint32(40, buffer.length * numCh * 2, true);
+  let offset = 44;
+  for (let i = 0; i < buffer.length; i++) {
+    for (let ch = 0; ch < numCh; ch++) {
+      const s = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  return out;
+}
+</script>
+</body>
+</html>
