@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scan Day Briefing · June 7, 2026</title>
+<title>Scan Day Briefing · Jun 7, 2026</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -42,7 +42,6 @@
   .flag.orange { background: rgba(230,81,0,0.15); color: #ff8a50; border: 1px solid rgba(230,81,0,0.25); }
   .flag.green { background: rgba(46,125,50,0.15); color: #66bb6a; border: 1px solid rgba(46,125,50,0.25); }
   .flag.blue { background: rgba(21,101,192,0.15); color: #64b5f6; border: 1px solid rgba(21,101,192,0.25); }
-  .flag.yellow { background: rgba(249,168,37,0.15); color: #ffcc02; border: 1px solid rgba(249,168,37,0.25); }
 
   .progress-wrap { background: #252530; border-radius: 6px; height: 5px;
     margin: 18px 0 6px; overflow: hidden; }
@@ -78,13 +77,17 @@
 
   .status-msg { font-size: 11px; color: #444; margin-top: 14px; text-align: center; line-height: 1.6; }
   .status-msg.error { color: #e05a5a; }
+
+  .play-both { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; max-width: 680px; width: 100%; text-align: center; margin-bottom: 20px; }
+  .play-both p { font-size: 12px; color: #555; margin-bottom: 14px; }
 </style>
 </head>
 <body>
 
 <div class="page-header">
-  <h1>Scan Day Briefing · June 7, 2026</h1>
-  <p>Ronnie Sanchez · 9:00 AM · Campbell · ElevenLabs TTS</p>
+  <h1>Scan Day Briefing · Jun 7, 2026</h1>
+  <p>Anuj Chakrapani &amp; Sunitha Tyagavalli Krishnaswamy · 12:00 PM · ElevenLabs TTS</p>
 </div>
 
 <!-- Shared API config -->
@@ -96,84 +99,151 @@
   </div>
   <div class="cfg-row" style="margin-top:10px">
     <label>Voice ID</label>
-    <input type="text" id="voiceSelect" value="gWaDC0oXAheKoZfljzuI" placeholder="ElevenLabs voice ID" style="font-family:monospace;letter-spacing:0.5px" />
-    <label style="margin-left:6px">Speed</label>
+    <input type="text" id="voiceSelect" value="gWaDC0oXAheKoZfljzuI" style="max-width:260px" />
+    <label>Speed</label>
     <select id="speedSelect" style="max-width:80px">
-      <option value="0.85">0.85×</option>
-      <option value="0.95">0.95×</option>
       <option value="1.0">1.0×</option>
       <option value="1.1">1.1×</option>
       <option value="1.2" selected>1.2×</option>
     </select>
   </div>
-  <div class="cfg-note">Snap voice pre-loaded. Paste a different voice ID to swap. Key stays in your browser tab only.</div>
+  <p class="cfg-note">API key and voice ID are pre-filled. Speed is capped at 1.2× per ElevenLabs limits.</p>
 </div>
 
-<!-- ===== RONNIE SANCHEZ ===== -->
-<div class="client-card" id="card-rs">
+<!-- Generate both in sequence -->
+<div class="play-both">
+  <p>Generate and play both clients back-to-back, or generate individually below.</p>
+  <button class="btn-primary" onclick="playBothSequence()">▶ Generate All &amp; Play in Sequence</button>
+</div>
+
+<!-- ─── ANUJ CHAKRAPANI ─────────────────────────────────────── -->
+<div class="client-card">
   <div class="card-header">
-    <div class="name">Ronnie Sanchez</div>
-    <div class="sub">Male · Lean Bulk · Push/Pull/Leg 3x/week</div>
-    <div class="scan-badge">📅 June 7, 2026 · 9:00 AM · Campbell</div>
+    <div class="name">Anuj Chakrapani</div>
+    <div class="sub">48yo male · Duo Second Scan · 12:00 PM</div>
+    <div class="scan-badge">Scan 2 · Jun 7, 2026</div>
   </div>
+
   <div class="flag-row">
-    <span class="flag green">ALMI 23rd %ile (up from 15th)</span>
-    <span class="flag green">Squat +14.3%</span>
-    <span class="flag green">Shoulder Press +23.0%</span>
-    <span class="flag green">Protein 211g/day</span>
-    <span class="flag orange">Consistency 79% (11/14)</span>
-    <span class="flag orange">3 missed end of block</span>
-    <span class="flag orange">Lat Pulldown -19.1%</span>
-    <span class="flag orange">DB Row -23–28%</span>
-    <span class="flag orange">Shoulder caution (bench)</span>
-    <span class="flag blue">60–90 min windows</span>
+    <span class="flag red">BMD T-1.6 / Z-1.4</span>
+    <span class="flag red">ALMI 4th %ile AM</span>
+    <span class="flag orange">Elbow/Wrist Pain</span>
+    <span class="flag orange">Calories Too Low</span>
+    <span class="flag blue">VAT 90.8 cm²</span>
+    <span class="flag green">+34.6% Progression</span>
   </div>
-  <div class="progress-wrap"><div class="progress-bar" id="rs-progressBar"></div></div>
-  <div class="progress-label" id="rs-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+
   <div class="controls">
-    <button class="btn-primary" id="rs-btnGenerate" onclick="generateClient('rs')">✨ Generate &amp; Play</button>
-    <button class="btn-secondary" id="rs-btnStop" onclick="stopClient('rs')" disabled>■ Stop</button>
-    <button class="btn-secondary" id="rs-btnDownload" onclick="downloadClient('rs')" disabled>⬇ Download WAV</button>
+    <button class="btn-primary" id="anuj-btnGenerate" onclick="generateClient('anuj')">▶ Generate &amp; Play</button>
+    <button class="btn-secondary" id="anuj-btnStop" onclick="stopClient('anuj')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="anuj-btnDownload" onclick="downloadClient('anuj')" disabled>↓ WAV</button>
   </div>
-  <div class="sections" id="rs-sectionList"></div>
-  <div class="status-msg" id="rs-statusMsg"></div>
+
+  <div class="progress-wrap"><div class="progress-bar" id="anuj-progressBar"></div></div>
+  <div class="progress-label" id="anuj-progressLabel">Ready</div>
+
+  <div class="sections" id="anuj-sectionList"></div>
+  <div class="status-msg" id="anuj-statusMsg"></div>
+</div>
+
+<!-- ─── SUNITHA TYAGAVALLI KRISHNASWAMY ───────────────────── -->
+<div class="client-card">
+  <div class="card-header">
+    <div class="name">Sunitha Tyagavalli Krishnaswamy</div>
+    <div class="sub">Anuj's partner · Duo Second Scan · 12:00 PM</div>
+    <div class="scan-badge">Scan 2 · Jun 7, 2026</div>
+  </div>
+
+  <div class="flag-row">
+    <span class="flag red">0% Consistency</span>
+    <span class="flag red">VAT 149.3 cm²</span>
+    <span class="flag orange">ALMI 13th %ile AM</span>
+    <span class="flag orange">No Everfit Program</span>
+    <span class="flag green">BMD Normal</span>
+  </div>
+
+  <div class="controls">
+    <button class="btn-primary" id="sunitha-btnGenerate" onclick="generateClient('sunitha')">▶ Generate &amp; Play</button>
+    <button class="btn-secondary" id="sunitha-btnStop" onclick="stopClient('sunitha')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="sunitha-btnDownload" onclick="downloadClient('sunitha')" disabled>↓ WAV</button>
+  </div>
+
+  <div class="progress-wrap"><div class="progress-bar" id="sunitha-progressBar"></div></div>
+  <div class="progress-label" id="sunitha-progressLabel">Ready</div>
+
+  <div class="sections" id="sunitha-sectionList"></div>
+  <div class="status-msg" id="sunitha-statusMsg"></div>
 </div>
 
 <script>
 const CLIENT_SECTIONS = {
-
-  rs: [
+  anuj: [
     {
       icon: "👋", title: "Intro", desc: "Who he is and today's goal",
-      text: `Ronnie Sanchez is coming in today for his second DEXA scan at 9:00 AM in Campbell. He is on a lean bulk program, training Push, Pull, and Leg three days per week. His Scan 1 baseline from April 30th showed a body weight of 167.5 pounds, body fat at 22.9 percent in the 41st age-matched percentile, and lean mass at 128 pounds. His appendicular lean mass index sat at the 23rd percentile at scan time — already up from the 15th percentile on his April 2nd baseline just four weeks earlier. Bone density Z-score is 0.6, solid. VAT at 37.7 square centimeters, well controlled. He came into this block wanting to build measurable lean tissue and confirm the lean bulk is working. Today we find out if the numbers moved. He rescheduled from Thursday June 4th to this Sunday after his son's graduation came up on June 5th. He moved it and showed up. That matters.`
+      text: `Anuj Chakrapani is a 48-year-old male coming in for his second DEXA scan at 12 PM today. He joined Kalos in early April and completed a 4-week Foundation Phase 1 program at Rush Fitness — a machine-based setup designed around a right elbow and wrist limitation. His primary goals are to build lean tissue aggressively, reduce body fat toward 60 square centimeters of VAT, and improve long-term health and longevity. He trains 3 times per week. Today we find out if the program is moving the clinical markers that matter.`
     },
     {
-      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, lead strong",
-      text: `Lead with the wins and be specific. His appendicular lean mass index climbed from the 15th percentile on his April 2nd baseline all the way to the 23rd percentile at Scan 1 on April 30th — measurable lean mass gain in just four weeks. That is the lean bulk working from day one. Long-term target is the 70th percentile, and the trajectory is already moving. On the strength side: his squat is up 14.3 percent, shoulder press up 23 percent, and barbell Romanian deadlift up 10.7 percent. Those are the compound lifts that drive body composition, and they are all trending in the right direction. Nutrition has been excellent — he is averaging 2,391 calories per day against a 2,430 target, and protein is at 211 grams per day, well above his 155 gram floor. That is the fuel that makes lean tissue gains possible. And even with three missed sessions at the end of the block during graduation week, he self-logged on June 3rd and June 5th. He did not go dark. He kept the thread.`
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Lead with these wins before you touch anything else. First, his training volume progression is up 34.6 percent over the 4-week window — that is a meaningful jump in total workload capacity. Second, his lat pulldown went up 126 percent and his cable seated row went up nearly 60 percent — his back strength nearly doubled in 4 weeks. Third, his chest press improved 26 percent. Fourth, he logged 9 of 13 sessions at 69 percent consistency despite a trip to India and ongoing equipment confusion at his gym. He was working around real obstacles and still showed up. Start there.`
     },
     {
-      icon: "⚠️", title: "Biggest Concern", desc: "Top flag with data",
-      text: `The biggest concern going into today is the pulling regression, and you should be ready to talk about it. His lat pulldown dropped 19.1 percent over the block, his dumbbell single-arm row dropped 23.3 percent, and his dumbbell bent-over row dropped 28.7 percent. Those are significant. The likely culprit is lower back fatigue taking over on the heavier rows — he flagged discomfort on dumbbell bent-over rows at 120 pounds, which suggests his lower back was doing the work instead of his lats. The fix involves two things: cueing on every row — ribs tucked, core braced, gaze down — and seriously considering a chest-supported row variation for the next block, which removes the lower back as a load-bearing variable entirely. Do not gloss over this. A 20 to 28 percent drop in pulling strength while pressing numbers are climbing is a real imbalance to course-correct before it becomes a shoulder or postural issue.`
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `The biggest clinical concern going into this scan is bone mineral density. At Scan 1, his BMD was already at T-score negative 1.6 and Z-score negative 1.4. That puts him in osteopenia territory and is a meaningful flag for a 48-year-old male. This is the number you want to be prepared to discuss with context — it is addressable through resistance training load and adequate protein, both of which his program is targeting. Don't let this catch you off guard when the Scan 2 result comes up on screen. The secondary concern is his ALMI, which came in at the 4th age-matched percentile — critically low lean mass for his age and height. These two markers together mean lean mass building is the non-negotiable priority for the next block.`
     },
     {
-      icon: "🦴", title: "Training and Movement", desc: "Limitations and what to watch",
-      text: `A few movement and training notes beyond the pulling issue. Bench press: he had an overreach attempt on May 8th, going 175 by 2 reps before his planned working sets. He has a shoulder to protect, so loading needs to stay conservative — 5 pound maximum jumps, no ego loading. Shoulder comfort is the guardrail on any pressing movement. Outside of that, his foundational pattern on the Push, Pull, Leg split is established. Sessions are, in his words, starting to feel more manageable. That is a good sign for long-term adherence. One tactical note on training windows: he works before 6 AM or between work and kid pickups. That means 60 to 90 minute sessions are the realistic maximum. The rule to reinforce is that if time is tight, he does 2 strong working sets on the main compound lifts and cuts accessories — not the other way around.`
+      icon: "🦴", title: "Training and Movement", desc: "Form, injuries, what to watch",
+      text: `The primary movement flag is a right elbow and wrist limitation that has been active throughout the 4-week program. Because of this, his DB bench press dropped 44 percent — likely from pain-based substitution or load reduction rather than a true strength regression. His leg press also dropped 21.5 percent, which is worth checking — was this intentional, was it substituted away, or is there an underlying lower-body issue? The Rush Fitness gym setup has also been a source of confusion for him — equipment availability and setup unfamiliarity have added friction to his sessions. His intensity score was 74 out of 100 on Iris, trending up to 81.5 on June 3rd, so his effort in the sessions he completed is increasing. That's a good sign going into today.`
     },
     {
-      icon: "😴", title: "Recovery Load", desc: "Sleep, stress, total picture",
-      text: `Recovery picture is generally solid for Ronnie. The three missed sessions at the end of the block — May 28th, May 30th, and June 1st — are directly attributable to graduation week, not to accumulated fatigue or overtraining. He self-corrected by logging on June 3rd and June 5th without being prompted. There are no reported injury flares beyond the lower back flag on heavy rows and the shoulder caution on bench. His training schedule — before 6 AM or between work and kid pickups — is a lifestyle recovery factor in its own right. The fact that he is consistently navigating that window and still showing up tells you the fatigue is manageable. Going into the next block, the question to ask is whether a two-session minimum fallback plan exists for weeks when life hits — so a graduation week or a busy stretch never becomes a full miss.`
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `No major recovery flags are documented for Anuj. His 3-times-per-week schedule at Rush Fitness gives him adequate rest between sessions. The India travel earlier in the program window created some consistency gaps but he returned and got back on track. The main recovery concern is nutritional — he's averaging approximately 1,900 calories per day, which is likely too low for someone trying to build lean tissue while doing consistent resistance training. Protein is averaging 116 grams per day against a 121-gram target, which is close. But total energy may be suppressing his recovery capacity and limiting muscle protein synthesis. This is worth addressing directly in the post-scan conversation.`
     },
     {
-      icon: "🧠", title: "Coaching Frame", desc: "Communication style and approach",
-      text: `No sensitive psychological flags for Ronnie. No body dysmorphia, anxiety, or special clinical framing needed. He is motivated by the numbers moving — ALMI percentile climbing, strength going up, the lean bulk confirmed by data. He responds well to direct, concrete feedback and specific percentages. The frame that will land best today is: the lean bulk is working, the key lifts are moving, and now we have a clear list of things to sharpen in the next block. When you get to the pulling regression, be matter-of-fact about it — lower back fatigue is mechanical, it is fixable, and here is exactly how we fix it. He is not someone who needs a lot of cushioning around hard data. Give him the number, name the cause, and hand him the solution. That is the coaching style that fits him.`
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `No sensitive flags for Anuj — no body dysmorphia, no anxiety notes. He is motivated by health and longevity, not aesthetics per se, which means you can lead with clinical data directly. Start with the strength wins — 34 percent volume progression, back strength nearly doubled — before moving into the clinical conversation on bone density and lean mass percentile. The BMD result may come as a surprise; frame it as something the program is already addressing through progressive resistance training. He responded well to the program despite travel and equipment challenges, so there's a foundation of buy-in. The post-scan conversation should feel like calibration, not correction.`
     },
     {
       icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
-      text: `Four priorities to lock in coming out of the scan today. First, fix the pull pattern: add chest-supported rows or incline bench dumbbell rows as the primary horizontal pull movement, and cue ribs tucked and core braced on every rep. The goal is to get the lat doing the work, not the lower back. Check in on how rows feel at the end of the first month of the new block. Second, protect the shoulder: keep bench press loading at 5 pound max jumps, and do not attempt any rep-max efforts until the shoulder has a clean two-month track record at current loads. Third, build a fallback plan for disrupted weeks: define a two-session minimum — even if one of them is a 30-minute home finisher with bodyweight and light dumbbells. That way graduation weeks or busy stretches have a floor. Fourth, track ALMI percentile trajectory: his long-term target is the 70th percentile. Mark where today's scan lands and set a checkpoint at the three-month scan.`
+      text: `Four things to set coming out of today's scan. First, increase total caloric intake to at least 2,200 calories per day — protein is close at 116 grams, but total energy needs to come up to support lean tissue growth and recovery. Second, address the right elbow and wrist limitation directly — identify substitutions that protect the joint while still loading the pressing pattern. The 44 percent drop in DB bench is a flag that the current setup isn't working. Third, investigate the leg press regression — is this substituted away, is there pain, or is it a programming gap? Fourth, set a specific lean mass target for Scan 3. Given his ALMI is at the 4th percentile, moving it even a few points over the next 8-week block should be the anchor metric for everything downstream.`
     },
     {
       icon: "✅", title: "Closing", desc: "Bottom line going in",
-      text: `Bottom line on Ronnie going into this scan. ALMI already climbed from the 15th to the 23rd percentile in four weeks before today. Squat up 14.3 percent, shoulder press up 23 percent, nutrition on point at 211 grams of protein per day. He rescheduled from Thursday, showed up Sunday, and self-logged on June 3rd and 5th even during graduation week. The lean bulk is confirmed working. The thing to sharpen is pulling: lat pulldown and rows all down 20 to 28 percent, lower back fatigue is the culprit, chest-supported rows are the fix. Lead with the ALMI win, name the pulling regression clearly, set the chest-supported row swap, and reinforce the two-session minimum for disrupted weeks. He is building something real. Today's scan is data, not a verdict.`
+      text: `Bottom line on Anuj Chakrapani going into this scan. Consistency is 69 percent, training volume is up 34.6 percent, and back strength nearly doubled — these are real training wins. The clinical picture has two watchpoints: bone mineral density at T-score negative 1.6, and lean mass at the 4th age-matched percentile. Both are addressable with the program he's on, but the next block needs to come with more calories, a cleaner solution for the elbow limitation, and sharper consistency. Today's scan will tell us whether the training stimulus was enough to move the needle on lean tissue. Walk in energized — this is a 48-year-old man who showed up every week through travel and gym friction. That deserves acknowledgment.`
+    }
+  ],
+
+  sunitha: [
+    {
+      icon: "👋", title: "Intro", desc: "Who she is and today's goal",
+      text: `Sunitha Tyagavalli Krishnaswamy is coming in for her second DEXA scan at 12 PM today alongside her partner Anuj. She joined Kalos as part of a duo in early April. The most important context for today's scan is this: she traveled to Italy from May 11th through approximately May 29th, which consumed nearly the entire 4-week training window. She completed one session before leaving on May 10th, and then the program was effectively on hold. She's coming in to scan with practically a zero-training baseline since Scan 1. Whatever the numbers show today is a read on diet and natural body composition changes, not a trained response.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, not vague praise",
+      text: `Lead with wins because there are real ones here even in a challenging window. First, she showed up. After 3 weeks in Italy and returning home, she came in for the second scan. That is not guaranteed — many people bail on the follow-up after a disrupted block. She didn't. Second, she completed her one pre-travel session on May 10th — she was ready to train before the trip took over. Third, her membership has been renewed for the next block — her partner Anuj paid, and she is committed to continuing. The first real training window starts now.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top clinical flag with data",
+      text: `The primary clinical concern for Sunitha is visceral adipose tissue. At Scan 1, her VAT came in at 149.3 square centimeters — that is elevated above the clinical threshold and is the most important risk metric on her profile. VAT is not purely a cosmetic concern; it is the fat depot most directly associated with metabolic and cardiovascular risk. Reducing VAT is the number one outcome target for the next training block. The second concern is her lean mass, which came in at the 13th age-matched percentile — low, and in need of a consistent resistance training stimulus she hasn't had yet. Both of these markers are movable, but they require actual training weeks on the board.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Form, injuries, what to watch",
+      text: `There are no documented injury flags for Sunitha — no joint pain, no movement limitations noted in Iris. However, she does not yet have her own Everfit program independent of Anuj. She is not currently linked to the Everfit system as an individual client, which means she hasn't had personalized programming running during this window. This is an operational gap to close immediately after today's scan. She needs her own program — training frequency, movement selection, and progression tracking designed for her numbers and her schedule. Without that infrastructure, consistency will remain low regardless of motivation.`
+    },
+    {
+      icon: "😴", title: "Recovery and Load", desc: "Sleep, stress, total load picture",
+      text: `Recovery context for Sunitha is dominated by the Italy trip. Three weeks of international travel — time zone shifts, different diet, different activity patterns — followed by a scan the week she's back. There are no documented sleep or stress flags in Iris, but travel recovery is real. The good news is she's back, the scan is happening, and the next block starts fresh. There's no accumulated training fatigue to recover from — she's been resting for three weeks whether she planned to or not. That means the first few weeks of consistent training in the next block should feel manageable rather than piled onto existing load.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and priorities",
+      text: `No sensitive flags for Sunitha — no body dysmorphia, no anxiety notes documented. You can lead with data directly. The most important framing choice today is around the 0 percent consistency number. Do not let her feel like she failed the program. The Italy trip was a real and known constraint, not avoidance. Frame it as: this scan is the true baseline — we finally know what her body looks like before a real training block begins. Whatever the Scan 2 numbers show, the next 8 weeks are the first actual intervention. The VAT number and the lean mass percentile are what we're going to move, and now we have the infrastructure in place to do it. Walk in with that forward framing established.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
+      text: `Four priorities to establish coming out of today's scan. First and most important: set up her own Everfit program. She needs independent programming separate from Anuj — her own training days, her own exercise selection based on her numbers, her own progression tracking. Second, establish a nutrition baseline. She doesn't have a documented caloric or protein target yet. Given her VAT level and lean mass status, getting protein above body-weight in grams per day and moderating total caloric intake is the starting point. Third, set a concrete training frequency — 3 sessions per week minimum, in a format that can survive real life including the occasional travel week. Fourth, make VAT the anchor metric for Scan 3. Getting that number below 120 square centimeters would be a meaningful clinical win and gives her a concrete target beyond aesthetics.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Sunitha going into this scan. Italy travel defined this window — practically zero training stimulus since May 6th. The scan results reflect that reality. Her primary clinical watchpoints are VAT at 149.3 square centimeters — elevated and the top priority to reduce — and lean mass at the 13th age-matched percentile. Her BMD is normal, which is one fewer thing to manage. Today is about establishing a clean baseline after a disrupted window and walking out with a real plan: her own Everfit program, a protein target, a training frequency she can commit to, and VAT as the metric that anchors the next 8 weeks. This is the start, not the reckoning.`
     }
   ]
 };
@@ -182,7 +252,7 @@ const CLIENT_SECTIONS = {
 
 const state = {};
 
-['rs'].forEach(id => {
+['anuj', 'sunitha'].forEach(id => {
   state[id] = {
     audioBuffers: new Array(CLIENT_SECTIONS[id].length).fill(null),
     audioCtx: null,
@@ -241,7 +311,7 @@ function setActive(id, i) {
 
 async function fetchAudio(text) {
   const apiKey = document.getElementById('apiKey').value.trim();
-  const voiceId = document.getElementById('voiceSelect').value;
+  const voiceId = document.getElementById('voiceSelect').value.trim();
   const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
     method: 'POST',
     headers: {
@@ -283,7 +353,7 @@ async function generateClient(id) {
   CLIENT_SECTIONS[id].forEach((_, i) => setStatus(id, i, '⏳', ''));
   playFrom(id, 0);
 
-  // Sequential generation — avoids ElevenLabs rate limits
+  // Sequential generation — avoids rate limits
   (async () => {
     for (let i = 0; i < CLIENT_SECTIONS[id].length; i++) {
       if (!s.isPlaying) break;
@@ -305,7 +375,7 @@ async function generateClient(id) {
     if (s.isPlaying) {
       s.generationDone = true;
       document.getElementById(id + '-btnDownload').disabled = false;
-      document.getElementById(id + '-statusMsg').textContent = 'Generated ✓ — re-generate to use a different voice.';
+      document.getElementById(id + '-statusMsg').textContent = 'Generated ✓ — click WAV to download.';
     }
   })();
 
@@ -320,7 +390,7 @@ async function generateClient(id) {
 function playFrom(id, i) {
   const s = state[id];
   if (s.currentSource) {
-    s.currentSource.onended = null;
+    s.currentSource.onended = null; // prevent stale callback from racing
     try { s.currentSource.stop(); } catch(e) {}
     s.currentSource = null;
   }
@@ -381,8 +451,17 @@ async function downloadClient(id) {
   const blob = new Blob([wavBuffer], { type: 'audio/wav' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'ronnie-sanchez-briefing-jun07.wav';
+  a.download = id + '-briefing-jun07.wav';
   a.click();
+}
+
+async function playBothSequence() {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) { alert('Paste your ElevenLabs API key in the config box first.'); return; }
+  stopClient('anuj'); stopClient('sunitha');
+  await generateClient('anuj');
+  await new Promise(r => setTimeout(r, 800));
+  generateClient('sunitha');
 }
 
 function toWav(buffer) {
