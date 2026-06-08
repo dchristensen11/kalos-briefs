@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing · June 8, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f13; color: #e8e8ee; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 28px 16px 48px; }
+
+  .page-header { text-align: center; margin-bottom: 24px; }
+  .page-header h1 { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .page-header p { font-size: 12px; color: #555; margin-top: 4px; }
+
+  .shared-config { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; width: 100%; max-width: 680px; margin-bottom: 20px; }
+  .shared-config h3 { font-size: 12px; color: #555; letter-spacing: 0.6px;
+    text-transform: uppercase; margin-bottom: 12px; }
+  .cfg-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .cfg-row label { font-size: 11px; color: #666; white-space: nowrap; }
+  .cfg-row input, .cfg-row select {
+    background: #252530; border: 1px solid #333; color: #ccc;
+    font-size: 12px; padding: 8px 10px; border-radius: 8px; flex: 1; min-width: 0; }
+  .cfg-row input { font-family: monospace; letter-spacing: 0.5px; }
+  .cfg-note { font-size: 11px; color: #444; margin-top: 10px; line-height: 1.5; }
+
+  .generate-all-wrap { width: 100%; max-width: 680px; margin-bottom: 20px; text-align: center; }
+  .btn-generate-all { background: linear-gradient(135deg, #22c55e, #16a34a);
+    border: none; border-radius: 50px; color: #fff; font-size: 14px; font-weight: 700;
+    padding: 13px 32px; cursor: pointer; transition: opacity 0.15s; }
+  .btn-generate-all:hover { opacity: 0.9; }
+  .btn-generate-all:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .client-card { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 16px;
+    padding: 28px 32px; max-width: 680px; width: 100%;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4); margin-bottom: 20px; }
+  .card-header { margin-bottom: 20px; }
+  .name { font-size: 20px; font-weight: 700; color: #fff; }
+  .sub { font-size: 12px; color: #777; margin-top: 3px; }
+  .scan-badge { display: inline-block; background: #1e3a5f; color: #5ab4ff;
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 7px; }
+
+  .flag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .flag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 12px; }
+  .flag.red { background: rgba(198,40,40,0.15); color: #ef5350; border: 1px solid rgba(198,40,40,0.25); }
+  .flag.orange { background: rgba(230,81,0,0.15); color: #ff8a50; border: 1px solid rgba(230,81,0,0.25); }
+  .flag.green { background: rgba(46,125,50,0.15); color: #66bb6a; border: 1px solid rgba(46,125,50,0.25); }
+  .flag.blue { background: rgba(21,101,192,0.15); color: #64b5f6; border: 1px solid rgba(21,101,192,0.25); }
+  .flag.yellow { background: rgba(249,168,37,0.15); color: #ffcc02; border: 1px solid rgba(249,168,37,0.25); }
+
+  .progress-wrap { background: #252530; border-radius: 6px; height: 5px;
+    margin: 18px 0 6px; overflow: hidden; }
+  .progress-bar { background: linear-gradient(90deg, #5ab4ff, #7c6fff);
+    height: 100%; width: 0%; border-radius: 6px; transition: width 0.5s ease; }
+  .progress-label { font-size: 11px; color: #444; margin-bottom: 18px; }
+
+  .controls { display: flex; gap: 10px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+  .btn-primary { background: linear-gradient(135deg, #4a9eff, #7c6fff);
+    border: none; border-radius: 50px; color: #fff; font-size: 13px; font-weight: 600;
+    padding: 11px 22px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+  .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: #252530; border: 1px solid #333; border-radius: 50px;
+    color: #999; font-size: 12px; font-weight: 500; padding: 10px 18px; cursor: pointer; }
+  .btn-secondary:hover { background: #2e2e3d; }
+  .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .sections { display: flex; flex-direction: column; gap: 3px; }
+  .section-item { display: flex; align-items: flex-start; gap: 11px;
+    padding: 9px 12px; border-radius: 8px; font-size: 12px;
+    color: #555; border: 1px solid transparent; transition: all 0.2s; cursor: default; }
+  .section-item.active { background: #1c2640; border-color: #2a4070; color: #c8daff; }
+  .section-item.done { color: #3a6b3a; }
+  .section-item.loaded { cursor: pointer; }
+  .section-item.loaded:hover { background: #1f1f2a; color: #999; }
+  .sec-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .sec-title { font-weight: 600; }
+  .sec-desc { font-size: 10px; margin-top: 2px; opacity: 0.7; }
+  .sec-status { margin-left: auto; font-size: 10px; color: #333; flex-shrink: 0; margin-top: 2px; }
+  .section-item.active .sec-status { color: #5ab4ff; }
+  .section-item.done .sec-status { color: #3d7a3d; }
+
+  .status-msg { font-size: 11px; color: #444; margin-top: 14px; text-align: center; line-height: 1.6; }
+  .status-msg.error { color: #e05a5a; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Scan Day Briefing · June 8, 2026</h1>
+  <p>Oleksii Kuchaiev &amp; Joanna Pineda · 8:15 AM · 9:45 AM · ElevenLabs TTS</p>
+</div>
+
+<div class="shared-config">
+  <h3>ElevenLabs Config</h3>
+  <div class="cfg-row">
+    <label>API Key</label>
+    <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" />
+  </div>
+  <div class="cfg-row" style="margin-top:10px">
+    <label>Voice ID</label>
+    <input type="text" id="voiceSelect" value="gWaDC0oXAheKoZfljzuI" placeholder="ElevenLabs voice ID" style="font-family:monospace;letter-spacing:0.5px" />
+    <label style="margin-left:6px">Speed</label>
+    <select id="speedSelect" style="max-width:80px">
+      <option value="0.85">0.85×</option>
+      <option value="0.95">0.95×</option>
+      <option value="1.0">1.0×</option>
+      <option value="1.1">1.1×</option>
+      <option value="1.2">1.2×</option>
+      <option value="1.25" selected>1.25×</option>
+    </select>
+  </div>
+  <div class="cfg-note">Snap voice pre-loaded. Paste a different voice ID to swap. Key stays in your browser tab only.</div>
+</div>
+
+<div class="generate-all-wrap">
+  <button class="btn-generate-all" id="btnGenerateAll" onclick="generateAll()">▶ Generate All &amp; Play in Sequence</button>
+</div>
+
+<!-- ===== OLEKSII KUCHAIEV ===== -->
+<div class="client-card" id="card-ok">
+  <div class="card-header">
+    <div class="name">Oleksii Kuchaiev</div>
+    <div class="sub">Male · 42 · Prime 3-Day Full Body P2 · City Sports Club Westgate</div>
+    <div class="scan-badge">📅 June 8, 2026 · 8:15 AM · First scan</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Split Squat +40.3%</span>
+    <span class="flag green">Hip Thrust +28.3%</span>
+    <span class="flag green">SL RDL +34.1%</span>
+    <span class="flag green">Incline Bench +21.5%</span>
+    <span class="flag green">14 PBs Jun 1</span>
+    <span class="flag green">85% consistency</span>
+    <span class="flag red">Protein 94g/day (target 150g)</span>
+    <span class="flag red">Bench −4.7%</span>
+    <span class="flag orange">Intensity 73.4/100</span>
+    <span class="flag blue">Knee: V-squat / Smith</span>
+    <span class="flag blue">Deadlift learning phase</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="ok-progressBar"></div></div>
+  <div class="progress-label" id="ok-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="ok-btnGenerate" onclick="generateClient('ok')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="ok-btnStop" onclick="stopClient('ok')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="ok-btnDownload" onclick="downloadClient('ok')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="ok-sectionList"></div>
+  <div class="status-msg" id="ok-statusMsg"></div>
+</div>
+
+<!-- ===== JOANNA PINEDA ===== -->
+<div class="client-card" id="card-jp">
+  <div class="card-header">
+    <div class="name">Joanna Pineda</div>
+    <div class="sub">Female · 32 · Female Recomp 3-Day P2 · Planet Fitness (24-hour)</div>
+    <div class="scan-badge">📅 June 8, 2026 · 9:45 AM · Second scan</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">93% consistency (13/14)</span>
+    <span class="flag green">DB Bench 45lb×12 — target hit</span>
+    <span class="flag green">Hack Squat 125lb×9 — target exceeded</span>
+    <span class="flag green">14 PBs Jun 3+6</span>
+    <span class="flag green">Intensity 86.9/100 (last 5 sessions)</span>
+    <span class="flag red">Protein 78g/day (target 130g)</span>
+    <span class="flag red">Calories 1168/day avg</span>
+    <span class="flag orange">SA Row 20lb×12 (target 25lb×10)</span>
+    <span class="flag orange">VAT 164.9 cm² — high risk</span>
+    <span class="flag blue">Running 2×/week · Oct half marathon</span>
+    <span class="flag blue">ALMI 27th %ile baseline</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="jp-progressBar"></div></div>
+  <div class="progress-label" id="jp-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="jp-btnGenerate" onclick="generateClient('jp')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="jp-btnStop" onclick="stopClient('jp')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="jp-btnDownload" onclick="downloadClient('jp')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="jp-sectionList"></div>
+  <div class="status-msg" id="jp-statusMsg"></div>
+</div>
+
+<script>
+const CLIENT_SECTIONS = {
+
+  ok: [
+    {
+      icon: "👋", title: "Intro", desc: "Who he is and today's goal",
+      text: `Oleksii Kuchaiev, 42 years old, coming in at 8:15 AM for his second DEXA scan. He has been running the Prime 3-Day Full Body Phase 2 program out of City Sports Club Westgate. His Scan 1 on May 7th showed body weight at 172.1 pounds, body fat at 25.6 percent in the 62nd age-matched percentile, and lean mass at 118.71 pounds. His appendicular lean mass index was in the 44th age-matched percentile at baseline. VAT at 110.2 square centimeters — elevated, on the watch list. BMD is 1.169 with a T-score of minus 0.3 and a Z-score of minus 0.3 — normal range but worth monitoring over time. He trained yesterday, June 7th, the day before this scan. Primary goals are building lean mass, bringing his ALMI percentile up, and reducing VAT. Today we find out if the Phase 2 block delivered.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, lead strong",
+      text: `Lead with the lower body strength story — it is genuinely impressive. His split squat is up 40.3 percent over the block. Hip thrust up 28.3 percent. Single-leg Romanian deadlift up 34.1 percent. Incline bench up 21.5 percent. Those are not small gains. On June 1st he hit 14 personal bests in a single session — that is someone who built consistently throughout the block and peaked at exactly the right time. He also trained June 7th, the day before this scan, which tells you recovery is solid and his body can handle the load. The lower body trio — split squat plus 40, hip thrust plus 28, SL Romanian deadlift plus 34 — is exactly the stimulus that drives lean mass in the legs, glutes, and trunk. If those strength gains translated, you should see it in the regional lean numbers today. Lead with these. They are real, they are specific, and they represent a meaningful block of work.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top flag with concrete data",
+      text: `Two red flags to be prepared for today. First and most important: protein. He has been averaging 94 grams per day against a 150-gram target — 56 grams short every single day. Over a 4-week block, that is a significant gap in the building material for muscle protein synthesis. If lean mass gains are lower than expected today, protein availability is the primary variable to point to. The fix is concrete: protein anchors at every meal, and given his IBS and FODMAP sensitivities — apples and grapes are his triggers — he needs to work around those with compliant sources: eggs and egg whites in the morning, chicken or fish at lunch, Greek yogurt or cottage cheese as a snack, protein shake on training days. Second flag: bench press dropped 4.7 percent while everything lower body was climbing. That regression against the lower body gains tells you something split in his upper body stimulus or recovery. Whether it is programming balance, shoulder positioning, or energy availability needs to be explored today.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Limitations and what to watch",
+      text: `A few movement notes for Oleksii. Knee comfort: he substitutes V-squat and Smith machine for barbell back squat, and that has been working without reported flares. No new knee issues this block. He is in the process of learning conventional deadlift — treat this as a skill-building phase, not a loading phase. Video review and form check every two weeks is the right coaching intervention, not weight jumps. The movement pattern needs to be clean and consistent before load increases. On intensity: his average was 73.4 out of 100 across the block, which sits in the moderate-to-lower end for a hypertrophy program. The 14 personal bests on June 1st suggest he absolutely has the capacity. The question to explore is whether intensity was low during the earlier weeks and ramped toward the end, or whether scheduling and time constraints kept sessions conservative throughout. Either answer shapes how you program the next block.`
+    },
+    {
+      icon: "😴", title: "Recovery Load", desc: "Sleep, stress, total picture",
+      text: `Recovery picture looks generally solid for Oleksii. He hit 85 percent consistency across the block — approximately 10 to 11 of his scheduled sessions. He trained yesterday, which means he is coming into this scan with a fresh session in his body. That matters for reading the data: hydration and muscle glycogen from a workout the day before can shift the lean mass reading slightly upward and body fat slightly lower than a true fasted baseline. Worth keeping in mind when you look at the numbers today. IBS management is an ongoing factor — FODMAP compliance affects energy availability and can create gut-driven fatigue on high-symptom days. If there were flare days during the block, those would suppress training quality without showing up in the session log. Worth asking. Outside of those variables, no injury flares were reported, and the fact that he could train the day before a scan is a positive recovery signal.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Communication style and approach",
+      text: `No sensitive psychological flags for Oleksii. No body dysmorphia, clinical anxiety, or special framing required. He is data-oriented and responds well to specific numbers, percentiles, and concrete action items. The win narrative that will land for him is the lower body strength story: split squat plus 40 percent, hip thrust plus 28, SL Romanian deadlift plus 34. Lead with those, reference the ALMI percentile if it moved today, then pivot directly to the protein gap as the clearest lever for the next block. At 42, muscle retention and growth both require intentional, consistent nutritional effort — the frame that fits him is that the training stimulus is clearly working and the next unlock is tightening protein to match the effort he is already putting in. Keep it technical, direct, and action-oriented. He does not need cushioning around hard data. He needs the number, the cause, and the solution.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
+      text: `Four things to lock in coming out of this scan. First, close the protein gap: move from 94 grams to 150 grams per day. Build a FODMAP-compliant protocol — eggs and whites in the morning, chicken or fish at lunch, Greek yogurt or cottage cheese as a snack, protein shake on training days. The goal is to make 150 grams feel automatic, not effortful. Second, address the bench regression: assess shoulder positioning and range of motion on the next session. Consider switching to dumbbell incline press as the primary push movement for 4 to 6 weeks to rebuild the upper body pressing pattern before returning to barbell. Third, deadlift as a form project: no loading jumps until the hip hinge is clean and repeatable. Video review every two weeks. Loading comes later. Fourth, monitor VAT trajectory: at 110 square centimeters he is elevated. If the scan today shows VAT has climbed, the lever is one Zone 2 session per week and tightening caloric quality. If it dropped, keep the current approach and set a 100-centimeter target for the next scan.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Oleksii going into this scan. The lower body strength block worked — split squat plus 40 percent, hip thrust plus 28, SL Romanian deadlift plus 34, 14 personal bests on June 1st. He trained yesterday so lean mass may read slightly elevated today — acknowledge that if a number surprises him. The gap to address is protein: 94 grams versus a 150-gram target, and that is the primary lever for the next block. The bench regression needs unpacking — programming balance or shoulder positioning, one of those two. Lead with the lower body wins and the ALMI percentile if it moved. Name the protein gap clearly and hand him the protocol. Set deadlift as a form project, not a loading project. He has the training capacity. The stimulus is working. Now the inputs need to match.`
+    }
+  ],
+
+  jp: [
+    {
+      icon: "👋", title: "Intro", desc: "Who she is and today's goal",
+      text: `Joanna Pineda, 32-year-old female, coming in at 9:45 AM for her second DEXA scan. She has been running the Female Recomp 3-Day Phase 2 program out of Planet Fitness on Aborn and White — 24-hour access, which means she often trains late at night. Her Scan 1 on May 7th showed body weight at 167.8 pounds, body fat at 42.2 percent in the 81st age-matched percentile, lean mass at 88.25 pounds, and VAT at 164.9 square centimeters — that is the high-risk category for metabolic disease, and it is the number that matters most today given her family history of diabetes. Her appendicular lean mass index was in the 27th age-matched percentile. Bone density is excellent — T-score plus 0.9, Z-score plus 0.7. She is also running twice a week training for an October half marathon. Her primary goals are fat loss, VAT reduction, and managing her diabetes risk through body composition change. Today we find out what 30 days of consistent work produced.`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Specific numbers, lead strong",
+      text: `Lead strong with the consistency and the strength numbers, because both are genuinely impressive. She completed 13 of 14 sessions in the last 30 days — 93 percent — and she trained June 6th, the night before this scan. Late night at Planet Fitness, the evening before her scan appointment. That is commitment. On the lifts: she hit her DB bench target. The goal was 45 pounds for 10 reps. She did 45 pounds for 12 reps on set one. She exceeded it. Hack Squat: the target was 115 pounds for 10 reps. She opened at 125 pounds for 9 reps on set one — heavier than the target — then did 115 for 10. She went beyond the goal before hitting the goal. Hip Thrust: 110 pounds for 8 reps across 2 sets, then 100 pounds for 8. She also hit 14 personal bests spread across her June 3rd upper body session and her June 6th lower body session — 6 on June 3rd, 8 on June 6th. Her average intensity in the last 5 sessions was 86.9 out of 100. She pushed harder as the scan approached. That is exactly the right trajectory.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Top flag with concrete data",
+      text: `Two red flags, and the first one is the single biggest lever in her entire program. Protein: she is averaging 78 grams per day against a 130-gram target — 52 grams short every single day. With goals of building muscle mass and reducing VAT, under-eating protein is the primary brake on her results. The Fairlife shake anchor is working — that is established in her routine and a genuine win. What she needs on top of that is three more high-protein meals per day to close the gap. The second red flag is total calories: 1,168 per day average across 24 days of food logs. That is severely under-fueled, especially for someone training late at night. Under-eating at this level limits muscle protein synthesis, slows recovery, and can actually stall VAT reduction because chronically low energy intake signals the body to preserve fat mass. The active protocol — banana and protein shake before training, shake and fast carbs after — needs to be reinforced as non-negotiable. Pre and post-workout nutrition is not optional for someone training at this intake level.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Limitations and what to watch",
+      text: `On the lift targets: two of three were hit or exceeded. DB bench hit. Hack Squat exceeded. The one that did not move: single-arm row. The target was 25 pounds for 10 reps. All 4 sets on June 3rd stayed at 20 pounds for 12 reps. The coaching cue that unlocks this is: pull with the elbow, not the shoulder, and keep the torso still throughout the rep. If the torso is rotating to get the weight up, the lat is not doing the work. For the next session, bump sets 1 and 2 to 25 pounds and keep the cue active — elbow drives back, body stays square. A few movement notes: hip thrust is machine only — no barbell hip thrust. Back squat is on a gradual load increase, no jumps. And she is running twice a week for the October half marathon, which means lower body fatigue is accumulating across running days and leg sessions. That interaction needs to be accounted for in the next block — strength sessions on non-run days where possible, and monitoring lower body fatigue as running volume increases toward the race.`
+    },
+    {
+      icon: "😴", title: "Recovery Load", desc: "Sleep, stress, total picture",
+      text: `The late-night Planet Fitness sessions are a defining feature of Joanna's training life. She trained June 6th in the evening — the night before this scan. That means she has a workout in her body right now, which can affect the DEXA reading: lean tissue hydration and muscle glycogen may read slightly higher than a true rested baseline, and fat mass may read slightly lower. Worth acknowledging if any number surprises her today. Her overall load picture is 93 percent training consistency with twice-weekly running on top. She is not under-training. If anything, with 1,168 calories per day as her average fuel supply, recovery nutrition is the limiting factor — not effort. The scan today will tell us whether her body adapted to the stimulus despite the caloric deficit, or whether the deficit held back lean mass changes. Either reading is informative and actionable. There are no injury flares or structural flags reported.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Sensitive context and communication style",
+      text: `No body dysmorphia or clinical anxiety flags noted for Joanna. But the framing of today's results matters because the health stakes are personal and concrete. VAT at 164.9 square centimeters puts her in the clinically high-risk category for metabolic disease, and her family history of diabetes makes that real, not abstract. The frame that will resonate with her is clinical and data-driven — this scan is health data that tells us exactly what is working and what to adjust, not a verdict on how she looks. Lead with what the VAT number means for her actual metabolic health. When you talk about protein and calories — and you should talk about both directly — connect the nutrition to the VAT outcome: more protein and adequate caloric intake is how we change the body composition that drives her diabetes risk. The reframe that matters for her is this: eating more of the right things is the intervention that reduces VAT over time. Restriction does not accelerate it.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to set today",
+      text: `Four priorities coming out of this scan. First, protein to 130 grams per day: build a daily anchor protocol that makes it automatic. Fairlife shake is one. Two dedicated protein meals — chicken, fish, eggs, Greek yogurt. One protein-forward snack. The goal is to make 130 grams feel routine, not effortful. Second, pre and post-workout nutrition as non-negotiable: banana and protein shake before every training session, shake and fast carbs after. Every late-night session. No exceptions. This is the recovery protocol that makes 93 percent consistency actually produce body composition results. Third, single-arm row to 25 pounds: bump sets 1 and 2 on the first session of the next block. Cue: elbow driving back, torso square, no rotation. Check in at end of month one. Fourth, half marathon integration: as October approaches, running volume will increase. Build a plan now for how strength sessions and longer runs coexist — prioritize strength on non-run days, monitor leg fatigue, and protect the lower body from accumulated overuse. The half marathon and the recomp goals are compatible if programmed carefully.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Joanna going into this scan. 93 percent consistency. Trained the night before. Two lift targets hit, one exceeded. She pushed harder in the last 5 sessions — 86.9 average intensity — right into the scan date. The two numbers that matter most today are VAT and lean mass. Does VAT drop from 164.9? Does the strength work translate into measurable lean mass gain? She has a late-night workout in her body so lean may read slightly high and fat slightly low — acknowledge that if a number surprises her. The clear lever for the next block is protein: 78 grams per day needs to become 130. That is the single change that will unlock muscle gain, VAT reduction, and better energy for training. Lead with the wins — 13 of 14 sessions, bench target exceeded, Hack Squat exceeded — frame the VAT number as health data, and hand her the protein protocol as the concrete next action. She put in the work. Today's scan is the measurement, not the verdict.`
+    }
+  ]
+};
+
+// ─── Engine ─────────────────────────────────────────────────────────────────
+
+const state = {};
+
+['ok', 'jp'].forEach(id => {
+  state[id] = {
+    audioBuffers: new Array(CLIENT_SECTIONS[id].length).fill(null),
+    audioCtx: null,
+    currentSource: null,
+    currentSection: -1,
+    isPlaying: false,
+    generationDone: false
+  };
+  buildSections(id);
+});
+
+function buildSections(id) {
+  const list = document.getElementById(id + '-sectionList');
+  CLIENT_SECTIONS[id].forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'section-item';
+    div.id = id + '-sec-' + i;
+    div.innerHTML = `<span class="sec-icon">${s.icon}</span>
+      <div style="flex:1"><div class="sec-title">${s.title}</div>
+      <div class="sec-desc">${s.desc}</div></div>
+      <div class="sec-status" id="${id}-stat-${i}">—</div>`;
+    div.onclick = () => {
+      if (state[id].audioBuffers[i] && state[id].isPlaying) playFrom(id, i);
+    };
+    list.appendChild(div);
+  });
+}
+
+function setStatus(id, i, text, cls) {
+  const el = document.getElementById(id + '-sec-' + i);
+  const st = document.getElementById(id + '-stat-' + i);
+  el.className = 'section-item ' + (cls || '');
+  if (st) st.textContent = text;
+}
+
+function setActive(id, i) {
+  CLIENT_SECTIONS[id].forEach((_, idx) => {
+    const el = document.getElementById(id + '-sec-' + idx);
+    if (!el) return;
+    if (idx === i) {
+      el.className = 'section-item active' + (state[id].audioBuffers[idx] ? ' loaded' : '');
+    } else if (idx < i) {
+      el.className = 'section-item done loaded';
+      const st = document.getElementById(id + '-stat-' + idx);
+      if (st) st.textContent = '✓';
+    }
+  });
+  state[id].currentSection = i;
+  const total = CLIENT_SECTIONS[id].length;
+  const pct = i < 0 ? 0 : Math.round(((i + 1) / total) * 100);
+  document.getElementById(id + '-progressBar').style.width = (i < 0 ? 0 : pct) + '%';
+  document.getElementById(id + '-progressLabel').textContent =
+    i < 0 ? 'Ready' : `Playing section ${i + 1} of ${total}`;
+  if (i >= 0) document.getElementById(id + '-sec-' + i).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function fetchAudio(text) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const voiceId = document.getElementById('voiceSelect').value;
+  const speed = Math.min(1.25, parseFloat(document.getElementById('speedSelect').value) || 1.25);
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg'
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_turbo_v2_5',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.15, use_speaker_boost: true },
+      speed
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(`ElevenLabs ${resp.status}: ${JSON.stringify(err)}`);
+  }
+  return await resp.arrayBuffer();
+}
+
+async function generateClient(id) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    document.getElementById(id + '-statusMsg').textContent = '⚠️ Paste your ElevenLabs API key in the config box above first.';
+    document.getElementById(id + '-statusMsg').className = 'status-msg error';
+    return;
+  }
+  const s = state[id];
+  document.getElementById(id + '-btnGenerate').disabled = true;
+  document.getElementById(id + '-btnStop').disabled = false;
+  document.getElementById(id + '-statusMsg').textContent = '';
+  document.getElementById(id + '-statusMsg').className = 'status-msg';
+  s.audioCtx = s.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  s.audioBuffers = new Array(CLIENT_SECTIONS[id].length).fill(null);
+  s.generationDone = false;
+  s.isPlaying = true;
+
+  CLIENT_SECTIONS[id].forEach((_, i) => setStatus(id, i, '⏳', ''));
+  playFrom(id, 0);
+
+  for (let i = 0; i < CLIENT_SECTIONS[id].length; i++) {
+    if (!s.isPlaying) break;
+    try {
+      const buf = await fetchAudio(CLIENT_SECTIONS[id][i].text);
+      const decoded = await s.audioCtx.decodeAudioData(buf);
+      s.audioBuffers[i] = decoded;
+      if (s.currentSection < i) setStatus(id, i, 'ready', 'loaded');
+    } catch (err) {
+      setStatus(id, i, '✗', '');
+      document.getElementById(id + '-statusMsg').className = 'status-msg error';
+      document.getElementById(id + '-statusMsg').textContent = `Error on section ${i + 1}: ${err.message}`;
+      s.isPlaying = false;
+      document.getElementById(id + '-btnGenerate').disabled = false;
+      document.getElementById(id + '-btnStop').disabled = true;
+      return;
+    }
+  }
+  if (s.isPlaying) {
+    s.generationDone = true;
+    document.getElementById(id + '-btnDownload').disabled = false;
+    document.getElementById(id + '-statusMsg').textContent = 'Generated ✓ — re-generate to use a different voice.';
+  }
+}
+
+function playFrom(id, i) {
+  const s = state[id];
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  if (i >= CLIENT_SECTIONS[id].length) {
+    s.isPlaying = false;
+    document.getElementById(id + '-btnGenerate').disabled = false;
+    document.getElementById(id + '-btnStop').disabled = true;
+    document.getElementById(id + '-progressLabel').textContent = 'Done ✓ — regenerate or download WAV';
+    return;
+  }
+  setActive(id, i);
+  if (s.audioBuffers[i]) {
+    const src = s.audioCtx.createBufferSource();
+    src.buffer = s.audioBuffers[i];
+    src.connect(s.audioCtx.destination);
+    src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
+    src.start();
+    s.currentSource = src;
+  } else {
+    const check = setInterval(() => {
+      if (s.audioBuffers[i]) {
+        clearInterval(check);
+        if (s.isPlaying) playFrom(id, i);
+      }
+    }, 200);
+  }
+}
+
+function stopClient(id) {
+  const s = state[id];
+  s.isPlaying = false;
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  document.getElementById(id + '-btnGenerate').disabled = false;
+  document.getElementById(id + '-btnStop').disabled = true;
+}
+
+async function generateAll() {
+  document.getElementById('btnGenerateAll').disabled = true;
+  await generateClient('ok');
+  if (state['ok'].generationDone) {
+    await generateClient('jp');
+  }
+  document.getElementById('btnGenerateAll').disabled = false;
+}
+
+async function downloadClient(id) {
+  const s = state[id];
+  if (!s.generationDone) { alert('Still generating — wait for all sections to finish.'); return; }
+  const rendered = await Promise.all(s.audioBuffers.map(buf => {
+    const offline = new OfflineAudioContext(buf.numberOfChannels, buf.length, buf.sampleRate);
+    const src = offline.createBufferSource();
+    src.buffer = buf; src.connect(offline.destination); src.start();
+    return offline.startRendering();
+  }));
+  const totalLen = rendered.reduce((a, b) => a + b.length, 0);
+  const combined = s.audioCtx.createBuffer(1, totalLen, rendered[0].sampleRate);
+  let offset = 0;
+  rendered.forEach(buf => {
+    combined.copyToChannel(buf.getChannelData(0), 0, offset);
+    offset += buf.length;
+  });
+  const wavBuffer = toWav(combined);
+  const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const names = { ok: 'oleksii-kuchaiev', jp: 'joanna-pineda' };
+  a.download = `${names[id]}-briefing-jun08.wav`;
+  a.click();
+}
+
+function toWav(buffer) {
+  const numCh = buffer.numberOfChannels;
+  const length = buffer.length * numCh * 2 + 44;
+  const out = new ArrayBuffer(length);
+  const view = new DataView(out);
+  const write = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+  write(0, 'RIFF'); view.setUint32(4, length - 8, true); write(8, 'WAVE');
+  write(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+  view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+  view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+  view.setUint16(34, 16, true); write(36, 'data'); view.setUint32(40, buffer.length * numCh * 2, true);
+  let offset = 44;
+  for (let i = 0; i < buffer.length; i++) {
+    for (let ch = 0; ch < numCh; ch++) {
+      const s = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  return out;
+}
+</script>
+</body>
+</html>
