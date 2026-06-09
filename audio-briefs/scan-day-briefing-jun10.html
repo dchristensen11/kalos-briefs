@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing · June 10, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f13; color: #e8e8ee; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 28px 16px 48px; }
+
+  .page-header { text-align: center; margin-bottom: 24px; }
+  .page-header h1 { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .page-header p { font-size: 12px; color: #555; margin-top: 4px; }
+
+  .shared-config { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; width: 100%; max-width: 680px; margin-bottom: 20px; }
+  .shared-config h3 { font-size: 12px; color: #555; letter-spacing: 0.6px;
+    text-transform: uppercase; margin-bottom: 12px; }
+  .cfg-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .cfg-row label { font-size: 11px; color: #666; white-space: nowrap; }
+  .cfg-row input, .cfg-row select {
+    background: #252530; border: 1px solid #333; color: #ccc;
+    font-size: 12px; padding: 8px 10px; border-radius: 8px; flex: 1; min-width: 0; }
+  .cfg-row input { font-family: monospace; letter-spacing: 0.5px; }
+  .cfg-note { font-size: 11px; color: #444; margin-top: 10px; line-height: 1.5; }
+
+  .generate-all-wrap { width: 100%; max-width: 680px; margin-bottom: 20px; text-align: center; }
+  .btn-generate-all { background: linear-gradient(135deg, #22c55e, #16a34a);
+    border: none; border-radius: 50px; color: #fff; font-size: 14px; font-weight: 700;
+    padding: 13px 32px; cursor: pointer; transition: opacity 0.15s; }
+  .btn-generate-all:hover { opacity: 0.9; }
+  .btn-generate-all:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .client-card { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 16px;
+    padding: 28px 32px; max-width: 680px; width: 100%;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4); margin-bottom: 20px; }
+  .card-header { margin-bottom: 20px; }
+  .name { font-size: 20px; font-weight: 700; color: #fff; }
+  .sub { font-size: 12px; color: #777; margin-top: 3px; }
+  .scan-badge { display: inline-block; background: #1e3a5f; color: #5ab4ff;
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 7px; }
+
+  .flag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .flag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 12px; }
+  .flag.red { background: rgba(198,40,40,0.15); color: #ef5350; border: 1px solid rgba(198,40,40,0.25); }
+  .flag.orange { background: rgba(230,81,0,0.15); color: #ff8a50; border: 1px solid rgba(230,81,0,0.25); }
+  .flag.green { background: rgba(46,125,50,0.15); color: #66bb6a; border: 1px solid rgba(46,125,50,0.25); }
+  .flag.blue { background: rgba(21,101,192,0.15); color: #64b5f6; border: 1px solid rgba(21,101,192,0.25); }
+  .flag.yellow { background: rgba(249,168,37,0.15); color: #ffcc02; border: 1px solid rgba(249,168,37,0.25); }
+
+  .progress-wrap { background: #252530; border-radius: 6px; height: 5px;
+    margin: 18px 0 6px; overflow: hidden; }
+  .progress-bar { background: linear-gradient(90deg, #5ab4ff, #7c6fff);
+    height: 100%; width: 0%; border-radius: 6px; transition: width 0.5s ease; }
+  .progress-label { font-size: 11px; color: #444; margin-bottom: 18px; }
+
+  .controls { display: flex; gap: 10px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+  .btn-primary { background: linear-gradient(135deg, #4a9eff, #7c6fff);
+    border: none; border-radius: 50px; color: #fff; font-size: 13px; font-weight: 600;
+    padding: 11px 22px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+  .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: #252530; border: 1px solid #333; border-radius: 50px;
+    color: #999; font-size: 12px; font-weight: 500; padding: 10px 18px; cursor: pointer; }
+  .btn-secondary:hover { background: #2e2e3d; }
+  .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .sections { display: flex; flex-direction: column; gap: 3px; }
+  .section-item { display: flex; align-items: flex-start; gap: 11px;
+    padding: 9px 12px; border-radius: 8px; font-size: 12px;
+    color: #555; border: 1px solid transparent; transition: all 0.2s; cursor: default; }
+  .section-item.active { background: #1c2640; border-color: #2a4070; color: #c8daff; }
+  .section-item.done { color: #3a6b3a; }
+  .section-item.loaded { cursor: pointer; }
+  .section-item.loaded:hover { background: #1f1f2a; color: #999; }
+  .sec-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .sec-title { font-weight: 600; }
+  .sec-desc { font-size: 10px; margin-top: 2px; opacity: 0.7; }
+  .sec-status { margin-left: auto; font-size: 10px; color: #333; flex-shrink: 0; margin-top: 2px; }
+  .section-item.active .sec-status { color: #5ab4ff; }
+  .section-item.done .sec-status { color: #3d7a3d; }
+
+  .status-msg { font-size: 11px; color: #444; margin-top: 14px; text-align: center; line-height: 1.6; }
+  .status-msg.error { color: #e05a5a; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Scan Day Briefing · June 10, 2026</h1>
+  <p>Jas Sohal · 10:00 AM · Campbell · ElevenLabs TTS</p>
+</div>
+
+<div class="shared-config">
+  <h3>ElevenLabs Config</h3>
+  <div class="cfg-row">
+    <label>API Key</label>
+    <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" />
+  </div>
+  <div class="cfg-row" style="margin-top:10px">
+    <label>Voice ID</label>
+    <input type="text" id="voiceSelect" value="gWaDC0oXAheKoZfljzuI" placeholder="ElevenLabs voice ID" style="font-family:monospace;letter-spacing:0.5px" />
+    <label style="margin-left:6px">Speed</label>
+    <select id="speedSelect" style="max-width:80px">
+      <option value="0.85">0.85×</option>
+      <option value="0.95">0.95×</option>
+      <option value="1.0">1.0×</option>
+      <option value="1.1">1.1×</option>
+      <option value="1.2">1.2×</option>
+      <option value="1.25" selected>1.25×</option>
+    </select>
+  </div>
+  <div class="cfg-note">Snap voice pre-loaded. Paste a different voice ID to swap. Key stays in your browser tab only.</div>
+</div>
+
+<div class="generate-all-wrap">
+  <button class="btn-generate-all" id="btnGenerateAll" onclick="generateAll()">▶ Generate &amp; Play</button>
+</div>
+
+<!-- ===== JAS SOHAL ===== -->
+<div class="client-card" id="card-jas">
+  <div class="card-header">
+    <div class="name">Jas Sohal</div>
+    <div class="sub">Other · Post-Stroke · Functional Strength 3-Day P1 · Home Gym + 24HF Campbell</div>
+    <div class="scan-badge">📅 June 10, 2026 · 10:00 AM · Second Scan · Campbell</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">5-mile walks · improving stiffness</span>
+    <span class="flag green">CGM + keto — glucose in range, no meds</span>
+    <span class="flag red">Protein 59g/day (target 128g)</span>
+    <span class="flag red">Calories ~567/day avg</span>
+    <span class="flag orange">4/18 sessions (22%) — no session since May 30</span>
+    <span class="flag orange">Post-stroke left-side limitations</span>
+    <span class="flag blue">VAT 201.8 cm² — headline metric</span>
+    <span class="flag blue">ALMI 37th %ile AM baseline</span>
+    <span class="flag blue">No loaded lift baseline yet</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="jas-progressBar"></div></div>
+  <div class="progress-label" id="jas-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="jas-btnGenerate" onclick="generateClient('jas')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="jas-btnStop" onclick="stopClient('jas')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="jas-btnDownload" onclick="downloadClient('jas')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="jas-sectionList"></div>
+  <div class="status-msg" id="jas-statusMsg"></div>
+</div>
+
+<script>
+const CLIENT_SECTIONS = {
+
+  jas: [
+    {
+      icon: "👋", title: "Intro", desc: "Who they are and today's goal",
+      text: `Jas Sohal, coming in at 10:00 AM for their second DEXA scan at the Campbell location. Scan 1 was April 30th, 2026. Jas identifies as Other. They have been running the Functional Strength 3-Day Phase 1 program across a home gym with dumbbells, an all-in-one cable machine, and a landmine setup, plus 24 Hour Fitness in Campbell which has a sauna. Primary goals are fat loss, visceral fat reduction, and regaining strength and movement quality after a January 2024 stroke, while managing glucose without medication using a CGM and a ketogenic approach. From Scan 1 we have partial data: body fat 39.2 percent, VAT at 201.8 square centimeters which is in the very high risk category and is the number one metric to move today. ALMI was in the 37th age-matched percentile, long-term target is the 70th. BMD Z-score is plus 1.2, which is excellent. Weight, height, lean and fat mass in pounds, and regional breakdown are still pending from the April 30th PDF, which was not uploaded to Drive. You may need to pull the printed report at the facility today to fill those cells in after the scan. This is a second scan read on a first block. The headline question is: did VAT move?`
+    },
+    {
+      icon: "🏆", title: "Wins — Lead With These", desc: "Lead strong — metabolic wins are real",
+      text: `The wins here are metabolic and behavioral, not lifting numbers — and that is completely valid. Lead with them because they are real and they represent consistent daily effort. First: walking. Jas has been logging 5-mile walks with reported improvement in left-side stiffness since the stroke. That is meaningful aerobic output and it is the primary mechanism maintaining metabolic rate and cardiovascular health through a block where the gym sessions did not happen. Five miles per day is not a consolation prize. It is real work. Second: CGM and ketogenic management. Glucose is in range without medication. That is the primary longevity goal and it is working. Managing glucose at that level on a low-carb approach while recovering from a stroke is a real achievement. Third: the warm-up protocol is in place. Sauna 5 to 10 minutes, then full-body stretch, then conservative lifting. For someone managing spasticity post-stroke, that is not a preference — it is a functional preparation tool. Jas built that structure and uses it. Fourth: they came back for Scan 2. After a challenging block, a 3-day water fast in May, a stroke recovery protocol, and a missed June, they showed up to measure. That reflects real investment in the long game.`
+    },
+    {
+      icon: "⚠️", title: "Biggest Concern", desc: "Protein gap is the headline lever",
+      text: `The biggest concern is nutrition, and it is significant. Iris food journal data shows Jas averaging 59 grams of protein per day against a 128-gram target, across 4 logged days. Calories are averaging around 567 per day. On a ketogenic plus water fasting pattern, protein intake this low is almost certainly causing lean mass loss, not just slowing gain. And VAT does not respond well to severe caloric restriction either — the metabolic stress of chronically low intake can make visceral fat more resistant to reduction by triggering cortisol and preservation responses. This is the single highest-leverage conversation today. The good news is that it is a clear, fixable variable — it is not a training problem, it is not a movement problem, it is not a stroke problem. It is a protein sourcing problem. The second concern is training consistency: 4 of 18 assigned sessions completed over the full block, which is 22 percent program-to-date. In the last 30 days that drops to 8 percent. No session since May 30th. Every June session was missed. There is no loaded lift data in the system. We do not have a strength baseline yet. That is not a moral failure — the barriers are real — but it means today's scan is reading primarily walking and metabolic management, not a resistance training block.`
+    },
+    {
+      icon: "🦴", title: "Training and Movement", desc: "Stroke protocol and what to watch",
+      text: `The post-stroke left-side limitations are the defining training constraint for Jas. From the January 2024 stroke, there is ongoing left-side spasticity, shin soreness, and gait asymmetry. The exercise selection rules are established and clear: no reverse lunges, no dips, no hanging movements. For any movement that creates pain or stiffness, the protocol is to try the designated substitution first — and if that also hurts, skip the movement entirely and add a set to the flanking exercises instead. Never push through left-side pain. The sauna warm-up matters clinically. Heat before movement improves spasticity and prepares the left side for loading. Cold exposure does the opposite and can worsen it. This is why the sauna-to-stretch-to-lift sequence is not optional for Jas's program. The baseline lift targets that were sent on June 5th are still the working targets: dumbbell bench or landmine press at 3 sets of 10 with 1 to 2 reps in reserve, goblet or box squat at 3 sets of 10 full range, and 1-arm dumbbell row at 10 reps per side with attention to matching the left side to the right. These targets were framed as discovery baselines, not pre-scan benchmarks — the point is to get any number in the log from the next session.`
+    },
+    {
+      icon: "😴", title: "Recovery Load", desc: "Low fuel, real output — the full picture",
+      text: `Recovery for Jas is operating under compounding load. Calories at approximately 567 per day do not give the body enough substrate for tissue repair or consistent energy output. A 3-day water fast in early May disrupted what would have been a key training week. The ongoing left-side spasticity from the stroke adds a recovery tax that does not show up in any session log but is there every day. Against all of that, the 5-mile daily walks represent real sustained output. The fact that left-side stiffness is improving on those walks — not staying the same, improving — is a recovery signal, not just a fitness signal. The CGM data supports metabolic stability: if glucose is consistently in range without medication, the system is adapting even under significant dietary restriction. Steps were very low on June 8th at around 413, which is likely a lower-activity day ahead of the scan rather than a trend. No scale bodyweight has been logged in Everfit during this block — we have no weight data to work with from their side. The scan today fills that gap.`
+    },
+    {
+      icon: "🧠", title: "Coaching Frame", desc: "Lead with wins — protein is the pivot",
+      text: `No body dysmorphia or clinical anxiety flags are noted in Iris for Jas. Sex is listed as Other. The most important framing principle for this conversation is: lead with metabolic wins, not training numbers. Training adherence is low. There is no loaded lift data. Any conversation that opens with consistency or missed sessions will immediately put Jas on the defensive about something they already know. Lead instead with what is working. The walking is working. The CGM is working. The glucose management is working. The commitment to come back and measure is working. The body composition results today are the first data point on an ongoing effort that started when Jas decided to take control of their health post-stroke. That is the frame. Then pivot to protein — not as a criticism, but as the highest-leverage action available. The reframe to use is this: you are already doing the hard things. You are managing your glucose, you are walking, you built a warm-up protocol that works for your body. Adding protein is not starting over — it is adding the one input that makes everything else compound. Protein builds the muscle that lowers visceral fat. It provides the energy for the sessions. It is the mechanism behind every goal on the board.`
+    },
+    {
+      icon: "🎯", title: "Next Block Priorities", desc: "3–4 concrete things to lock in today",
+      text: `Three to four things to lock in coming out of this scan. First, protein to 128 grams per day. Build a keto-compatible anchor protocol that does not require daily calorie counting. The simplest structure: two protein anchors per day at roughly 40 grams each — eggs with protein powder in the morning, chicken or fish in the evening — plus a third smaller source like Greek yogurt or another shake. Creatine is already in the protocol at 5 grams per day; make sure it is happening consistently because it matters for both muscle retention and cognitive function post-stroke. Second, reset the session minimum. Pull back from 3 days per week to 2 sessions per week as the actual non-negotiable, with a clear fallback option: a 3-exercise home circuit that takes 20 minutes and uses the equipment they already have. Reducing friction is the lever here, not adding expectations. Third, log real weights in the first session back. Whatever weight Jas uses for DB bench, goblet squat, and 1-arm row in the first post-scan session, those numbers get recorded. Even 5 pounds. Especially 5 pounds. That is the baseline this program has been waiting for. Fourth, pull the April 30th DEXA PDF. Either from today's facility for the comparison printout, or by following up with the scan location. Weight, height, lean and fat mass in pounds, and regional data are still missing from the Iris record.`
+    },
+    {
+      icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Jas going into this scan. VAT 201.8 square centimeters is the headline. Everything today is about whether that number moved. The mechanism that drives VAT down is the combination Jas is already using — low-carb eating, walking, metabolic monitoring — but it needs protein support to avoid being a net muscle-loss block at the same time. The walking is working. The CGM is working. Those are real. The scan reads the first block: limited lifting, very low caloric intake, but consistent walking and metabolic monitoring. Whatever the result shows, it is informative. If VAT dropped, the walking and metabolic approach is producing results even without the gym work. If VAT stayed or increased, the variables to adjust are protein and session consistency — both are clear and actionable. Lead with the wins. Frame the result as data, not a verdict. Then hand Jas two things to leave with: a protein target of 128 grams per day with a keto-compatible protocol to hit it, and a minimum of 2 sessions per week as the reset standard. That is the brief. Walk in ready.`
+    }
+  ]
+};
+
+// ─── Engine ─────────────────────────────────────────────────────────────────
+
+const state = {};
+
+['jas'].forEach(id => {
+  state[id] = {
+    audioBuffers: new Array(CLIENT_SECTIONS[id].length).fill(null),
+    audioCtx: null,
+    currentSource: null,
+    currentSection: -1,
+    isPlaying: false,
+    generationDone: false
+  };
+  buildSections(id);
+});
+
+function buildSections(id) {
+  const list = document.getElementById(id + '-sectionList');
+  CLIENT_SECTIONS[id].forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'section-item';
+    div.id = id + '-sec-' + i;
+    div.innerHTML = `<span class="sec-icon">${s.icon}</span>
+      <div style="flex:1"><div class="sec-title">${s.title}</div>
+      <div class="sec-desc">${s.desc}</div></div>
+      <div class="sec-status" id="${id}-stat-${i}">—</div>`;
+    div.onclick = () => {
+      if (state[id].audioBuffers[i] && state[id].isPlaying) playFrom(id, i);
+    };
+    list.appendChild(div);
+  });
+}
+
+function setStatus(id, i, text, cls) {
+  const el = document.getElementById(id + '-sec-' + i);
+  const st = document.getElementById(id + '-stat-' + i);
+  el.className = 'section-item ' + (cls || '');
+  if (st) st.textContent = text;
+}
+
+function setActive(id, i) {
+  CLIENT_SECTIONS[id].forEach((_, idx) => {
+    const el = document.getElementById(id + '-sec-' + idx);
+    if (!el) return;
+    if (idx === i) {
+      el.className = 'section-item active' + (state[id].audioBuffers[idx] ? ' loaded' : '');
+    } else if (idx < i) {
+      el.className = 'section-item done loaded';
+      const st = document.getElementById(id + '-stat-' + idx);
+      if (st) st.textContent = '✓';
+    }
+  });
+  state[id].currentSection = i;
+  const total = CLIENT_SECTIONS[id].length;
+  const pct = i < 0 ? 0 : Math.round(((i + 1) / total) * 100);
+  document.getElementById(id + '-progressBar').style.width = (i < 0 ? 0 : pct) + '%';
+  document.getElementById(id + '-progressLabel').textContent =
+    i < 0 ? 'Ready' : `Playing section ${i + 1} of ${total}`;
+  if (i >= 0) document.getElementById(id + '-sec-' + i).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function fetchAudio(text) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const voiceId = document.getElementById('voiceSelect').value;
+  const speed = Math.min(1.25, parseFloat(document.getElementById('speedSelect').value) || 1.25);
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg'
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_turbo_v2_5',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0.15, use_speaker_boost: true },
+      speed
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(`ElevenLabs ${resp.status}: ${JSON.stringify(err)}`);
+  }
+  return await resp.arrayBuffer();
+}
+
+async function generateClient(id) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    document.getElementById(id + '-statusMsg').textContent = '⚠️ Paste your ElevenLabs API key in the config box above first.';
+    document.getElementById(id + '-statusMsg').className = 'status-msg error';
+    return;
+  }
+  const s = state[id];
+  document.getElementById(id + '-btnGenerate').disabled = true;
+  document.getElementById(id + '-btnStop').disabled = false;
+  document.getElementById(id + '-statusMsg').textContent = '';
+  document.getElementById(id + '-statusMsg').className = 'status-msg';
+  s.audioCtx = s.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  s.audioBuffers = new Array(CLIENT_SECTIONS[id].length).fill(null);
+  s.generationDone = false;
+  s.isPlaying = true;
+
+  CLIENT_SECTIONS[id].forEach((_, i) => setStatus(id, i, '⏳', ''));
+  playFrom(id, 0);
+
+  for (let i = 0; i < CLIENT_SECTIONS[id].length; i++) {
+    if (!s.isPlaying) break;
+    try {
+      const buf = await fetchAudio(CLIENT_SECTIONS[id][i].text);
+      const decoded = await s.audioCtx.decodeAudioData(buf);
+      s.audioBuffers[i] = decoded;
+      if (s.currentSection < i) setStatus(id, i, 'ready', 'loaded');
+    } catch (err) {
+      setStatus(id, i, '✗', '');
+      document.getElementById(id + '-statusMsg').className = 'status-msg error';
+      document.getElementById(id + '-statusMsg').textContent = `Error on section ${i + 1}: ${err.message}`;
+      s.isPlaying = false;
+      document.getElementById(id + '-btnGenerate').disabled = false;
+      document.getElementById(id + '-btnStop').disabled = true;
+      return;
+    }
+  }
+  if (s.isPlaying) {
+    s.generationDone = true;
+    document.getElementById(id + '-btnDownload').disabled = false;
+    document.getElementById(id + '-statusMsg').textContent = 'Generated ✓ — re-generate to use a different voice.';
+  }
+}
+
+function playFrom(id, i) {
+  const s = state[id];
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  if (i >= CLIENT_SECTIONS[id].length) {
+    s.isPlaying = false;
+    document.getElementById(id + '-btnGenerate').disabled = false;
+    document.getElementById(id + '-btnStop').disabled = true;
+    document.getElementById(id + '-progressLabel').textContent = 'Done ✓ — regenerate or download WAV';
+    return;
+  }
+  setActive(id, i);
+  if (s.audioBuffers[i]) {
+    const src = s.audioCtx.createBufferSource();
+    src.buffer = s.audioBuffers[i];
+    src.connect(s.audioCtx.destination);
+    src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
+    src.start();
+    s.currentSource = src;
+  } else {
+    const check = setInterval(() => {
+      if (s.audioBuffers[i]) {
+        clearInterval(check);
+        if (s.isPlaying) playFrom(id, i);
+      }
+    }, 200);
+  }
+}
+
+function stopClient(id) {
+  const s = state[id];
+  s.isPlaying = false;
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  document.getElementById(id + '-btnGenerate').disabled = false;
+  document.getElementById(id + '-btnStop').disabled = true;
+}
+
+async function generateAll() {
+  document.getElementById('btnGenerateAll').disabled = true;
+  await generateClient('jas');
+  document.getElementById('btnGenerateAll').disabled = false;
+}
+
+async function downloadClient(id) {
+  const s = state[id];
+  if (!s.generationDone) { alert('Still generating — wait for all sections to finish.'); return; }
+  const rendered = await Promise.all(s.audioBuffers.map(buf => {
+    const offline = new OfflineAudioContext(buf.numberOfChannels, buf.length, buf.sampleRate);
+    const src = offline.createBufferSource();
+    src.buffer = buf; src.connect(offline.destination); src.start();
+    return offline.startRendering();
+  }));
+  const totalLen = rendered.reduce((a, b) => a + b.length, 0);
+  const combined = s.audioCtx.createBuffer(1, totalLen, rendered[0].sampleRate);
+  let offset = 0;
+  rendered.forEach(buf => {
+    combined.copyToChannel(buf.getChannelData(0), 0, offset);
+    offset += buf.length;
+  });
+  const wavBuffer = toWav(combined);
+  const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `jas-sohal-briefing-jun10.wav`;
+  a.click();
+}
+
+function toWav(buffer) {
+  const numCh = buffer.numberOfChannels;
+  const length = buffer.length * numCh * 2 + 44;
+  const out = new ArrayBuffer(length);
+  const view = new DataView(out);
+  const write = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+  write(0, 'RIFF'); view.setUint32(4, length - 8, true); write(8, 'WAVE');
+  write(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+  view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+  view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+  view.setUint16(34, 16, true); write(36, 'data'); view.setUint32(40, buffer.length * numCh * 2, true);
+  let offset = 44;
+  for (let i = 0; i < buffer.length; i++) {
+    for (let ch = 0; ch < numCh; ch++) {
+      const s = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  return out;
+}
+</script>
+</body>
+</html>
