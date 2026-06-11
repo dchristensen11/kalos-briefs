@@ -509,6 +509,11 @@ async function generateAll(clientId) {
   const config = getConfig();
   if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key above.', 'error'); return; }
 
+  // Must create/resume AudioContext synchronously inside the click handler
+  // before any awaits — otherwise browsers block autoplay
+  const ctx = getAudioCtx();
+  ctx.resume();
+
   const btn = document.getElementById(`genBtn-${clientId}`);
   const stopBtn = document.getElementById(`stopBtn-${clientId}`);
   btn.disabled = true;
