@@ -293,9 +293,18 @@
 
 <script>
 const audioCache = {};
+let sharedCtx = null;
 let currentSource = null;
 let currentClientPlaying = null;
 const stopRequested = {};
+
+function getAudioCtx() {
+  if (!sharedCtx || sharedCtx.state === 'closed') {
+    sharedCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (sharedCtx.state === 'suspended') sharedCtx.resume();
+  return sharedCtx;
+}
 
 function stopAll(clientId) {
   stopRequested[clientId] = true;
@@ -357,13 +366,14 @@ async function fetchAudio(text, config) {
     method: 'POST',
     headers: {
       'xi-api-key': config.apiKey,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg'
     },
     body: JSON.stringify({
       text,
-      model_id: 'eleven_turbo_v2_5',
-      speed: Math.min(config.speed, 1.2),
-      voice_settings: { stability: 0.45, similarity_boost: 0.75 }
+      model_id: 'eleven_multilingual_v2',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0, use_speaker_boost: true },
+      speed: Math.min(config.speed, 1.25)
     })
   });
 
@@ -378,7 +388,7 @@ async function fetchAudio(text, config) {
 }
 
 async function playBuffer(buf) {
-  const ctx = new AudioContext();
+  const ctx = getAudioCtx();
   const decoded = await ctx.decodeAudioData(buf.slice(0));
   return new Promise((resolve, reject) => {
     if (currentSource) {
