@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing — June 11, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+  h1 {
+    font-size: 18px; font-weight: 700; letter-spacing: -0.3px;
+    color: #fff; margin-bottom: 4px;
+  }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 24px; }
+
+  /* Config */
+  .config-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 10px;
+    padding: 16px 20px; margin-bottom: 28px;
+  }
+  .config-card label { font-size: 11px; color: #888; display: block; margin-bottom: 4px; }
+  .config-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .config-field { flex: 1; min-width: 180px; }
+  .config-field input {
+    width: 100%; background: #0f0f18; border: 1px solid #333; border-radius: 6px;
+    color: #e8eaf0; font-size: 13px; padding: 8px 10px; font-family: monospace;
+  }
+
+  /* Client card */
+  .client-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%);
+    padding: 18px 22px 14px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge {
+    background: #7c8aff22; border: 1px solid #7c8aff55;
+    color: #a0acff; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  /* Generate button */
+  .gen-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%);
+    color: #fff; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* Stop + Download row */
+  .btn-row { display: flex; }
+  .stop-btn {
+    flex: 1; padding: 11px;
+    background: #2a1a1a; border: none; border-top: 1px solid #3a2020;
+    color: #f87171; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+    border-right: 1px solid #1e1e2e;
+  }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+
+  /* Sections */
+  .sections { padding: 0 4px 4px; }
+  .section {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #1e1e2e;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    min-width: 70px; justify-content: flex-end;
+  }
+  .play-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #7c8aff22; border: 1px solid #7c8aff44;
+    color: #a0acff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .play-btn:hover { background: #7c8aff44; }
+  .play-btn.loading { animation: pulse 1s ease-in-out infinite; }
+  .play-btn.active { background: #7c8aff66; border-color: #7c8aff; }
+  .sec-dur { font-size: 11px; color: #555; }
+  .dl-btn {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: #1e2a1e; border: 1px solid #2a3d2a;
+    color: #4ade80; font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; text-decoration: none; flex-shrink: 0;
+    opacity: 0.35;
+  }
+  .dl-btn.ready { opacity: 1; }
+  .dl-btn:hover.ready { background: #2a3d2a; }
+
+  /* Download all */
+  .dl-all-btn {
+    flex: 1; padding: 11px;
+    background: #0f1a0f; border: none; border-top: 1px solid #1e2e1e;
+    color: #4ade80; font-size: 13px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center;
+    justify-content: center; gap: 8px; transition: background 0.15s;
+    opacity: 0.5;
+  }
+  .dl-all-btn.ready { opacity: 1; }
+  .dl-all-btn.ready:hover { background: #152215; }
+
+  /* Status bar */
+  .status-bar {
+    text-align: center; font-size: 12px; color: #556; padding: 10px;
+    min-height: 34px;
+  }
+  .status-bar.error { color: #f87171; }
+  .status-bar.ok { color: #4ade80; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Thursday, June 11, 2026 &nbsp;·&nbsp; 1 client</div>
+
+<!-- Config -->
+<div class="config-card">
+  <div class="config-row">
+    <div class="config-field">
+      <label>ElevenLabs API Key</label>
+      <input type="password" id="apiKey" placeholder="sk-..." autocomplete="off">
+    </div>
+    <div class="config-field">
+      <label>Voice ID</label>
+      <input type="text" id="voiceId" value="gWaDC0oXAheKoZfljzuI">
+    </div>
+    <div class="config-field" style="max-width:100px">
+      <label>Speed</label>
+      <input type="number" id="speed" value="1.2" min="0.7" max="1.2" step="0.05">
+    </div>
+  </div>
+</div>
+
+<!-- ANDREI BERAR -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Andrei Berar</h2>
+      <div class="meta">73 · Male · Recomp / VAT / Lean Mass · Evolve 3-Day P1</div>
+    </div>
+    <div class="time-badge">12:00 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-andrei" onclick="generateAll('andrei')">
+    <span>⚡</span> Generate All &amp; Play in Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-andrei" onclick="stopAll('andrei')" disabled>■ Stop</button>
+    <button class="dl-all-btn" id="dlAll-andrei" onclick="downloadFullBriefing('andrei')">↓ Download Full Briefing</button>
+  </div>
+
+  <div class="sections" id="sections-andrei">
+
+    <div class="section" id="sec-andrei-0" onclick="playSection('andrei', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Andrei Berar, 73 years old, male. Second DEXA scan today at noon in Campbell. His program goal is recomp: lowering visceral fat, building lean mass, and feeling good around 180 pounds. He signed up for Kalos on May 13 and has been on the Evolve 3-Day P1 program since then. He had cataract surgery on Monday June 9 and took Tuesday and Wednesday off as planned. Today is the scan and his first time back in the room since the surgery. He is motivated by longevity and being strong at 73.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrei-0">▶</div>
+        <a class="dl-btn" id="dl-andrei-0" title="Download section audio" onclick="downloadSection('andrei',0)">↓</a>
+        <div class="sec-dur" id="dur-andrei-0"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-andrei-1" onclick="playSection('andrei', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins — Lead With These</div>
+        <div class="sec-text">Lead with the progression numbers. Average progression across all tracked lifts is plus 22.9 percent in about four weeks. The standout lifts are dumbbell RDL up 181 percent, seated chest press up 100 percent, and standing shoulder press up 191 percent. That is exceptional output for a 73-year-old. Consistency is 83 percent, which is 10 out of 12 sessions. The June 8 miss was the day before surgery, so that should not count against him. The last five workouts are all scoring 82 to 85 out of 100 on intensity, which shows he is actually responding to the coaching cue to start heavier from set one. And on June 1 he went 3 for 3 sessions and hit 7 personal bests in a single week. Open with those wins. They are real and earned.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrei-1">▶</div>
+        <a class="dl-btn" id="dl-andrei-1" title="Download section audio" onclick="downloadSection('andrei',1)">↓</a>
+        <div class="sec-dur" id="dur-andrei-1"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-andrei-2" onclick="playSection('andrei', 2)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Two red flags. First: protein. Iris shows he is averaging 67 grams of protein per day across 8 logged days, versus a 165 gram daily target. That is less than half. Calories are averaging 825 per day, which almost certainly reflects incomplete logging rather than actual intake that low, but you need to find out. This is the number one thing holding back lean mass gains. The food quality score is a solid 7 out of 10, so the issue is quantity and logging completeness, not food choices. Second: his VAT came in at 145.8 centimeters squared at the baseline scan, which is in the very high risk zone. Every bit of visceral fat reduction at this scan is meaningful for his long-term health. Those are the two metrics that matter most today.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrei-2">▶</div>
+        <a class="dl-btn" id="dl-andrei-2" title="Download section audio" onclick="downloadSection('andrei',2)">↓</a>
+        <div class="sec-dur" id="dur-andrei-2"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-andrei-3" onclick="playSection('andrei', 3)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">Post-surgery situation: cataract surgery was June 9, with planned rest June 9 and 10. He trained through Monday June 8 as planned. Before resuming normal loading, ask how the recovery is going. If he reports any discomfort, redness, or blurry vision, keep intensity conservative. Post-surgery restrictions to keep in mind: no heavy straining or bracing, no pushing to failure, no heavy overhead loading. On technique: the coaching feedback since the start has been to start working sets heavier, which is working. His leg press data from June 2 showed 130, 130, 110 across three sets, meaning he dropped 20 pounds on the third set. Same pattern on RDLs: 60, 60, 55. The week-out targets were holding 130 on all three leg press sets and 60 on all three RDL sets. He did not message back confirming he hit them, so check on that at the scan.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrei-3">▶</div>
+        <a class="dl-btn" id="dl-andrei-3" title="Download section audio" onclick="downloadSection('andrei',3)">↓</a>
+        <div class="sec-dur" id="dur-andrei-3"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-andrei-4" onclick="playSection('andrei', 4)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Energy has been generally good, but Iris flags that poor sleep has caused some lower-energy training days. He skipped May 15 and 16 because he did not feel well. He also skipped June 8, which was the planned pre-surgery rest. Ask about how sleep has been going and how he is feeling post-surgery before committing to the next training block structure. If sleep is still an issue, that limits how aggressively you can dial up intensity in the next four weeks. The surgery itself adds a short-term recovery load on top of training, so the first week back should probably be a transition week with slightly reduced intensity before returning to full working loads.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrei-4">▶</div>
+        <a class="dl-btn" id="dl-andrei-4" title="Download section audio" onclick="downloadSection('andrei',4)">↓</a>
+        <div class="sec-dur" id="dur-andrei-4"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-andrei-5" onclick="playSection('andrei', 5)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No red psychological flags from Iris. Andrei is a data-driven guy who responds well to specifics. Lead with numbers, not vague encouragement. He knows he is 73 and he is not delusional about it, but he also does not want to be patronized. Treat him like the athlete he is becoming. He has strong intrinsic motivation around longevity and functional strength, so anchor everything back to that. One flag worth noting: he may be leaving the area in roughly two months. That has not come up directly, but Iris flagged it as affecting program continuity and potentially scan timing. Get the details on travel plans today and build a remote training plan before he leaves if needed.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrei-5">▶</div>
+        <a class="dl-btn" id="dl-andrei-5" title="Download section audio" onclick="downloadSection('andrei',5)">↓</a>
+        <div class="sec-dur" id="dur-andrei-5"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-andrei-6" onclick="playSection('andrei', 6)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things to set after the scan. One: fix the protein gap. Build a simple structure with four feedings of 35 to 45 grams each day. Figure out if the 825 calorie average is under-eating or under-logging, because the answer changes the recommendation. Two: post-surgery return-to-training. Design the first week back as a transition week with lower intensity and no pushing to failure, then ramp back up from there. Three: nail down travel. When is he leaving, where is he going, what equipment will he have access to? Build a travel version of the Evolve program before he goes. Four: set new four-week Everfit targets based on today's scan data for body weight, ALMI percentile, and VAT.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrei-6">▶</div>
+        <a class="dl-btn" id="dl-andrei-6" title="Download section audio" onclick="downloadSection('andrei',6)">↓</a>
+        <div class="sec-dur" id="dur-andrei-6"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-andrei-7" onclick="playSection('andrei', 7)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Andrei has put in real work in four weeks. Plus 22.9 percent progression and 83 percent consistency at 73 years old is genuinely impressive. Open with that energy and mean it. The scan results are what they are, but the conversation is yours to frame. If VAT dropped even slightly, that is a medical win worth celebrating out loud. If lean mass moved up or held, that is the goal. The protein gap is the main thing you need to address today, and the surgery conversation sets the tone for the next block. He responded well to coaching, he showed up, he hit the room 10 out of 12 times while also going through an eye surgery. Give him the credit he earned and then get to work on the next chapter.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrei-7">▶</div>
+        <a class="dl-btn" id="dl-andrei-7" title="Download section audio" onclick="downloadSection('andrei',7)">↓</a>
+        <div class="sec-dur" id="dur-andrei-7"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="status-bar" id="status-andrei"></div>
+</div>
+
+<script>
+const audioCache = {};
+let currentSource = null;
+let currentClientPlaying = null;
+const stopRequested = {};
+
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  if (currentSource) {
+    currentSource.onended = null;
+    try { currentSource.stop(); } catch(e) {}
+    currentSource = null;
+  }
+  const total = document.querySelectorAll(`#sections-${clientId} .section`).length;
+  for (let i = 0; i < total; i++) {
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const genBtn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (genBtn) { genBtn.disabled = false; genBtn.innerHTML = '<span>⚡</span> Generate All &amp; Play in Sequence'; }
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.', '');
+}
+
+function getConfig() {
+  return {
+    apiKey: document.getElementById('apiKey').value.trim(),
+    voiceId: document.getElementById('voiceId').value.trim(),
+    speed: parseFloat(document.getElementById('speed').value) || 1.2
+  };
+}
+
+function getTextForSection(clientId, idx) {
+  const el = document.querySelector(`#sec-${clientId}-${idx} .sec-text`);
+  return el ? el.innerText.trim() : '';
+}
+
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) {
+    el.textContent = msg;
+    el.className = 'status-bar' + (type ? ' ' + type : '');
+  }
+}
+
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'loading' ? ' loading' : state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '▶';
+}
+
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+
+async function fetchAudio(text, config) {
+  const key = text.substring(0, 40);
+  if (audioCache[key]) return audioCache[key];
+
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${config.voiceId}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': config.apiKey,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_turbo_v2_5',
+      speed: Math.min(config.speed, 1.2),
+      voice_settings: { stability: 0.45, similarity_boost: 0.75 }
+    })
+  });
+
+  if (!resp.ok) {
+    const err = await resp.text();
+    throw new Error(`ElevenLabs error ${resp.status}: ${err}`);
+  }
+
+  const buf = await resp.arrayBuffer();
+  audioCache[key] = buf;
+  return buf;
+}
+
+async function playBuffer(buf) {
+  const ctx = new AudioContext();
+  const decoded = await ctx.decodeAudioData(buf.slice(0));
+  return new Promise((resolve, reject) => {
+    if (currentSource) {
+      currentSource.onended = null;
+      try { currentSource.stop(); } catch(e) {}
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = decoded;
+    src.connect(ctx.destination);
+    currentSource = src;
+    src.onended = resolve;
+    src.onerror = reject;
+    src.start(0);
+  });
+}
+
+async function playSection(clientId, idx) {
+  const config = getConfig();
+  if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key above.', 'error'); return; }
+
+  setBtn(clientId, idx, 'loading');
+  setStatus(clientId, 'Generating audio...');
+
+  const sectionCount = document.querySelectorAll(`#sections-${clientId} .section`).length;
+  for (let i = 0; i < sectionCount; i++) {
+    setBtn(clientId, i, i === idx ? 'loading' : '');
+    setSectionPlaying(clientId, i, false);
+  }
+
+  try {
+    const text = getTextForSection(clientId, idx);
+    const buf = await fetchAudio(text, config);
+    markDlReady(clientId, idx);
+    setBtn(clientId, idx, 'playing');
+    setSectionPlaying(clientId, idx, true);
+    setStatus(clientId, `Playing section ${idx + 1}...`);
+    await playBuffer(buf);
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    setStatus(clientId, 'Done.', 'ok');
+  } catch(e) {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    setStatus(clientId, 'Error: ' + e.message, 'error');
+  }
+}
+
+function triggerDownload(buf, filename) {
+  const blob = new Blob([buf], { type: 'audio/mpeg' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+}
+
+function markDlReady(clientId, idx) {
+  const btn = document.getElementById(`dl-${clientId}-${idx}`);
+  if (btn) btn.classList.add('ready');
+}
+
+function downloadSection(clientId, idx) {
+  const text = getTextForSection(clientId, idx);
+  const key = text.substring(0, 40);
+  if (!audioCache[key]) { setStatus(clientId, 'Generate or play this section first.', 'error'); return; }
+  const title = document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent.replace(/\s+/g, '-').toLowerCase();
+  triggerDownload(audioCache[key], `andrei-${idx+1}-${title}.mp3`);
+}
+
+async function downloadFullBriefing(clientId) {
+  const config = getConfig();
+  const sections = document.querySelectorAll(`#sections-${clientId} .section`);
+  const total = sections.length;
+  const dlAllBtn = document.getElementById(`dlAll-${clientId}`);
+
+  // Check if all cached
+  let allCached = true;
+  for (let i = 0; i < total; i++) {
+    const key = getTextForSection(clientId, i).substring(0, 40);
+    if (!audioCache[key]) { allCached = false; break; }
+  }
+
+  if (!allCached) {
+    if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key to generate audio first.', 'error'); return; }
+    dlAllBtn.textContent = 'Generating audio...';
+    try {
+      for (let i = 0; i < total; i++) {
+        setStatus(clientId, `Generating ${i+1} of ${total} for download...`);
+        const text = getTextForSection(clientId, i);
+        if (!audioCache[text.substring(0,40)]) await fetchAudio(text, config);
+        markDlReady(clientId, i);
+      }
+    } catch(e) {
+      setStatus(clientId, 'Error: ' + e.message, 'error');
+      dlAllBtn.textContent = '↓ Download Full Briefing';
+      return;
+    }
+  }
+
+  setStatus(clientId, 'Merging and downloading...');
+  // Concatenate all MP3 buffers
+  const buffers = [];
+  for (let i = 0; i < total; i++) {
+    const key = getTextForSection(clientId, i).substring(0, 40);
+    buffers.push(new Uint8Array(audioCache[key]));
+  }
+  const totalLen = buffers.reduce((s, b) => s + b.length, 0);
+  const merged = new Uint8Array(totalLen);
+  let offset = 0;
+  for (const b of buffers) { merged.set(b, offset); offset += b.length; }
+  triggerDownload(merged.buffer, 'andrei-berar-briefing-jun11.mp3');
+  setStatus(clientId, 'Downloaded.', 'ok');
+  dlAllBtn.textContent = '↓ Download Full Briefing';
+  dlAllBtn.classList.add('ready');
+}
+
+async function generateAll(clientId) {
+  const config = getConfig();
+  if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key above.', 'error'); return; }
+
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  if (stopBtn) stopBtn.disabled = false;
+  stopRequested[clientId] = false;
+
+  const sections = document.querySelectorAll(`#sections-${clientId} .section`);
+  const total = sections.length;
+
+  try {
+    for (let i = 0; i < total; i++) {
+      if (stopRequested[clientId]) break;
+      setStatus(clientId, `Generating ${i + 1} of ${total}...`);
+      setBtn(clientId, i, 'loading');
+      const text = getTextForSection(clientId, i);
+      await fetchAudio(text, config);
+      setBtn(clientId, i, '');
+      markDlReady(clientId, i);
+    }
+
+    if (stopRequested[clientId]) return;
+
+    // Enable full-briefing download button
+    const dlAll = document.getElementById(`dlAll-${clientId}`);
+    if (dlAll) { dlAll.classList.add('ready'); dlAll.textContent = '↓ Download Full Briefing'; }
+
+    setStatus(clientId, 'All generated. Playing...', 'ok');
+    btn.disabled = false;
+    btn.innerHTML = '<span>⚡</span> Generate All &amp; Play in Sequence';
+
+    // Play sequentially
+    for (let i = 0; i < total; i++) {
+      if (stopRequested[clientId]) break;
+      const secs = document.querySelectorAll(`#sections-${clientId} .section`);
+      secs.forEach((s, si) => setSectionPlaying(clientId, si, si === i));
+      setBtn(clientId, i, 'playing');
+      setStatus(clientId, `Section ${i + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${i} .sec-title`).textContent}`);
+      const text = getTextForSection(clientId, i);
+      const buf = audioCache[text.substring(0, 40)];
+      await playBuffer(buf);
+      setBtn(clientId, i, '');
+      setSectionPlaying(clientId, i, false);
+    }
+
+    if (!stopRequested[clientId]) {
+      setStatus(clientId, 'Briefing complete.', 'ok');
+      if (stopBtn) stopBtn.disabled = true;
+    }
+
+  } catch(e) {
+    if (!stopRequested[clientId]) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>⚡</span> Generate All &amp; Play in Sequence';
+      if (stopBtn) stopBtn.disabled = true;
+      setStatus(clientId, 'Error: ' + e.message, 'error');
+      for (let i = 0; i < total; i++) setBtn(clientId, i, '');
+    }
+  }
+}
+
+async function playAllSections(clientId) {
+  const config = getConfig();
+  if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key above.', 'error'); return; }
+
+  const sections = document.querySelectorAll(`#sections-${clientId} .section`);
+  const total = sections.length;
+
+  try {
+    for (let i = 0; i < total; i++) {
+      const text = getTextForSection(clientId, i);
+      if (!audioCache[text.substring(0, 40)]) {
+        setStatus(clientId, `Generating ${i + 1} of ${total}...`);
+        setBtn(clientId, i, 'loading');
+        await fetchAudio(text, config);
+        setBtn(clientId, i, '');
+      }
+      setBtn(clientId, i, 'playing');
+      setSectionPlaying(clientId, i, true);
+      setStatus(clientId, `Section ${i + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${i} .sec-title`).textContent}`);
+      const buf = audioCache[text.substring(0, 40)];
+      await playBuffer(buf);
+      setBtn(clientId, i, '');
+      setSectionPlaying(clientId, i, false);
+    }
+    setStatus(clientId, 'All done.', 'ok');
+  } catch(e) {
+    setStatus(clientId, 'Error: ' + e.message, 'error');
+    for (let i = 0; i < total; i++) { setBtn(clientId, i, ''); setSectionPlaying(clientId, i, false); }
+  }
+}
+</script>
+</body>
+</html>
