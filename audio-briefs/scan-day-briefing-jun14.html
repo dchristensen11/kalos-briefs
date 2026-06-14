@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing · June 14, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f13; color: #e8e8ee; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 28px 16px 48px; }
+
+  .page-header { text-align: center; margin-bottom: 24px; }
+  .page-header h1 { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  .page-header p { font-size: 12px; color: #555; margin-top: 4px; }
+
+  .shared-config { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 14px;
+    padding: 20px 24px; width: 100%; max-width: 680px; margin-bottom: 20px; }
+  .shared-config h3 { font-size: 12px; color: #555; letter-spacing: 0.6px;
+    text-transform: uppercase; margin-bottom: 12px; }
+  .cfg-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .cfg-row label { font-size: 11px; color: #666; white-space: nowrap; }
+  .cfg-row input, .cfg-row select {
+    background: #252530; border: 1px solid #333; color: #ccc;
+    font-size: 12px; padding: 8px 10px; border-radius: 8px; flex: 1; min-width: 0; }
+  .cfg-note { font-size: 11px; color: #444; margin-top: 10px; line-height: 1.5; }
+
+  .generate-all-wrap { width: 100%; max-width: 680px; margin-bottom: 20px; text-align: center; }
+  .btn-generate-all { background: linear-gradient(135deg, #22c55e, #16a34a);
+    border: none; border-radius: 50px; color: #fff; font-size: 14px; font-weight: 700;
+    padding: 13px 32px; cursor: pointer; transition: opacity 0.15s; }
+  .btn-generate-all:hover { opacity: 0.9; }
+  .btn-generate-all:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .client-card { background: #1a1a22; border: 1px solid #2e2e3a; border-radius: 16px;
+    padding: 28px 32px; max-width: 680px; width: 100%;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4); margin-bottom: 20px; }
+  .card-header { margin-bottom: 20px; }
+  .name { font-size: 20px; font-weight: 700; color: #fff; }
+  .sub { font-size: 12px; color: #777; margin-top: 3px; }
+  .scan-badge { display: inline-block; background: #1e3a5f; color: #5ab4ff;
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 7px; }
+
+  .flag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+  .flag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 12px; }
+  .flag.red { background: rgba(198,40,40,0.15); color: #ef5350; border: 1px solid rgba(198,40,40,0.25); }
+  .flag.orange { background: rgba(230,81,0,0.15); color: #ff8a50; border: 1px solid rgba(230,81,0,0.25); }
+  .flag.green { background: rgba(46,125,50,0.15); color: #66bb6a; border: 1px solid rgba(46,125,50,0.25); }
+  .flag.blue { background: rgba(21,101,192,0.15); color: #64b5f6; border: 1px solid rgba(21,101,192,0.25); }
+
+  .progress-wrap { background: #252530; border-radius: 6px; height: 5px;
+    margin: 18px 0 6px; overflow: hidden; }
+  .progress-bar { background: linear-gradient(90deg, #5ab4ff, #7c6fff);
+    height: 100%; width: 0%; border-radius: 6px; transition: width 0.5s ease; }
+  .progress-label { font-size: 11px; color: #444; margin-bottom: 18px; }
+
+  .controls { display: flex; gap: 10px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+  .btn-primary { background: linear-gradient(135deg, #4a9eff, #7c6fff);
+    border: none; border-radius: 50px; color: #fff; font-size: 13px; font-weight: 600;
+    padding: 11px 22px; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
+  .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: #252530; border: 1px solid #333; border-radius: 50px;
+    color: #999; font-size: 12px; font-weight: 500; padding: 10px 18px; cursor: pointer; }
+  .btn-secondary:hover { background: #2e2e3d; }
+  .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .sections { display: flex; flex-direction: column; gap: 3px; }
+  .section-item { display: flex; align-items: flex-start; gap: 11px;
+    padding: 9px 12px; border-radius: 8px; font-size: 12px;
+    color: #555; border: 1px solid transparent; transition: all 0.2s; cursor: default; }
+  .section-item.active { background: #1c2640; border-color: #2a4070; color: #c8daff; }
+  .section-item.done { color: #3a6b3a; }
+  .section-item.loaded { cursor: pointer; }
+  .section-item.loaded:hover { background: #1f1f2a; color: #999; }
+  .sec-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .sec-title { font-weight: 600; }
+  .sec-desc { font-size: 10px; margin-top: 2px; opacity: 0.7; }
+  .sec-status { margin-left: auto; font-size: 10px; color: #333; flex-shrink: 0; margin-top: 2px; }
+  .section-item.active .sec-status { color: #5ab4ff; }
+  .section-item.done .sec-status { color: #3d7a3d; }
+
+  .status-msg { font-size: 11px; color: #444; margin-top: 14px; text-align: center; line-height: 1.6; }
+  .status-msg.error { color: #e05a5a; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Scan Day Briefing · June 14, 2026</h1>
+  <p>7 clients · 8:15 AM · 10:30 AM · 12:00 PM · ElevenLabs TTS</p>
+</div>
+
+<div class="shared-config">
+  <h3>ElevenLabs Config</h3>
+  <div class="cfg-row">
+    <label>API Key</label>
+    <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" />
+  </div>
+  <div class="cfg-row" style="margin-top:10px">
+    <label>Voice ID</label>
+    <input type="text" id="voiceSelect" value="gWaDC0oXAheKoZfljzuI" style="font-family:monospace;letter-spacing:0.5px" />
+    <label style="margin-left:6px">Speed</label>
+    <select id="speedSelect" style="max-width:80px">
+      <option value="0.85">0.85×</option>
+      <option value="0.95">0.95×</option>
+      <option value="1.0">1.0×</option>
+      <option value="1.1">1.1×</option>
+      <option value="1.2">1.2×</option>
+      <option value="1.25" selected>1.25×</option>
+    </select>
+  </div>
+  <div class="cfg-note">Snap voice pre-loaded. Paste a different voice ID to swap. Key stays in your browser tab only.</div>
+</div>
+
+<div class="generate-all-wrap">
+  <button class="btn-generate-all" id="btnGenerateAll" onclick="generateAll()">▶ Generate All &amp; Play in Sequence</button>
+</div>
+
+<!-- ===== KRISTINA APODACA ===== -->
+<div class="client-card" id="card-kristina">
+  <div class="card-header">
+    <div class="name">Kristina Apodaca</div>
+    <div class="sub">F · 45 · Foundation 4X P1 · Duo · 8:15 AM</div>
+    <div class="scan-badge">📅 June 14, 2026 · Second Scan</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">17/17 sessions · 100%</span>
+    <span class="flag green">Leg Press 85→90 lb</span>
+    <span class="flag green">Hip Thrust 225 lb</span>
+    <span class="flag orange">ALMI 12th %ile</span>
+    <span class="flag orange">VAT 70.6 cm² (goal <60)</span>
+    <span class="flag blue">BMD Z +0.1</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="kristina-progressBar"></div></div>
+  <div class="progress-label" id="kristina-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="kristina-btnGenerate" onclick="generateClient('kristina')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="kristina-btnStop" onclick="stopClient('kristina')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="kristina-btnDownload" onclick="downloadClient('kristina')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="kristina-sectionList"></div>
+  <div class="status-msg" id="kristina-statusMsg"></div>
+</div>
+
+<!-- ===== ABIMAEL ===== -->
+<div class="client-card" id="card-abimael">
+  <div class="card-header">
+    <div class="name">Abimael</div>
+    <div class="sub">M · 32 · GROWTH 3-Day P2 · Duo · 8:15 AM</div>
+    <div class="scan-badge">📅 June 14, 2026 · Second Scan</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">Sumo DL 315 lb × 6</span>
+    <span class="flag green">Lat Pulldown 175 lb × 9</span>
+    <span class="flag green">91-92% consistency</span>
+    <span class="flag orange">VAT 131.7 cm² (goal <60)</span>
+    <span class="flag blue">ALMI 86th %ile — protect on cut</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="abimael-progressBar"></div></div>
+  <div class="progress-label" id="abimael-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="abimael-btnGenerate" onclick="generateClient('abimael')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="abimael-btnStop" onclick="stopClient('abimael')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="abimael-btnDownload" onclick="downloadClient('abimael')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="abimael-sectionList"></div>
+  <div class="status-msg" id="abimael-statusMsg"></div>
+</div>
+
+<!-- ===== MATTHEW KEASLER ===== -->
+<div class="client-card" id="card-matthew">
+  <div class="card-header">
+    <div class="name">Matthew Keasler</div>
+    <div class="sub">M · 40 · POWER P1 · Solo · 10:30 AM</div>
+    <div class="scan-badge">📅 June 14, 2026 · Second Scan</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">15/15 sessions · 100%</span>
+    <span class="flag green">Bench 187 lb (target 162 lb)</span>
+    <span class="flag green">DL 245×3 · est 270 lb 1RM</span>
+    <span class="flag green">Squat est 237 lb · 7 lb from target</span>
+    <span class="flag orange">VAT 78.3 cm² (goal <60)</span>
+    <span class="flag blue">ALMI 33rd %ile · LBM build</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="matthew-progressBar"></div></div>
+  <div class="progress-label" id="matthew-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="matthew-btnGenerate" onclick="generateClient('matthew')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="matthew-btnStop" onclick="stopClient('matthew')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="matthew-btnDownload" onclick="downloadClient('matthew')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="matthew-sectionList"></div>
+  <div class="status-msg" id="matthew-statusMsg"></div>
+</div>
+
+<!-- ===== THERESE ===== -->
+<div class="client-card" id="card-therese">
+  <div class="card-header">
+    <div class="name">Therese</div>
+    <div class="sub">F · 59 · DB Program · Duo · 12:00 PM</div>
+    <div class="scan-badge">📅 June 14, 2026 · Second Scan</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">12/13 sessions · 92%</span>
+    <span class="flag green">Pull-Up reps progressing</span>
+    <span class="flag orange">Knee 90° limit · DB-only</span>
+    <span class="flag orange">BMD Z -0.6 · watch</span>
+    <span class="flag blue">ALMI 50th %ile · protect at 59</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="therese-progressBar"></div></div>
+  <div class="progress-label" id="therese-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="therese-btnGenerate" onclick="generateClient('therese')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="therese-btnStop" onclick="stopClient('therese')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="therese-btnDownload" onclick="downloadClient('therese')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="therese-sectionList"></div>
+  <div class="status-msg" id="therese-statusMsg"></div>
+</div>
+
+<!-- ===== ANDREW ===== -->
+<div class="client-card" id="card-andrew">
+  <div class="card-header">
+    <div class="name">Andrew</div>
+    <div class="sub">M · 61 · BB Program · Duo · 12:00 PM</div>
+    <div class="scan-badge">📅 June 14, 2026 · Second Scan</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">16/17 sessions · 94%</span>
+    <span class="flag green">RDL est 1RM 247 lb = Gold Standard</span>
+    <span class="flag green">Chest Press 60→120 lb</span>
+    <span class="flag red">VAT >200 cm² — primary risk</span>
+    <span class="flag orange">Shoulder: no bar-behind-neck</span>
+    <span class="flag blue">ALMI 73rd %ile · preserve on deficit</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="andrew-progressBar"></div></div>
+  <div class="progress-label" id="andrew-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="andrew-btnGenerate" onclick="generateClient('andrew')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="andrew-btnStop" onclick="stopClient('andrew')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="andrew-btnDownload" onclick="downloadClient('andrew')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="andrew-sectionList"></div>
+  <div class="status-msg" id="andrew-statusMsg"></div>
+</div>
+
+<!-- ===== CIN VONG ===== -->
+<div class="client-card" id="card-cin">
+  <div class="card-header">
+    <div class="name">Cin Vong</div>
+    <div class="sub">43 · Prime 3-Day FUL P2 · Duo · 12:00 PM · City Sports</div>
+    <div class="scan-badge">📅 June 14, 2026 · Second Scan</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">21/23 sessions · 91%</span>
+    <span class="flag green">16 PRs in one session</span>
+    <span class="flag green">3-mile run complete</span>
+    <span class="flag green">BSS 100 lb × 10</span>
+    <span class="flag orange">VAT 120.9 cm² (goal <100)</span>
+    <span class="flag blue">ALMI 55th %ile · target 70th</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="cin-progressBar"></div></div>
+  <div class="progress-label" id="cin-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="cin-btnGenerate" onclick="generateClient('cin')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="cin-btnStop" onclick="stopClient('cin')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="cin-btnDownload" onclick="downloadClient('cin')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="cin-sectionList"></div>
+  <div class="status-msg" id="cin-statusMsg"></div>
+</div>
+
+<!-- ===== NOEMI MONTUY ===== -->
+<div class="client-card" id="card-noemi">
+  <div class="card-header">
+    <div class="name">Noemi Montuy</div>
+    <div class="sub">F · 46 · Female Recomp P2 · Duo · 12:00 PM · City Sports</div>
+    <div class="scan-badge">📅 June 14, 2026 · Second Scan</div>
+  </div>
+  <div class="flag-row">
+    <span class="flag green">12/12 sessions · 100%</span>
+    <span class="flag green">VAT 26.5 cm² · healthy</span>
+    <span class="flag green">4 wks alcohol-free + creatine</span>
+    <span class="flag red">Right shoulder · calcium deposit · no heavy OHP</span>
+    <span class="flag red">Chiari symptoms · monitor</span>
+    <span class="flag orange">ALMI 11th %ile · critical gap</span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="noemi-progressBar"></div></div>
+  <div class="progress-label" id="noemi-progressLabel">Press Generate to create AI audio (~30 sec)</div>
+  <div class="controls">
+    <button class="btn-primary" id="noemi-btnGenerate" onclick="generateClient('noemi')">✨ Generate &amp; Play</button>
+    <button class="btn-secondary" id="noemi-btnStop" onclick="stopClient('noemi')" disabled>■ Stop</button>
+    <button class="btn-secondary" id="noemi-btnDownload" onclick="downloadClient('noemi')" disabled>⬇ Download WAV</button>
+  </div>
+  <div class="sections" id="noemi-sectionList"></div>
+  <div class="status-msg" id="noemi-statusMsg"></div>
+</div>
+
+<script>
+const CLIENT_SECTIONS = {
+  kristina: [
+    { icon: "👋", title: "Intro", desc: "Who she is and today's goal",
+      text: `Kristina Apodaca, 45-year-old female. Duo scan with her partner at 8:15 AM. This is her second Kalos DEXA scan. Kristina is on the Foundation 4X Phase 1 program — machine-based because of a bone fragility history — and she's been running a full-body split hitting legs, pull, and press each week. Primary goals are to add lean mass, specifically to bring her lean mass up from the 80.7 pounds she came in with at Scan 1, reduce visceral fat from 70.6 square centimeters down below 60, and protect and build bone density over time. At Scan 1 on May 10th, she weighed 124 pounds with 34.9 percent body fat, lean mass at 80.7 pounds, and ALMI in the 12th age-matched percentile for women — meaning she's in the bottom 12 percent for lean mass at her age. That is the structural gap the whole program is designed to close. The headline question today: did lean mass go up, and did VAT come down?` },
+    { icon: "🏆", title: "Wins — Lead With These", desc: "Concrete numbers and real momentum",
+      text: `Lead with the consistency because it is perfect. Kristina hit 17 out of 17 sessions in the last 30 days — 100 percent adherence. Not 90, not 95 — perfect. For a 45-year-old woman managing a bone fragility history, showing up to every single session and executing is the foundation that everything else is built on. Second win: the lifts are moving in every major pattern. Leg Press went from 85 pounds for 12 reps to hitting 90 pounds for 12 this week — that's a 5-pound jump and clean reps through it. Lat Pulldown is at 60 pounds for 12, targeting 62 this week. DB Shoulder Press upgraded from 15-pound dumbbells to 20-pound dumbbells — that's a full dumbbell jump, which is meaningful. And the Hip Thrust is at 225 pounds for 8 reps heading into the scan, with the target to push toward 245 to 255 pounds. She also progressed Bulgarian Split Squats from bodyweight to 34 pounds. Third win: she called out a weight discrepancy on her shoulder press target herself — that's coaching awareness and investment in the process. She's not just showing up, she's engaged.` },
+    { icon: "⚠️", title: "Biggest Concern", desc: "ALMI gap and VAT are the two numbers to move",
+      text: `The biggest concern is the structural lean mass gap. ALMI at the 12th percentile means 88 percent of women her age have more lean mass. At 80.7 pounds of lean mass coming in, adding even 2 pounds moves her meaningfully in the right direction — and 2 pounds is achievable in one block of consistent training with adequate protein. The second concern is VAT. At 70.6 square centimeters, she's above the 60-centimeter target. She's not in the high-risk zone, but she's above where she wants to be. The mechanism to move both of these is the same: consistent progressive training — which she's doing — plus protein at 110 grams per day — which is the target. Pre-workout carbohydrates matter here too. She's been told to eat before each session. If she's been skipping that, it's the easiest recovery lever to add. Bone density is a watch item, not a crisis. BMD Z-score is 0.1 — right on the edge of average. The program is already prescribing the right response: axial loading, machine-based work that stresses bone without excessive joint risk. This is the long game, scan to scan.` },
+    { icon: "🦴", title: "Training and Movement", desc: "Foundation program and what to watch",
+      text: `The Foundation 4X Phase 1 program is machine-based by design, given the bone fragility history. No barbell work in this phase — the Gold Standard lift numbers shown at the bottom of her lift table are long-term reference targets, not current prescriptions. What she IS doing: Leg Press, Lat Pulldown, DB Shoulder Press, Hip Thrust, and Bulgarian Split Squats. The rep scheme is 4 sets of 12 across most movements, pushing for progressive overload each session. Current working weights going into the scan: Leg Press 90 pounds, Lat Pulldown 62 pounds, DB Shoulder Press 20-pound dumbbells, Hip Thrust 225 pounds. The BSS progression from bodyweight to 34 pounds is notable because split squat work creates unilateral stability and hip strength that compounds directly into the hip thrust and leg press. No injuries or limitations are flagged. Full range of motion. Full exercise selection available within the machine-based program. The key coaching note on form: she has been specifically noted for calling out weights proactively, which suggests she's paying attention to effort level. The focus going into Phase 2 should be reinforcing: start Set 1 near the working weight, not as a warm-up.` },
+    { icon: "😴", title: "Recovery Load", desc: "No red flags — standard rebuild window",
+      text: `No recovery concerns flagged for Kristina. 100 percent session completion means she's managing her training load well enough to show up every time. No missed sessions, no injury flags, no reported soreness issues. The bone fragility history means her recovery window between sessions matters — and the machine-based program is designed to provide enough stimulus without excessive joint stress. Nutrition is the recovery lever to probe in the conversation. Protein at 110 grams per day and pre-workout carbohydrates are the two inputs that drive repair and growth in this phase. If either has been inconsistent, that's the most actionable recovery conversation. No travel disruptions reported. No sleep flags from Iris.` },
+    { icon: "🧠", title: "Coaching Frame", desc: "Lead with effort, frame the gap as the opportunity",
+      text: `Kristina is detail-oriented and engaged. She called out a weight discrepancy herself — that's someone paying attention and invested. The coaching frame that works here is: lead with the consistency win first, explicitly, because she earned it. Then move to the data. Frame the 12th percentile ALMI not as a deficit but as the clearest picture you have of what the next 12 months are building toward. She knows the goal: add lean mass, reduce visceral fat, protect bone. The results today are the first concrete read on how that mission is going. No body image flags, no anxiety flags noted. Data-forward conversation is appropriate. She understands the metrics. Keep the conversation grounded in specifics — the numbers she knows, the lifts she moved, and what comes next.` },
+    { icon: "🎯", title: "Next Block Priorities", desc: "3–4 things to lock in after the scan",
+      text: `Three things to lock in coming out of this scan. First, protein consistency at 110 grams per day. Build a daily anchor protocol that doesn't require constant tracking — a morning shake with 40 to 50 grams, a protein-forward lunch and dinner. Pre-workout shake or carbohydrate source before each session is non-negotiable for this phase. Second, keep the progression pattern. Leg Press from 90 to 95 is the next jump. Lat Pulldown from 62 to 65. Hip Thrust push from 225 toward 250. These are concrete next targets — write them down in the session. Third, bone health monitoring over time. At Z-score 0.1, she's borderline. Continued axial loading, creatine if not already in the stack, and vitamin D confirmation are the three levers outside of training. A follow-up DEXA in 3 to 6 months makes sense to track BMD trajectory. Fourth, Phase 1 to Phase 2 transition planning. When she's ready to progress — either after this block or in the next — the conversation about adding barbell work or compound movements should be based on scan data and strength baseline, not just time.` },
+    { icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Kristina going into this scan. Perfect attendance — 17 out of 17. Lifts moving in every pattern. Leg Press up 5 pounds to 90. Shoulder Press upgraded a full dumbbell to 20s. Hip Thrust at 225 heading for 250. The structural gap is ALMI at the 12th percentile — that's the 12-month mission. VAT at 70.6 wants to get under 60. Bone density at 0.1 Z-score is the watch item, not the emergency. Lead with the consistency. Frame the ALMI gap as the opportunity, not a problem. The program is working. She's executing. Today's scan is the first checkpoint on a trajectory that's moving in the right direction.` },
+  ],
+  abimael: [
+    { icon: "👋", title: "Intro", desc: "Who he is and today's goal",
+      text: `Abimael, 32-year-old male. Duo scan with Kristina at 8:15 AM. He finished Phase 1 and transitioned into Phase 2, which is the GROWTH 3-Day structure — a fat loss program designed to cut body fat while protecting the lean mass he built. At Scan 1 on May 10th, he came in at 203 pounds with 24.2 percent body fat, lean mass of approximately 154 pounds, and ALMI in the 86th age-matched percentile — which is excellent for a 32-year-old male. He's strong. The structural issue is visceral fat at 131.7 square centimeters, well above the 100 threshold, with a goal to get it under 60. Body fat target is 15 percent — dropping from 24.2 percent to 15 would mean losing roughly 18 to 19 pounds of fat while keeping lean mass at or above 154 pounds. Today is the first read on whether the P2 cut is producing results while protecting the muscle.` },
+    { icon: "🏆", title: "Wins — Lead With These", desc: "Strength momentum is real — use these numbers",
+      text: `The strength numbers are the headline wins here because they're concrete and they're impressive. Phase 1 lift totals going into the scan: Sumo Deadlift went from 275 pounds for 6 reps to 315 pounds for 6 reps — that's a 40-pound jump, three plates on the bar, which he hit in the first month of Phase 2. The target now is 315 for 8 reps. Lat Pulldown hit 175 pounds for 9 reps, with the target to push to 11 or more reps at the same weight. Bench Press was at 185 pounds for 6 in P1, and in P2 he hit a 165-pound PR for 5 reps at a different rep scheme — which shows the strength base transferred into the new block. Hip Thrust showed a 21.3 percent jump in load during the phase. Consistency was 92 percent in Phase 1 — 11 out of 12 sessions — and he trained through a Hawaii trip May 8th to 13th without missing a beat. In Phase 2 he's at 91 percent, 10 out of 11 sessions. That is elite adherence on a fat loss protocol.` },
+    { icon: "⚠️", title: "Biggest Concern", desc: "VAT and the cut — protect lean mass while moving fat",
+      text: `The biggest concern is whether the fat loss cut is working while protecting lean mass. VAT at 131.7 square centimeters is over 30 percent above the 100-centimeter threshold and more than double the 60-centimeter goal. Cutting from 24.2 percent to 15 percent body fat requires a sustained caloric deficit, adequate protein, and continued progressive overload to signal lean mass retention. The risk in a fat loss phase is that inconsistent protein or too aggressive a deficit costs lean mass — and Abimael's 86th percentile ALMI is the asset to protect. If lean mass drops even a few pounds while fat is lost, the body composition picture still improves, but the long-term lean mass base erodes. The coaching priority is: confirm protein is at or above target, confirm training intensity hasn't dropped on the deficit, and watch the ALMI number carefully in this scan.` },
+    { icon: "🦴", title: "Training and Movement", desc: "P2 structure and key lifts",
+      text: `Phase 2 is the GROWTH 3-Day structure, now shifted toward fat loss stimulus while maintaining compound movement patterns. The three big lifts entering the scan: Sumo Deadlift at 315 pounds for 6 reps with a target to hit 315 for 8 this week. Lat Pulldown at 175 pounds for 9, pushing for 11 or more. Bench is at 165 pounds in the P2 rep scheme, up from the 185 for 6 in P1 — the absolute number looks lower because the rep range changed, but the strength base is intact. The Hip Thrust was at 225 pounds for 8 reps and climbing, with a target toward 245 to 255. No injuries flagged. Full barbell program, full exercise selection available. The coaching note from Iris on intensity: some accessories were still being treated as warm-ups earlier in the block — reinforcing starting Set 1 near the working weight rather than ramping up through it is the key execution note going into Phase 3 planning.` },
+    { icon: "😴", title: "Recovery Load", desc: "Deficit fatigue — the watch variable on a cut",
+      text: `Recovery on a fat loss protocol is always the wildcard. Running a caloric deficit while maintaining training intensity means the body has less fuel for repair. Abimael's consistency at 91 percent in Phase 2 suggests the deficit hasn't caused a recovery breakdown yet — he's still showing up and training. The risk is accumulating fatigue over weeks 6 through 8 of a cut when glycogen depletion compounds. Watch for performance drops on the big three — Sumo Deadlift, Lat Pulldown, Bench — as early warning signs. No sleep flags from Iris. No travel coming up. The Hawaii trip in May was managed without missing sessions. No injury history or limitations flagged.` },
+    { icon: "🧠", title: "Coaching Frame", desc: "Data-forward, protect the muscle narrative",
+      text: `Abimael is a competitive-minded, performance-oriented client. He hit three plates on his sumo deadlift in Month 1 of Phase 2. He trained through a vacation. He's executing. The coaching frame that lands here is performance-first, not appearance-first: the cut is designed to reveal the muscle that's already there, not to shrink him. The ALMI 86th percentile is the number to anchor the conversation around — he has exceptional lean mass for his age, and the job now is to let that show while moving the fat and visceral fat numbers. Frame today's scan as: how much fat moved, and how much muscle stayed. Those two numbers tell the story of the cut.` },
+    { icon: "🎯", title: "Next Block Priorities", desc: "Cut mechanics and lift benchmarks",
+      text: `Three priorities for the next block. First, confirm protein is at or above target for the cut phase. Lean mass protection on a deficit is protein-dependent — if intake is inconsistent, that's the highest-leverage fix. Second, advance the three primary lifts. Sumo Deadlift from 315 for 6 to 315 for 8 is the immediate benchmark, then work toward 335. Lat Pulldown from 175 for 9 to 175 for 12, then add weight. Bench in P2 from 165 to 175 at the new rep scheme. Third, plan the VAT conversation. 131.7 centimeters to below 60 is not a one-block job — this is 2 to 3 scan windows. Set the expectation in the conversation today that the first cut cycle should show measurable VAT reduction, with the goal to see it below 100 by the next scan.` },
+    { icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Abimael going into this scan. He's strong and consistent. Sumo Deadlift hit three plates — 315 for 6 — in the first month of Phase 2. Lat Pulldown at 175 for 9. Two straight blocks of 91 to 92 percent consistency, trained through a vacation. The cut phase is active. The two numbers to read today: fat mass and ALMI. Did fat go down and did lean mass hold. VAT at 131.7 is the health priority — it needs to move under 100 in the next one to two scans. ALMI at 86th percentile is the asset to protect. Walk in ready to celebrate the strength base, confirm the cut is working, and set the trajectory for the next scan window.` },
+  ],
+  matthew: [
+    { icon: "👋", title: "Intro", desc: "Who he is and today's goal",
+      text: `Matthew Keasler, 40-year-old male. Solo scan at 10:30 AM in Campbell. He's been running POWER Phase 1 — a home gym program with barbell, dumbbells, and a pull-up bar — 4 times per week. Goals are to build lean mass, specifically to move his ALMI up from the 33rd age-matched percentile, reduce visceral fat from 78.3 square centimeters toward below 60, and progress his squat and deadlift toward Gold Standard numbers for a 180-pound male. At Scan 1 on May 10th, he came in at 185 pounds, 18.5 percent body fat, lean mass at 148.81 pounds, and ALMI at the 33rd percentile. Body fat is not the concern. Lean mass is the gap. Today's question: did the first block add lean tissue?` },
+    { icon: "🏆", title: "Wins — Lead With These", desc: "Perfect consistency and three benchmark lifts moving",
+      text: `The wins here are exceptional. Start with consistency: Matthew hit 15 out of 15 sessions — 100 percent perfect attendance through the full Phase 1 block. Zero missed sessions, no gaps. That's the foundation. Now the lifts, with concrete numbers. Bench Press: the week-out target was 162 pounds estimated 1RM — he came in at 187 pounds estimated 1RM. He didn't just hit the target, he beat it by 25 pounds. He had 19 personal records in a single session on June 9th. Deadlift: the week-out target was to hit 245 pounds for 3 reps during scan week — he hit it three days early. Estimated 1RM on deadlift is now around 270 pounds, closing in on the 280-pound Gold Standard. Squat: estimated 1RM is 237 pounds, with a Gold Standard target of 244 — just 7 pounds away. He also ordered heavier dumbbells for the home gym before the scan even happened — investing in the next phase before this one is even complete. That's a mindset tell.` },
+    { icon: "⚠️", title: "Biggest Concern", desc: "Nutrition is over-target — audit before the conversation",
+      text: `The biggest coaching flag coming into this scan is nutrition. The food journal shows 29-day averages of 282 grams of protein per day and 4,549 calories per day. The targets are 175 grams of protein and 2,400 to 2,600 calories. That's almost double the calorie target and 60 percent more protein than prescribed. If the logging is accurate, the calorie surplus could be significant — which would support lean mass gain but would also likely push fat mass and VAT up. Before the conversation, it's worth checking whether there are duplicate entries or inflated portions in the food journal. Either the logging is inflated and actual intake is closer to target, or he's genuinely eating at a large surplus — in which case the scan will show the result. The conversation today should cover this directly: what does his actual eating look like day to day, and does the logging reflect that accurately.` },
+    { icon: "🦴", title: "Training and Movement", desc: "Home gym barbell program and what to watch",
+      text: `Matthew trains at home — barbell, dumbbells, and a pull-up bar. New heavier dumbbells already on order. Phase 1 is a push-pull split, 4 times per week. The three primary compound lifts entering the scan: Bench Press estimated 1RM 187 pounds, well past the 162 Gold Standard for his weight. Squat estimated 1RM 237 pounds, 7 pounds from the 244 Gold Standard. Deadlift estimated 1RM 270 pounds, 10 pounds from the 280 Gold Standard. He hit 245 for 3 reps on deadlift — working sets are close to the target weight. Iris intensity data shows 74.8 out of 100 — a C grade overall despite perfect consistency and strong progression. The low-intensity pattern comes from accessories being treated as extended warm-ups rather than hard working sets. The coaching note: Weighted Pull-Up scored 100 out of 100 at 20 pounds for 10, 8, and 6 reps — he knows how to push. The same aggression needs to carry into the lower-scoring accessory movements. No injuries, no limitations flagged.` },
+    { icon: "😴", title: "Recovery Load", desc: "Clean recovery picture — one flag on ice baths",
+      text: `Recovery is solid. Sleep is described as good, soreness is productive, and 15 out of 15 sessions means the body is handling the training load without breaking down. One specific coaching flag from Iris: ice baths immediately after lifting. Cold immersion right after a strength session can blunt the hypertrophy signal that drives lean mass gain — which is his primary goal. If he's been doing ice baths post-training, the recommendation is to shift them to rest days or at least 4 to 6 hours after the session. Evening ice baths are fine. Right after lifting is the one window to avoid for a lean mass build. Hydration target is 80 to 100 ounces per day. He trained yesterday on June 13th — a light breakfast on scan morning is the standard guidance.` },
+    { icon: "🧠", title: "Coaching Frame", desc: "Data-forward, longevity framing, home gym identity",
+      text: `Matthew is a self-directed, analytically-minded client who trains early in the morning and has built his own gym. He ordered heavier equipment before the scan. He hit 19 PRs in one session. The coaching frame that lands here is capability and trajectory — he's building something. The goal is strength and lean mass that compounds over time into his 50s and 60s. This is not a physique vanity goal, it's a longevity investment. ALMI at the 33rd percentile is the baseline to build from — the target is the upper quartile over multiple scan windows. Frame today's results as Block 1 data: what moved, what didn't, and what the next block refines. The nutrition conversation should be matter-of-fact: the food journal numbers look high, let's figure out what's actually happening, because the calorie target and the lean mass goal need to be calibrated together.` },
+    { icon: "🎯", title: "Next Block Priorities", desc: "Three concrete things to advance",
+      text: `Three priorities coming out of this scan. First, squat to Gold Standard: 7 pounds to close on the 244-pound target. A few weeks of scan-week attempts at 230 to 235 for triples, working up from there, should close the gap. Deadlift is 10 pounds from 280 — same approach, push working sets heavier. Bench is already past the target at 187 — the next conversation is setting a new working ceiling. Second, audit and calibrate nutrition. Protein at 175 grams per day is right. The calorie target needs to be set based on today's scan — if lean mass went up, the surplus is working; if fat went up too much, pull back toward 2,400. Either way, the conversation clarifies the target. Third, address the accessory intensity gap. Iris shows 74.8 intensity score despite excellent pull-up work. Set specific load targets for the recurring low-scorers so they get trained like working sets, not warm-ups.` },
+    { icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Matthew going into this scan. Perfect consistency — 15 out of 15. Bench is already at 187 pounds estimated 1RM, 25 pounds past the target of 162. Deadlift hit 245 for 3 reps three days ahead of schedule. Squat is at 237, 7 pounds from Gold Standard at 244. He's executing the program. The two things to watch: did lean mass go up from 148.81 pounds, and did the nutrition surplus create too much fat gain. ALMI at 33rd percentile is the gap to close over the next 2 to 3 scan windows. Ice bath timing is the one easy recovery adjustment to make. Walk in ready to lead with the perfect consistency and the lift numbers — those are real and they're impressive.` },
+  ],
+  therese: [
+    { icon: "👋", title: "Intro", desc: "Who she is and today's goal",
+      text: `Therese, 59-year-old female. Duo scan with Andrew at 12:00 PM. She's been running a dumbbell-only program — no barbell movements in this phase — because of a knee limitation that caps range of motion at about 90 degrees on leg press and avoids heavy full-depth squats. She's also in the watch zone for bone density: BMD Z-score at negative 0.6, below average but not osteoporotic. The program is designed with both of these constraints in mind — progressive loading within her range, pull-up work for upper body pulling strength, and no movements that stress the knee through a deep bend. At Scan 1, she came in at 147 pounds with 31.2 percent body fat, lean mass at 100.8 pounds, and ALMI in the 50th age-matched percentile for women her age. Being at the 50th percentile at 59 is genuinely good — upper half for her age group. The goal is to protect that lean mass and build on it. Today's scan reads the first block of that effort.` },
+    { icon: "🏆", title: "Wins — Lead With These", desc: "Near-perfect consistency and pull-up progress",
+      text: `Therese hit 12 out of 13 sessions in the last 30 days — 92 percent consistency. Near-perfect through a full block, including showing up for her last session on June 12th, two days before the scan. That's commitment. The pull-up progression is the headline lift win. Pull-up work was added to her program and she's been adding reps per set each session — which means she's getting stronger in the most fundamental upper-body pulling pattern available. No specific starting number was logged, but improvement rep over rep signals real neuromuscular adaptation and genuine upper-body strength development. The DB Bench has been through a rep scheme transition — it went from 40 pounds in May down to 20 pounds in June when the rep scheme changed to 4 sets of 12, 10, 8, 8. The current working target is 25 pounds for the first two sets. DB Row is at 35 to 40 pounds for 12 reps. The program is moving forward within the constraints, which is exactly what needed to happen.` },
+    { icon: "⚠️", title: "Biggest Concern", desc: "Bone density and knee — the long watch variables",
+      text: `The two watch items for Therese are bone density and knee management. BMD Z-score at negative 0.6 means she's in the below-average range for bone density. It's not osteoporosis, but it puts her on a trajectory that requires attention. The good news: the program is already the right response. Progressive axial loading through dumbbell work and pull-ups — especially the pull-ups, which create tension through the spine and shoulder girdle — is protective. What won't change in this scan window is BMD — 4 to 6 weeks of training is not enough for bone remodeling to show up on a DEXA. The scan-to-scan BMD conversation is a 6 to 12 month picture. The knee limitation shapes the lower-body program — no deep squat loading, modified range on leg movements, split squats and step-ups within her usable range. As long as movements feel right and there's no irritation, the program is appropriate.` },
+    { icon: "🦴", title: "Training and Movement", desc: "DB-only program and where she is on each lift",
+      text: `The current program is dumbbell-only, full range of motion on upper body, modified range on lower body due to the knee. Working weights entering the scan: DB Bench Press at 20 to 25 pounds — the 25-pound target is for the first two sets this week. DB Single-Arm Row at 35 to 40 pounds for 12 reps per side. Pull-Ups with progression each session, adding one rep per set. No barbell Gold Standard targets apply to this phase — those are shown in the dashboard as long-term reference only. The rep scheme is 4 sets with descending rep targets: 12, 10, 8, 8 across most movements. The load reset on DB Bench from 40 pounds to 20 pounds in June reflects the rep scheme change — it's not a regression, it's a calibration for higher volume at better range and control. Technique has been clean based on coaching notes — the focus has been load selection and starting sets close to working weight rather than warming up through the work sets.` },
+    { icon: "😴", title: "Recovery Load", desc: "59 and consistent — recovery is the performance",
+      text: `At 59, recovery is the performance. Therese's 92 percent consistency tells you recovery is working — you can't maintain near-perfect attendance across a block if the body isn't handling the load. No sleep or stress flags noted. No travel disruptions. The duo dynamic with Andrew is a structural advantage — two people showing up together removes the decision friction that causes individual session misses. The bone fragility history means recovery quality — sleep, protein, possibly vitamin D and calcium — is not just a training support issue, it's a bone health issue. If protein is consistently below target, that's the recovery lever to address. No specific protein target was confirmed in the session data — this is a conversation point at the scan.` },
+    { icon: "🧠", title: "Coaching Frame", desc: "Duo dynamic, long game, and strength as longevity",
+      text: `Therese and Andrew scan together because they train together. That shared accountability is structural — acknowledge it. The coaching frame for Therese is strength as a longevity investment at 59. ALMI at the 50th percentile is genuinely good for her age group — she's above average, and the job is to stay that way or improve it. BMD at negative 0.6 is the long-term thread to track. Frame the program as protective — every session, every pull-up, every controlled dumbbell set is bone stimulus. The results today read the first block of that investment. No body image flags, no anxiety notes from Iris. Data conversation is appropriate. Lead with the consistency, name the pull-up progress, and frame the bone density monitoring as a proactive health strategy, not a concern to be worried about today.` },
+    { icon: "🎯", title: "Next Block Priorities", desc: "Advance the lifts, lock in protein, plan bone monitoring",
+      text: `Three priorities coming out of this scan. First, advance DB Bench from 25 pounds toward 30 pounds in the first two sets. DB Row from 40 pounds to 42 or 45. Pull-ups: the rep target is +1 per set, and when she's hitting the top of the rep range consistently, add a weight vest or band assist to progress the movement. Second, protein confirmation. Ask directly in the scan conversation what protein intake looks like on a typical day. This is the primary lean mass and bone support lever and the one we need a real number on. Third, set the BMD monitoring expectation. Negative 0.6 is a watch item, not a crisis. The goal is to come back in 6 to 12 months and see the Z-score moving toward zero or above through consistent progressive loading. Set that expectation today so the long game is clear.` },
+    { icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Therese going into this scan. 12 out of 13 sessions — 92 percent through a full block. Pull-up reps increasing each session. DB Row at 35 to 40 pounds. DB Bench through a rep scheme transition, stabilizing at 25 pounds for working sets. ALMI at 50th percentile is the asset — above average for 59. BMD at negative 0.6 is the long watch variable, not today's emergency. The scan today reads whether lean mass held or grew in Block 1. Lead with the consistency and the pull-up progress. Name the duo commitment — she and Andrew are both here, both showed up, and that shared accountability is a real structural advantage.` },
+  ],
+  andrew: [
+    { icon: "👋", title: "Intro", desc: "Who he is and today's goal",
+      text: `Andrew, 61-year-old male. Duo scan with Therese at 12:00 PM. He's been running a barbell-based program — Incline Bench, Romanian Deadlift, Hex Bar Squat, and Pull-Ups — with one shoulder constraint: no bar-behind-neck movements, so hex bar for squats and incline over flat bench. Primary goals are visceral fat reduction and fat loss while protecting lean mass. At Scan 1, he came in at 213.5 pounds with 26.5 percent body fat, lean mass of approximately 156.9 pounds, and ALMI in the 73rd age-matched percentile — well above average for a 61-year-old male. The headline health number is VAT above 200 square centimeters at baseline — very high cardiovascular and metabolic risk. He's been running a 500-calorie-per-day deficit at 2,293 calories. Today's question: did VAT move?` },
+    { icon: "🏆", title: "Wins — Lead With These", desc: "Real lift numbers and landmark adherence",
+      text: `Andrew's wins are strength wins and consistency wins. Start with the lift numbers. Romanian Deadlift: estimated 1RM is approximately 247 pounds, which is essentially at his Gold Standard benchmark — 246 pounds is 1.15 times his 213.5-pound body weight. He's at the standard for his decade in his primary hinge movement. BB Incline Bench is targeting 120 pounds for 8 to 10 reps this week — he's been progressing on the bench through a full block. Leg Press is at 130 pounds for 3 sets. Pull-Ups are maximum quality reps with full range of motion. The overall progression from the start of the block: Chest Press effectively doubled in load — from approximately 60 pounds up to 120 — as he built into the barbell compound work. Shoulder Press nearly tripled. These aren't small jumps. Consistency: 16 out of 17 sessions in the last 30 days — 94 percent. And he trained on June 13th, the day before the scan. That is commitment while running a caloric deficit.` },
+    { icon: "⚠️", title: "Biggest Concern", desc: "VAT above 200 is the primary health risk — did it move?",
+      text: `The primary concern is visceral fat. VAT above 200 square centimeters puts Andrew in the very high cardiovascular risk category. The 100-centimeter threshold is the established clinical marker for elevated risk — he came in more than double that at baseline. The 500-calorie daily deficit and the training program are the right combination to move VAT — caloric deficit is the primary driver of visceral fat reduction when it's combined with adequate protein and resistance training to protect lean mass. ALMI at 73rd percentile is the asset to protect. As long as protein is at 175 to 195 grams per day and he's hitting working sets close to failure, the deficit should pull primarily from fat mass. The secondary concern is the deficit fatigue question — 500 calories under maintenance for a sustained period affects training output. His 94 percent consistency suggests it hasn't broken him yet, but watch the RDL and bench numbers as the first indicators if recovery starts slipping.` },
+    { icon: "🦴", title: "Training and Movement", desc: "Barbell program and lift benchmarks",
+      text: `The program is a barbell compound structure with one modification: hex bar for squats due to the shoulder mobility limitation, and incline bench over flat bench for the same reason. No bar-behind-neck. Working weights entering the scan: BB Incline Bench at 120 pounds, targeting 8 to 10 clean reps. BB RDL at 185 pounds for both working sets — estimated 1RM around 247 pounds. Leg Press at 130 pounds for 3 sets. Pull-Ups at maximum quality reps, full range of motion. Bone density is excellent at Z-score plus 1.7, well above average for 61 — heavy compound lifting is appropriate and beneficial. No injury flags. Andrew trained the day before the scan on June 13th — this is commitment in the scan week context. The key technical coaching note from Iris: intensity across the last 5 sessions was consistently in the 82 to 85 out of 100 range — which means he's pushing closer to failure, exactly where the training stimulus needs to be. Seven personal records on June 1st.` },
+    { icon: "😴", title: "Recovery Load", desc: "Deficit fatigue is real — 94% consistency says he's managing it",
+      text: `Running a 500-calorie deficit at 61 while doing barbell compound training is a real recovery demand. 94 percent consistency across the block — including the day before the scan — tells you his body is absorbing the load. The most important recovery levers here are protein and sleep. Protein at 175 to 195 grams per day on a deficit protects lean mass and supports muscle protein synthesis. If intake has dropped below 150 grams on some days, that's the recovery hole to fill. Sleep quality at his age directly affects testosterone, growth hormone response to training, and fat metabolism — especially visceral fat. No specific sleep flags from Iris. One session was missed, noted as a pre-surgery rest day — not a consistency issue, appropriate rest management.` },
+    { icon: "🧠", title: "Coaching Frame", desc: "Lead with the VAT mission — frame deficit as the mechanism",
+      text: `Andrew's frame is health and longevity at 61. VAT above 200 is not an abstract number — it's a cardiovascular risk marker, and he knows it. The coaching conversation that lands here is: the program is exactly right, the deficit is working as designed, and today's scan is the first read on how much VAT moved. Frame this as: we identified the primary risk, we built the right protocol, and now we measure. His BMD at plus 1.7 is an asset to call out — excellent bone density at 61, well above average, which means heavy compound training is appropriate and beneficial, not risky. The duo scan with Therese is worth acknowledging — shared commitment between partners is a structural advantage for long-term adherence.` },
+    { icon: "🎯", title: "Next Block Priorities", desc: "VAT target, lift benchmarks, and deficit calibration",
+      text: `Three priorities coming out of this scan. First, the VAT trajectory. The goal is to get from above 200 down to below 100 in the next 1 to 2 scans, and eventually below 60. If VAT moved significantly today, confirm the deficit is working and maintain the protocol. If it didn't move much, review calorie adherence — the 500-calorie deficit only works if it's actually happening on most days. Second, advance the primary lifts. BB RDL from 185 toward 200 for both working sets. Incline Bench from 120 toward 130. These are the next concrete targets. Third, calibrate the deficit based on scan results. If lean mass held at or near 156.9 pounds and fat dropped, the protocol is working — stay the course. If lean mass dropped noticeably, pull the deficit back to 300 to 400 calories and confirm protein is consistently at 175 grams or above.` },
+    { icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Andrew going into this scan. 94 percent consistency — 16 out of 17 sessions. Trained yesterday. RDL estimated 1RM at 247 pounds, essentially at Gold Standard. Incline Bench targeting 120 for 8 to 10 reps. Chest Press doubled from 60 to 120 over the block. The primary mission is VAT: above 200 at baseline, goal is to move it toward 100 and eventually below 60. Running a 500-calorie deficit. BMD at plus 1.7 — excellent bone density, heavy lifting is safe and appropriate. Walk in ready to lead with the consistency and the RDL strength, then read the VAT number. Whatever it shows, the mechanism is right — deficit plus training plus protein. Today tells you how much ground was covered in Block 1.` },
+  ],
+  cin: [
+    { icon: "👋", title: "Intro", desc: "Who they are and today's goal",
+      text: `Cin Vong, 43 years old. Duo scan with Noemi at 12:00 PM at City Sports. This is a 12:00 PM scan at a different location — note the City Sports venue. Cin is a former 10x10 trainee who came back to structured programming through Kalos to break through a long plateau, and is now running the Prime 3-Day Full Upper-Lower Phase 2 program. Primary goals are lean mass build and visceral fat reduction. VAT came in at 120.9 square centimeters at Scan 1 — above the 100-centimeter health threshold, and the primary metabolic target. ALMI is at the 55th age-matched percentile — above median, targeting the 70th. At Scan 1, Cin came in at 182.7 pounds with 20.8 percent body fat and lean mass of approximately 144.7 pounds. The secondary goal is the 8-minute mile — combining strength and cardio integration is part of the identity shift from pure lifting to performance.` },
+    { icon: "🏆", title: "Wins — Lead With These", desc: "16 PRs in one session and a 3-mile run",
+      text: `The headline win is May 29th — 16 personal records in a single session. That is historic output in one training day. It reflects accumulated strength from the full block expressing itself in a peak session. Name it explicitly: 16 PRs in a day. Second win: the 3-mile run goal was completed. This matters because it's not just a lifting goal — it's an identity goal. Becoming someone who runs 3 miles is a different frame than someone who just lifts. The 8-minute mile is the next target, and completing the 3-mile goal opens that door. Third win: consistency at 91 percent — 21 out of 23 sessions — and two additional sessions completed after the week-out message was sent. The effort didn't ease off at the finish line. Fourth: the lift targets sent on June 2nd were Bulgarian Split Squat at 100 pounds for 10 reps, DB Incline at 30 pounds for 10 to 12 reps, and Pull-Ups for 8 reps. These are working weights that reflect a real strength base in a 43-year-old breaking a plateau.` },
+    { icon: "⚠️", title: "Biggest Concern", desc: "VAT 120.9 — the health number to move",
+      text: `The biggest concern is VAT at 120.9 square centimeters. Above 100 is elevated cardiovascular and metabolic risk. It's the primary number to move over the next scan window or two. The lever for visceral fat is primarily nutrition quality — training alone doesn't drive VAT reduction without the dietary component supporting it. As a former 10x10 trainee, Cin likely understands progressive training well. The conversation today should anchor the VAT number, explain what drives it, and frame the nutrition quality piece as the highest-leverage input that the training program can't fully compensate for on its own. ALMI at 55th percentile is above median — the gap to the 70th percentile is achievable over the next 2 to 3 scan cycles with consistent progressive training.` },
+    { icon: "🦴", title: "Training and Movement", desc: "Prime Phase 2 and where the lifts are",
+      text: `The Prime 3-Day Full Upper-Lower Phase 2 program is a full-body split with compound movement focus. Working lift targets entering the scan: Bulgarian Split Squat at 100 pounds for 10 reps, DB Incline Press at 30 pounds for 10 to 12 reps, Pull-Ups for 8 reps. These are the scan-week benchmarks. The 16-PR session on May 29th signals the program is producing strength adaptation — Cin's body is responding. The running integration adds aerobic volume and supports the VAT reduction goal by increasing total weekly energy expenditure. The 8-minute mile goal is performance-focused, and combining that with the strength program is a more complete fitness picture than either alone. No injury flags, no limitations noted from Iris.` },
+    { icon: "😴", title: "Recovery Load", desc: "Running plus lifting — total load picture",
+      text: `The load profile for Cin includes both the structured lifting program and the running component. Running 3 miles adds real aerobic demand on top of the strength sessions. At 91 percent training consistency, the body is managing the combined load well — but this is a higher total volume than a strength-only protocol. Recovery quality — sleep, nutrition, hydration — matters more when the aerobic component is added. No specific sleep or stress flags from Iris. No travel disruptions noted. The two sessions added after the week-out message suggest Cin was not conserving energy ahead of the scan — they were pushing through to the end of the block.` },
+    { icon: "🧠", title: "Coaching Frame", desc: "Former 10x10 trainee — plateau breakthrough is the narrative",
+      text: `Cin is a former 10x10 trainee who came to Kalos to break through a plateau. That context matters. A 10x10 background means a high training base, a performance mindset, and probably some familiarity with what intensity feels like. The coaching frame is plateau breakthrough: the Prime Phase 2 program is doing something that the prior training couldn't — producing 16 PRs in a session, building toward a 3-mile run, and now generating a DEXA data point that shows what actually happened to body composition. Lead with the identity shift: strength plus running, not just one or the other. Frame VAT as the health priority to move, and the nutrition conversation as the tool that training can't fully replace.` },
+    { icon: "🎯", title: "Next Block Priorities", desc: "VAT reduction and the 8-minute mile",
+      text: `Three priorities coming out of this scan. First, nutrition quality for VAT reduction. This is the lever. Identify 2 to 3 specific changes in food quality that move the needle — less processed food, more whole protein sources, reduced added sugars. Not a diet overhaul, just consistent quality choices. Second, advance the primary lifts. Bulgarian Split Squat from 100 pounds toward 110 or 115 for the same reps. DB Incline from 30 toward 35 pounds. Pull-Ups from 8 reps toward 10, then add weight. Third, the 8-minute mile target. Set a specific training plan for it — whether that's timed mile repeats, interval work, or adding a structured run session per week. Having a concrete benchmark makes it a program goal, not just an aspiration.` },
+    { icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Cin going into this scan. 91 percent consistency — 21 out of 23 sessions, two more after the week-out message. 16 PRs in a single session on May 29th. 3-mile run completed. BSS at 100 pounds for 10. DB Incline at 30 pounds. Pull-Ups hitting 8 reps. The two numbers to read today: did lean mass build from 144.7 pounds, and did VAT come down from 120.9. VAT is the health priority. Lead with the 16-PR session and the run. The plateau is broken. Today confirms it with data.` },
+  ],
+  noemi: [
+    { icon: "👋", title: "Intro", desc: "Who she is and today's goal",
+      text: `Noemi Montuy, 46-year-old female. Duo scan with Cin at 12:00 PM at City Sports. Two critical flags to carry into this appointment: first, a right shoulder calcium deposit — no heavy overhead pressing. The program works around the shoulder using rows, lat pulldowns, and modified pressing. Second, Chiari symptoms — monitor for headaches or neurological symptoms during heavy lifting. If either comes up, it changes the coaching conversation. At Scan 1, Noemi came in with 33.8 percent body fat, VAT at 26.5 square centimeters — that's healthy, well below the 100-centimeter threshold — and ALMI in the 11th age-matched percentile. ALMI at the 11th percentile is the structural gap: the lean mass deficit that drives the whole program. She's been running the Female Recomp 3-Day Phase 2 with perfect compliance, and she runs 6 times per week on top of that. Today's question: did lean mass go up?` },
+    { icon: "🏆", title: "Wins — Lead With These", desc: "Perfect compliance and real lifestyle changes",
+      text: `Lead with the consistency: 12 out of 12 sessions — 100 percent. Perfect adherence through 6-day work weeks. That's the first thing to say in the room. It's not just a number — it means she prioritized training through every single work week, including the hard ones. Second win: 4 weeks alcohol-free heading into the scan. Alcohol removal is a meaningful lever for body composition and visceral fat — and 4 weeks is a real behavioral commitment. Third: creatine at 5 grams per day. For a woman at the 11th ALMI percentile, creatine is one of the best-researched lean mass support supplements available. She started it. Fourth: running 6 times per week. The aerobic base is built. Combined with the strength program, she's doing more total work than most clients in a single week. The challenge coming into Phase 2 is that cardio volume needs to stay in balance with the strength stimulus — too much cardio at insufficient calories blunts lean mass gain. This is the nuance for the conversation.` },
+    { icon: "⚠️", title: "Biggest Concern", desc: "ALMI 11th percentile — lean mass is the mission",
+      text: `The biggest concern is ALMI at the 11th percentile. 89 percent of women her age have more lean mass. This is the structural gap that changes everything downstream — lean mass is the primary driver of metabolic rate, bone density support, functional strength, and long-term health outcomes for a 46-year-old woman. The fat loss goal and the recomposition goal are both downstream of lean mass. You can't recomp sustainably without building muscle. The coaching priority for this scan conversation is: confirm lean mass moved. Even 1 pound of lean mass gain in Block 2 is directionally correct and worth celebrating. Second concern is protein at 100 grams per day — the anti-inflammatory protocol target. For the ALMI gap she's trying to close, 100 grams is the minimum. If running 6 days per week and doing 3 strength sessions, total protein demand is higher than what a sedentary person needs. Make sure the 100 grams is a floor, not a ceiling. VAT at 26.5 centimeters is healthy — this is actually a win to open with. No visceral fat concern.` },
+    { icon: "🦴", title: "Training and Movement", desc: "Shoulder protocol and current working weights",
+      text: `The right shoulder calcium deposit is the defining movement constraint. The program is built around it: no heavy overhead pressing, lat pulldown instead of overhead pull, rows as the primary pulling pattern. The week-out targets reflect this: Hip Thrust with a target to beat the last top set by 2 reps or 5 pounds — working toward the 225 to 255 pound range from the duo modal data; Lat Pulldown for 3 sets, shoulder-safe; Hack Squat or Leg Press for 3 sets of quality depth; and DB Row for 3 sets of 10 per side. The Goblet Squat target is 3 sets of 15 at the same or heavier load than the June 10th baseline. DB Shoulder Press was given modified guidance — careful around the right shoulder. The Chiari symptom flag means: if she reports any headache or neurological sensation during a lift, that session stops and it's flagged immediately. No reported episodes, but this is the flag to keep active.` },
+    { icon: "😴", title: "Recovery Load", desc: "6-day work weeks plus 6 runs plus 3 lifting sessions",
+      text: `Noemi's total weekly load is high: 6-day work weeks, running 6 times per week, 3 strength sessions. That's 9 structured physical activities in a week alongside a demanding job. For 12 out of 12 session compliance to hold, her body has been managing it — but this is the volume profile that can mask under-recovery over time. The warning sign to watch in the scan conversation is fatigue trend: if she reports feeling increasingly tired over the last 2 weeks, that's a recovery signal. Alcohol-free for 4 weeks improves sleep quality, which is the biggest recovery lever at this volume. Creatine supports cellular hydration and ATP recovery between sessions. Protein at 100 grams with this much volume is the floor — not optimal, but functional. The most actionable recovery conversation is: how's sleep quality, and is the protein intake consistent day to day.` },
+    { icon: "🧠", title: "Coaching Frame", desc: "Health-first, shoulder protocol, Chiari awareness",
+      text: `Two clinical flags shape the coaching frame for Noemi. Right shoulder: the program explicitly works around it. Never push overhead pressing or heavy external rotation into pain. The shoulder flag is not a reason to reduce training — it's a reason to be smart about exercise selection, and the program already accounts for it. Chiari: any new headache or neurological symptom during a heavy set is an immediate flag. This is not about fear-based coaching — it's about monitoring the one variable that can change the training picture entirely. Outside of those two flags, the coaching frame is: lead with the VAT win. VAT at 26.5 centimeters is excellent. She's not carrying dangerous visceral fat. The structural job is to build lean mass from the 11th percentile upward. Frame ALMI as a multi-year project — each block adds a pound or two, and over 3 to 5 scan windows, the percentile shifts meaningfully.` },
+    { icon: "🎯", title: "Next Block Priorities", desc: "ALMI build, protein, and shoulder management",
+      text: `Three priorities coming out of this scan. First, confirm lean mass moved and set the next block's ALMI target. Even a 1-pound lean mass gain is directionally correct. The target for the next 2 to 3 scans is to push ALMI toward the 25th to 30th percentile — that's a real, achievable trajectory. Second, protein floor at 100 grams. On 6-day work weeks with 6 runs and 3 strength sessions, under-eating protein is the most likely reason lean mass gain stalls. Identify protein sources that work with the anti-inflammatory protocol and build them into the daily routine as non-negotiables — not tracked, just automatic. Third, manage the cardio-to-strength ratio. 6 runs per week on top of 3 strength sessions is a high aerobic volume for a lean mass build goal. If the scan shows lean mass didn't move, the first adjustment is to shift one run session per week into a rest or mobility session to give the strength signal more room to work.` },
+    { icon: "✅", title: "Closing", desc: "Bottom line going in",
+      text: `Bottom line on Noemi going into this scan. 12 out of 12 sessions — 100 percent. Running 6 days per week. 4 weeks alcohol-free. Creatine 5 grams daily. Two clinical flags to keep active: right shoulder calcium deposit — no heavy overhead — and Chiari symptoms — monitor for headaches. VAT at 26.5 centimeters is healthy — open with this win. ALMI at 11th percentile is the mission. The scan today reads: did lean mass move from the 11th percentile baseline. Even a small gain confirms the program is working and gives you the direction for the next block. Lead with the perfect consistency, name the alcohol-free commitment, and frame the ALMI gap as the 12-month project it is.` },
+  ],
+};
+
+// ─── Engine ─────────────────────────────────────────────────────────────────
+
+const CLIENT_IDS = ["kristina", "abimael", "matthew", "therese", "andrew", "cin", "noemi"];
+const state = {};
+
+CLIENT_IDS.forEach(id => {
+  state[id] = {
+    audioBuffers: new Array(CLIENT_SECTIONS[id].length).fill(null),
+    audioCtx: null,
+    currentSource: null,
+    currentSection: -1,
+    isPlaying: false,
+    generationDone: false
+  };
+  buildSections(id);
+});
+
+function buildSections(id) {
+  const list = document.getElementById(id + '-sectionList');
+  CLIENT_SECTIONS[id].forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'section-item';
+    div.id = id + '-sec-' + i;
+    div.innerHTML = `<span class="sec-icon">${s.icon}</span>
+      <div style="flex:1"><div class="sec-title">${s.title}</div>
+      <div class="sec-desc">${s.desc}</div></div>
+      <div class="sec-status" id="${id}-stat-${i}">—</div>`;
+    div.onclick = () => {
+      if (state[id].audioBuffers[i] && state[id].isPlaying) playFrom(id, i);
+    };
+    list.appendChild(div);
+  });
+}
+
+function setStatus(id, i, text, cls) {
+  const el = document.getElementById(id + '-sec-' + i);
+  const st = document.getElementById(id + '-stat-' + i);
+  if (el) el.className = 'section-item ' + (cls || '');
+  if (st) st.textContent = text;
+}
+
+function setActive(id, i) {
+  CLIENT_SECTIONS[id].forEach((_, idx) => {
+    const el = document.getElementById(id + '-sec-' + idx);
+    if (!el) return;
+    if (idx === i) {
+      el.className = 'section-item active' + (state[id].audioBuffers[idx] ? ' loaded' : '');
+    } else if (idx < i) {
+      el.className = 'section-item done loaded';
+      const st = document.getElementById(id + '-stat-' + idx);
+      if (st) st.textContent = '✓';
+    }
+  });
+  state[id].currentSection = i;
+  const total = CLIENT_SECTIONS[id].length;
+  const pct = i < 0 ? 0 : Math.round(((i + 1) / total) * 100);
+  document.getElementById(id + '-progressBar').style.width = (i < 0 ? 0 : pct) + '%';
+  document.getElementById(id + '-progressLabel').textContent =
+    i < 0 ? 'Ready' : `Playing section ${i + 1} of ${total}`;
+  if (i >= 0) document.getElementById(id + '-sec-' + i).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function fetchAudio(text) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  const voiceId = document.getElementById('voiceSelect').value;
+  const speed = Math.min(1.25, parseFloat(document.getElementById('speedSelect').value) || 1.25);
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'audio/mpeg'
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_multilingual_v2',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0, use_speaker_boost: true },
+      speed
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(`ElevenLabs ${resp.status}: ${JSON.stringify(err)}`);
+  }
+  return await resp.arrayBuffer();
+}
+
+async function generateClient(id) {
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    document.getElementById(id + '-statusMsg').textContent = '⚠️ Paste your ElevenLabs API key above first.';
+    document.getElementById(id + '-statusMsg').className = 'status-msg error';
+    return;
+  }
+  const s = state[id];
+  document.getElementById(id + '-btnGenerate').disabled = true;
+  document.getElementById(id + '-btnStop').disabled = false;
+  document.getElementById(id + '-statusMsg').textContent = '';
+  document.getElementById(id + '-statusMsg').className = 'status-msg';
+  s.audioCtx = s.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+  s.audioBuffers = new Array(CLIENT_SECTIONS[id].length).fill(null);
+  s.generationDone = false;
+  s.isPlaying = true;
+
+  CLIENT_SECTIONS[id].forEach((_, i) => setStatus(id, i, '⏳', ''));
+  playFrom(id, 0);
+
+  for (let i = 0; i < CLIENT_SECTIONS[id].length; i++) {
+    if (!s.isPlaying) break;
+    try {
+      const buf = await fetchAudio(CLIENT_SECTIONS[id][i].text);
+      const decoded = await s.audioCtx.decodeAudioData(buf);
+      s.audioBuffers[i] = decoded;
+      if (s.currentSection < i) setStatus(id, i, 'ready', 'loaded');
+    } catch (err) {
+      setStatus(id, i, '✗', '');
+      document.getElementById(id + '-statusMsg').className = 'status-msg error';
+      document.getElementById(id + '-statusMsg').textContent = `Error on section ${i + 1}: ${err.message}`;
+      s.isPlaying = false;
+      document.getElementById(id + '-btnGenerate').disabled = false;
+      document.getElementById(id + '-btnStop').disabled = true;
+      return;
+    }
+  }
+  if (s.isPlaying) {
+    s.generationDone = true;
+    document.getElementById(id + '-btnDownload').disabled = false;
+    document.getElementById(id + '-statusMsg').textContent = 'Generated ✓ — re-generate to use a different voice.';
+  }
+}
+
+function playFrom(id, i) {
+  const s = state[id];
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  if (i >= CLIENT_SECTIONS[id].length) {
+    s.isPlaying = false;
+    document.getElementById(id + '-btnGenerate').disabled = false;
+    document.getElementById(id + '-btnStop').disabled = true;
+    document.getElementById(id + '-progressLabel').textContent = 'Done ✓ — regenerate or download WAV';
+    return;
+  }
+  setActive(id, i);
+  if (s.audioBuffers[i]) {
+    const src = s.audioCtx.createBufferSource();
+    src.buffer = s.audioBuffers[i];
+    src.connect(s.audioCtx.destination);
+    src.onended = () => { if (s.isPlaying) playFrom(id, i + 1); };
+    src.start();
+    s.currentSource = src;
+  } else {
+    const check = setInterval(() => {
+      if (s.audioBuffers[i]) {
+        clearInterval(check);
+        if (s.isPlaying) playFrom(id, i);
+      }
+    }, 200);
+  }
+}
+
+function stopClient(id) {
+  const s = state[id];
+  s.isPlaying = false;
+  if (s.currentSource) {
+    s.currentSource.onended = null;
+    try { s.currentSource.stop(); } catch(e) {}
+    s.currentSource = null;
+  }
+  document.getElementById(id + '-btnGenerate').disabled = false;
+  document.getElementById(id + '-btnStop').disabled = true;
+}
+
+async function generateAll() {
+  document.getElementById('btnGenerateAll').disabled = true;
+  for (const id of CLIENT_IDS) {
+    await generateClient(id);
+  }
+  document.getElementById('btnGenerateAll').disabled = false;
+}
+
+async function downloadClient(id) {
+  const s = state[id];
+  if (!s.generationDone) { alert('Still generating — wait for all sections to finish.'); return; }
+  const rendered = await Promise.all(s.audioBuffers.map(buf => {
+    const offline = new OfflineAudioContext(buf.numberOfChannels, buf.length, buf.sampleRate);
+    const src = offline.createBufferSource();
+    src.buffer = buf; src.connect(offline.destination); src.start();
+    return offline.startRendering();
+  }));
+  const totalLen = rendered.reduce((a, b) => a + b.length, 0);
+  const combined = s.audioCtx.createBuffer(1, totalLen, rendered[0].sampleRate);
+  let offset = 0;
+  rendered.forEach(buf => {
+    combined.copyToChannel(buf.getChannelData(0), 0, offset);
+    offset += buf.length;
+  });
+  const wavBuffer = toWav(combined);
+  const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${id}-briefing-jun14.wav`;
+  a.click();
+}
+
+function toWav(buffer) {
+  const numCh = buffer.numberOfChannels;
+  const length = buffer.length * numCh * 2 + 44;
+  const out = new ArrayBuffer(length);
+  const view = new DataView(out);
+  const write = (off, str) => { for (let i = 0; i < str.length; i++) view.setUint8(off + i, str.charCodeAt(i)); };
+  write(0, 'RIFF'); view.setUint32(4, length - 8, true); write(8, 'WAVE');
+  write(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+  view.setUint16(22, numCh, true); view.setUint32(24, buffer.sampleRate, true);
+  view.setUint32(28, buffer.sampleRate * numCh * 2, true); view.setUint16(32, numCh * 2, true);
+  view.setUint16(34, 16, true); write(36, 'data'); view.setUint32(40, buffer.length * numCh * 2, true);
+  let offset = 44;
+  for (let i = 0; i < buffer.length; i++) {
+    for (let ch = 0; ch < numCh; ch++) {
+      const s = Math.max(-1, Math.min(1, buffer.getChannelData(ch)[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+  return out;
+}
+</script>
+</body>
+</html>
