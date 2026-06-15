@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing — June 15, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 24px; }
+
+  .config-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 10px;
+    padding: 16px 20px; margin-bottom: 28px;
+  }
+  .config-card label { font-size: 11px; color: #888; display: block; margin-bottom: 4px; }
+  .config-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .config-field { flex: 1; min-width: 180px; }
+  .config-field input {
+    width: 100%; background: #0f0f18; border: 1px solid #333; border-radius: 6px;
+    color: #e8eaf0; font-size: 13px; padding: 8px 10px; font-family: monospace;
+  }
+
+  .client-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%);
+    padding: 18px 22px 14px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge {
+    background: #7c8aff22; border: 1px solid #7c8aff55;
+    color: #a0acff; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .gen-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%);
+    color: #fff; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .btn-row { display: flex; }
+  .stop-btn {
+    flex: 1; padding: 11px;
+    background: #2a1a1a; border: none; border-top: 1px solid #3a2020;
+    color: #f87171; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+    border-right: 1px solid #1e1e2e;
+  }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn {
+    flex: 1; padding: 11px;
+    background: #1a2a1a; border: none; border-top: 1px solid #2a3a20;
+    color: #6b7280; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .dl-all-btn.ready { color: #4ade80; cursor: pointer; }
+  .dl-all-btn:hover.ready { background: #1e2e1e; }
+
+  .sections { padding: 0 4px 4px; }
+  .section {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #1e1e2e;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    min-width: 70px; justify-content: flex-end;
+  }
+  .play-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #7c8aff22; border: 1px solid #7c8aff44;
+    color: #a0acff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .play-btn.loading { animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .dl-btn {
+    font-size: 16px; color: #444; cursor: pointer; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .dl-btn.ready { color: #4ade80; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+
+  .status-bar {
+    padding: 10px 18px; font-size: 12px; color: #666;
+    border-top: 1px solid #1e1e2e; min-height: 38px;
+    display: flex; align-items: center;
+  }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Sunday, June 15, 2026 · 1 client</div>
+
+<div class="config-card">
+  <div class="config-row">
+    <div class="config-field">
+      <label>ElevenLabs API Key</label>
+      <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" autocomplete="off">
+    </div>
+    <div class="config-field">
+      <label>Voice ID</label>
+      <input type="text" id="voiceId" value="gWaDC0oXAheKoZfljzuI">
+    </div>
+    <div class="config-field" style="max-width:120px">
+      <label>Speed</label>
+      <input type="number" id="speed" value="1.2" min="0.7" max="1.2" step="0.05">
+    </div>
+  </div>
+</div>
+
+<!-- Vladimir Novikov -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Vladimir Novikov</h2>
+      <div class="meta">Fat Loss + VAT · CTC · Second Scan · Campbell</div>
+    </div>
+    <div class="time-badge">1:30 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-vladimir" onclick="generateAll('vladimir')">
+    <span>⚡</span> Generate All &amp; Play in Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-vladimir" onclick="stopAll('vladimir')" disabled>⏹ Stop</button>
+    <button class="dl-all-btn" id="dlAll-vladimir" onclick="downloadFullBriefing('vladimir')">↓ Download Full Briefing</button>
+  </div>
+
+  <div class="sections" id="sections-vladimir">
+
+    <div class="section" id="sec-vladimir-0" onclick="playSection('vladimir', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Vladimir Novikov. Tennis coach, mid-40s range, active lifestyle outside the gym. Second Kalos DEXA scan today, June 15 at 1:30 PM in Campbell. His first scan was May 14, so this is about four weeks of work. Primary goal is fat loss and visceral fat reduction. He came in with VAT at 195 centimeters squared, which is in the high-risk zone above 100. His ALMI landed at the 88th percentile for age and sex, which is an exceptional muscle foundation and the single biggest asset he has going into fat loss. The job for the next block is to move the VAT needle while protecting that lean mass. He trains at CTC four to five times per week independently, no Everfit program, no session logging. Creatine five grams per day. Approximately five weeks alcohol-free heading into this scan. That is the picture.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-0">▶</div>
+        <a class="dl-btn" id="dl-vladimir-0" title="Download" onclick="downloadSection('vladimir',0)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-0"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-1" onclick="playSection('vladimir', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins — Lead With These</div>
+        <div class="sec-text">Lead with the ALMI. 88th percentile for age and sex is the highest of any second-scan client in this cycle. That is a genuine structural advantage. It means the muscle base is there to protect through a cut, and it is not something most people walk in with. Open with that number. Second win: approximately five weeks alcohol-free. Alcohol is a direct driver of visceral fat accumulation, so removing it is one of the most effective levers for VAT reduction, and he stuck with it. Third: creatine five grams per day, which protects lean mass during a caloric deficit. Smart choice, consistent execution. Fourth: the one food log he submitted on June 4 showed food quality at 8 out of 10. Eggs, Premier Protein, meat. The food choices are right. That matters. The volume is the issue, not the quality.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-1">▶</div>
+        <a class="dl-btn" id="dl-vladimir-1" title="Download" onclick="downloadSection('vladimir',1)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-1"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-2" onclick="playSection('vladimir', 2)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Two red flags, closely related. First: VAT at 195 centimeters squared is the headline number. Above 100 is elevated risk; 195 is well into the danger zone. That is the primary metabolic and cardiovascular target for today and the next block. Second: under-eating is confirmed with data. The only logged day, June 4, showed 128 grams of protein against a 175 gram daily target. That is a 47 gram daily gap. Calories estimated at 1,495. Given that he is training at CTC four to five times per week, coaching tennis, and playing soccer, that caloric floor is almost certainly too aggressive. Iris flags low energy and low drive as a direct result of this deficit. The consequence of under-eating at his activity level is not faster fat loss. It is muscle loss. He has an 88th percentile ALMI to protect. The fix is not eating less. The fix is hitting 175 grams of protein consistently and building the right structure around his schedule.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-2">▶</div>
+        <a class="dl-btn" id="dl-vladimir-2" title="Download" onclick="downloadSection('vladimir',2)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-2"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-3" onclick="playSection('vladimir', 3)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">No injuries reported. The first scan showed a slight postural curve in his positioning but it was ruled out as scoliosis. Trains CTC independently four to five times per week, dumbbell and machine-based, no barbell program. Baselines were established via DM on June 10: DB Shoulder Press three sets of ten at RPE 8 out of 10, Goblet Squat three sets of 15, DB Row three sets of ten per side. These are the three movements to anchor progression around. He did not log any sessions in Everfit before today, so there is no data on whether loads moved. When you see him, ask directly: did the shoulder press feel heavier or lighter than two weeks ago, same for the goblet squat. On form: cue full depth on the Goblet Squat with controlled tempo and full range on the DB Row. Those were the specific coaching notes from the week-out message. No sessions logged means no session data to review, but he has consistently shown up at CTC across five weeks.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-3">▶</div>
+        <a class="dl-btn" id="dl-vladimir-3" title="Download" onclick="downloadSection('vladimir',3)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-3"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-4" onclick="playSection('vladimir', 4)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Sleep is reportedly good. The main recovery flag is energy and drive, which Iris notes as low. The direct cause is under-fueling at a high activity level. His total daily load is substantial: Camp four to five times per week, plus tennis coaching, plus soccer. That is a lot of output against 1,495 calories and only 128 grams of protein on the one day we can see. The fatigue is not from overtraining. It is from under-fueling. The good news is that this is correctable immediately. Once he hits protein targets and adds appropriate calories around workouts, energy should recover fast. No stress flags, no sleep issues beyond the low-energy pattern. The recovery picture is actually good if you fix the nutrition foundation underneath it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-4">▶</div>
+        <a class="dl-btn" id="dl-vladimir-4" title="Download" onclick="downloadSection('vladimir',4)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-4"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-5" onclick="playSection('vladimir', 5)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No psychological flags from Iris. No body dysmorphia, no anxiety notes, no sensitive framing required. Vladimir is a tennis coach, which means he understands performance, progression, and physical training at a professional level. He responds to concrete data and logical structure. Do not be vague. Lead with numbers: VAT 195, ALMI 88th percentile, protein 128 versus 175 grams. Frame the under-eating not as a failure but as a structural problem with a clear fix. The formula is simple: two protein shakes at 30 grams each plus three protein meals at roughly 35 grams each equals close to 175 grams without overthinking it. Anchor everything to the longevity goal he stated. He is building a body that performs well into the next decade. Protecting the 88th percentile ALMI while reducing 195-centimeter-squared visceral fat is exactly that goal. One logistical flag: possible World Cup travel post-scan. Confirm dates today and factor into program timing.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-5">▶</div>
+        <a class="dl-btn" id="dl-vladimir-5" title="Download" onclick="downloadSection('vladimir',5)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-5"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-6" onclick="playSection('vladimir', 6)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things to set after the scan. One: protein structure. Two shakes at 30 grams each plus three meals at 35 grams each equals 175 grams daily. That is the non-negotiable. Add carbohydrates around CTC sessions, soccer, and tennis to support energy output without spiking the caloric deficit. Two: seven-day food logging task in Everfit starting today. Photo journal, every meal. This is the accountability baseline for scan three. Three: decide on a formal Everfit program or confirm the CTC-independent structure with weekly check-ins. Either works, but lift tracking has to start now. Baseline loads for DB Shoulder Press, Goblet Squat, and DB Row should be entered today based on what he confirms from the last two weeks. Four: confirm World Cup travel dates and build the remote training plan before he leaves. If he is traveling for two-plus weeks, that needs a travel-adapted program in place before departure.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-6">▶</div>
+        <a class="dl-btn" id="dl-vladimir-6" title="Download" onclick="downloadSection('vladimir',6)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-6"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-7" onclick="playSection('vladimir', 7)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Vladimir has the best muscle foundation of any second-scan client this cycle. 88th percentile ALMI is rare and it is his. Five weeks alcohol-free is real discipline. The scan today will show what five weeks of consistent training plus alcohol removal plus creatine has done to the VAT number, and even a modest drop from 195 is a meaningful win for long-term health. The conversation you need to have today has two parts. Part one is celebrate what is real: the alcohol removal, the creatine, the training consistency, the food quality. Part two is fix the one structural problem: protein volume is 47 grams short per day and calories may be too low for his activity level. Give him the two-shakes-plus-three-meals formula and it becomes a solvable problem, not a vague directive. He is a coach. He understands structure. Speak his language. Frame the next block around protecting the 88th percentile ALMI while driving the VAT below 100 over the next eight to twelve weeks. That is the mission.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-7">▶</div>
+        <a class="dl-btn" id="dl-vladimir-7" title="Download" onclick="downloadSection('vladimir',7)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-vladimir"></div>
+</div>
+
+<script>
+const audioCache = {};
+let sharedCtx = null;
+let currentSource = null;
+const stopRequested = {};
+
+function getAudioCtx() {
+  if (!sharedCtx || sharedCtx.state === 'closed') {
+    sharedCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (sharedCtx.state === 'suspended') sharedCtx.resume();
+  return sharedCtx;
+}
+
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  if (currentSource) {
+    currentSource.onended = null;
+    try { currentSource.stop(); } catch(e) {}
+    currentSource = null;
+  }
+  const total = document.querySelectorAll(`#sections-${clientId} .section`).length;
+  for (let i = 0; i < total; i++) {
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const genBtn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (genBtn) { genBtn.disabled = false; genBtn.innerHTML = '<span>⚡</span> Generate All &amp; Play in Sequence'; }
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.', '');
+}
+
+function getConfig() {
+  return {
+    apiKey: document.getElementById('apiKey').value.trim(),
+    voiceId: document.getElementById('voiceId').value.trim(),
+    speed: parseFloat(document.getElementById('speed').value) || 1.2
+  };
+}
+
+function getTextForSection(clientId, idx) {
+  const el = document.querySelector(`#sec-${clientId}-${idx} .sec-text`);
+  return el ? el.innerText.trim() : '';
+}
+
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'loading' ? ' loading' : state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '▶';
+}
+
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+
+async function fetchAudio(text, config) {
+  const key = text.substring(0, 40);
+  if (audioCache[key]) return audioCache[key];
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${config.voiceId}`, {
+    method: 'POST',
+    headers: { 'xi-api-key': config.apiKey, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_multilingual_v2',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0, use_speaker_boost: true },
+      speed: Math.min(config.speed, 1.2)
+    })
+  });
+  if (!resp.ok) { const err = await resp.text(); throw new Error(`ElevenLabs ${resp.status}: ${err}`); }
+  const buf = await resp.arrayBuffer();
+  audioCache[key] = buf;
+  return buf;
+}
+
+async function playBuffer(buf) {
+  const ctx = getAudioCtx();
+  const decoded = await ctx.decodeAudioData(buf.slice(0));
+  return new Promise((resolve, reject) => {
+    if (currentSource) { currentSource.onended = null; try { currentSource.stop(); } catch(e) {} }
+    const src = ctx.createBufferSource();
+    src.buffer = decoded;
+    src.connect(ctx.destination);
+    currentSource = src;
+    src.onended = resolve;
+    src.onerror = reject;
+    src.start(0);
+  });
+}
+
+async function playSection(clientId, idx) {
+  const config = getConfig();
+  if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key above.', 'error'); return; }
+  const total = document.querySelectorAll(`#sections-${clientId} .section`).length;
+  for (let i = 0; i < total; i++) { setBtn(clientId, i, i === idx ? 'loading' : ''); setSectionPlaying(clientId, i, false); }
+  try {
+    const text = getTextForSection(clientId, idx);
+    const buf = await fetchAudio(text, config);
+    markDlReady(clientId, idx);
+    setBtn(clientId, idx, 'playing');
+    setSectionPlaying(clientId, idx, true);
+    setStatus(clientId, `Playing section ${idx + 1}...`);
+    await playBuffer(buf);
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    setStatus(clientId, 'Done.', 'ok');
+  } catch(e) {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    setStatus(clientId, 'Error: ' + e.message, 'error');
+  }
+}
+
+function markDlReady(clientId, idx) {
+  const btn = document.getElementById(`dl-${clientId}-${idx}`);
+  if (btn) btn.classList.add('ready');
+}
+
+function downloadSection(clientId, idx) {
+  const text = getTextForSection(clientId, idx);
+  const key = text.substring(0, 40);
+  if (!audioCache[key]) { setStatus(clientId, 'Play this section first.', 'error'); return; }
+  const title = document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent.replace(/\s+/g,'-').toLowerCase();
+  triggerDownload(audioCache[key], `vladimir-${idx+1}-${title}.mp3`);
+}
+
+function triggerDownload(buf, filename) {
+  const blob = new Blob([buf], { type: 'audio/mpeg' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+}
+
+async function downloadFullBriefing(clientId) {
+  const config = getConfig();
+  const sections = document.querySelectorAll(`#sections-${clientId} .section`);
+  const total = sections.length;
+  const dlBtn = document.getElementById(`dlAll-${clientId}`);
+  let allCached = true;
+  for (let i = 0; i < total; i++) {
+    if (!audioCache[getTextForSection(clientId, i).substring(0,40)]) { allCached = false; break; }
+  }
+  if (!allCached) {
+    if (!config.apiKey) { setStatus(clientId, 'Enter API key first.', 'error'); return; }
+    dlBtn.textContent = 'Generating...';
+    try {
+      for (let i = 0; i < total; i++) {
+        setStatus(clientId, `Generating ${i+1} of ${total} for download...`);
+        const text = getTextForSection(clientId, i);
+        if (!audioCache[text.substring(0,40)]) await fetchAudio(text, config);
+        markDlReady(clientId, i);
+      }
+    } catch(e) { setStatus(clientId, 'Error: ' + e.message, 'error'); dlBtn.textContent = '↓ Download Full Briefing'; return; }
+  }
+  setStatus(clientId, 'Merging and downloading...');
+  const buffers = [];
+  for (let i = 0; i < total; i++) buffers.push(new Uint8Array(audioCache[getTextForSection(clientId,i).substring(0,40)]));
+  const totalLen = buffers.reduce((s,b) => s+b.length, 0);
+  const merged = new Uint8Array(totalLen);
+  let offset = 0;
+  for (const b of buffers) { merged.set(b, offset); offset += b.length; }
+  triggerDownload(merged.buffer, 'vladimir-novikov-briefing-jun15.mp3');
+  setStatus(clientId, 'Downloaded.', 'ok');
+  dlBtn.textContent = '↓ Download Full Briefing';
+  dlBtn.classList.add('ready');
+}
+
+async function generateAll(clientId) {
+  const config = getConfig();
+  if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key above.', 'error'); return; }
+  const ctx = getAudioCtx();
+  ctx.resume();
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  if (stopBtn) stopBtn.disabled = false;
+  stopRequested[clientId] = false;
+  const sections = document.querySelectorAll(`#sections-${clientId} .section`);
+  const total = sections.length;
+  try {
+    for (let i = 0; i < total; i++) {
+      if (stopRequested[clientId]) break;
+      setStatus(clientId, `Generating ${i+1} of ${total}...`);
+      setBtn(clientId, i, 'loading');
+      await fetchAudio(getTextForSection(clientId, i), config);
+      setBtn(clientId, i, '');
+      markDlReady(clientId, i);
+    }
+    if (stopRequested[clientId]) return;
+    const dlAll = document.getElementById(`dlAll-${clientId}`);
+    if (dlAll) { dlAll.classList.add('ready'); dlAll.textContent = '↓ Download Full Briefing'; }
+    setStatus(clientId, 'All generated. Playing...', 'ok');
+    btn.disabled = false;
+    btn.innerHTML = '<span>⚡</span> Generate All &amp; Play in Sequence';
+    for (let i = 0; i < total; i++) {
+      if (stopRequested[clientId]) break;
+      document.querySelectorAll(`#sections-${clientId} .section`).forEach((s,si) => setSectionPlaying(clientId, si, si === i));
+      setBtn(clientId, i, 'playing');
+      setStatus(clientId, `Section ${i+1} of ${total}: ${document.querySelector(`#sec-${clientId}-${i} .sec-title`).textContent}`);
+      await playBuffer(audioCache[getTextForSection(clientId, i).substring(0,40)]);
+      setBtn(clientId, i, '');
+      setSectionPlaying(clientId, i, false);
+    }
+    if (!stopRequested[clientId]) {
+      setStatus(clientId, 'Briefing complete.', 'ok');
+      if (stopBtn) stopBtn.disabled = true;
+    }
+  } catch(e) {
+    if (!stopRequested[clientId]) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>⚡</span> Generate All &amp; Play in Sequence';
+      if (stopBtn) stopBtn.disabled = true;
+      setStatus(clientId, 'Error: ' + e.message, 'error');
+      const total2 = document.querySelectorAll(`#sections-${clientId} .section`).length;
+      for (let i = 0; i < total2; i++) setBtn(clientId, i, '');
+    }
+  }
+}
+</script>
+</body>
+</html>
