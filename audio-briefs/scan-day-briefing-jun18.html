@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing — June 18, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 24px; }
+
+  .config-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 10px;
+    padding: 16px 20px; margin-bottom: 28px;
+  }
+  .config-card label { font-size: 11px; color: #888; display: block; margin-bottom: 4px; }
+  .config-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .config-field { flex: 1; min-width: 180px; }
+  .config-field input {
+    width: 100%; background: #0f0f18; border: 1px solid #333; border-radius: 6px;
+    color: #e8eaf0; font-size: 13px; padding: 8px 10px; font-family: monospace;
+  }
+
+  .client-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%);
+    padding: 18px 22px 14px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge {
+    background: #7c8aff22; border: 1px solid #7c8aff55;
+    color: #a0acff; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .gen-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%);
+    color: #fff; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .btn-row { display: flex; }
+  .stop-btn {
+    flex: 1; padding: 11px;
+    background: #2a1a1a; border: none; border-top: 1px solid #3a2020;
+    color: #f87171; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+    border-right: 1px solid #1e1e2e;
+  }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn {
+    flex: 1; padding: 11px;
+    background: #1a2a1a; border: none; border-top: 1px solid #2a3a20;
+    color: #6b7280; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .dl-all-btn.ready { color: #4ade80; cursor: pointer; }
+  .dl-all-btn:hover.ready { background: #1e2e1e; }
+
+  .sections { padding: 0 4px 4px; }
+  .section {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #1e1e2e;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    min-width: 70px; justify-content: flex-end;
+  }
+  .play-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #7c8aff22; border: 1px solid #7c8aff44;
+    color: #a0acff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .play-btn.loading { animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .dl-btn {
+    font-size: 16px; color: #444; cursor: pointer; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .dl-btn.ready { color: #4ade80; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+
+  .status-bar {
+    padding: 10px 18px; font-size: 12px; color: #666;
+    border-top: 1px solid #1e1e2e; min-height: 38px;
+    display: flex; align-items: center;
+  }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Thursday, June 18, 2026 · 3 clients · Duo: Xi Chen &amp; Feng Tian (12:00 PM) · Solo: Vladimir Novikov (1:30 PM)</div>
+
+<div class="config-card">
+  <div class="config-row">
+    <div class="config-field">
+      <label>ElevenLabs API Key</label>
+      <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" autocomplete="off">
+    </div>
+    <div class="config-field">
+      <label>Voice ID</label>
+      <input type="text" id="voiceId" value="gWaDC0oXAheKoZfljzuI">
+    </div>
+    <div class="config-field" style="max-width:120px">
+      <label>Speed</label>
+      <input type="number" id="speed" value="1.2" min="0.7" max="1.2" step="0.05">
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── XI CHEN ─────────────── -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Xi Chen</h2>
+      <div class="meta">Muscle Build · 51F · Duo w/ Feng Tian · Lower Back Protocol · Membership Ends Today</div>
+    </div>
+    <div class="time-badge">12:00 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-xi" onclick="generateAll('xi')">
+    <span>⚡</span> Generate All &amp; Play in Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-xi" onclick="stopAll('xi')" disabled>⏹ Stop</button>
+    <button class="dl-all-btn" id="dlAll-xi" onclick="downloadFullBriefing('xi', 'xi-chen-briefing-jun18')">↓ Download Full Briefing</button>
+  </div>
+
+  <div class="sections" id="sections-xi">
+
+    <div class="section" id="sec-xi-0" onclick="playSection('xi', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Xi Chen. 51-year-old woman, four-week Kalos member, DB-only full body program. Second Kalos Duo DEXA scan today, June 18, scanning alongside Feng Tian in Campbell. First scan was May 18, so this is exactly four weeks of work. Primary goal is fat loss and functional strength, but the structural headline is ALMI at 8th percentile for age and sex. That is the critical number — lean mass is critically low and building it is the first priority. VAT at 78.6 centimeters squared is healthy, no visceral fat concern. Body fat at 35.8 percent, 38th percentile for age and sex. She completed 13 sessions, 100 percent attendance, three workouts per week on a dumbbell-only full body program. Membership ends today on scan day, so the renewal conversation is built into the debrief.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-xi-0">▶</div>
+        <a class="dl-btn" id="dl-xi-0" title="Download" onclick="downloadSection('xi',0)">↓</a>
+        <div class="sec-dur" id="dur-xi-0"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-xi-1" onclick="playSection('xi', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins — Lead With These</div>
+        <div class="sec-text">Lead with the attendance. 100 percent, 13 for 13 sessions. Perfect adherence across the full four-week DB-only program. For a first-time Kalos member at 51 years old, this is exceptional and rare. It is the best possible foundation heading into a scan. Second win: PRs on DB Incline Bench. She hit 28 pounds for three sets of 15-15-12 in her most recent session. The third set at 15 reps is within reach this week. For a member at 8th percentile ALMI, upper body progressive loading is directly contributing to lean mass, and the incline bench PR is the clearest proof that it is working. Third: week-out messaging complete June 14. Opener and lift targets sent, food journal tasks added for June 14 and 15. She showed up every single week. No exceptions.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-xi-1">▶</div>
+        <a class="dl-btn" id="dl-xi-1" title="Download" onclick="downloadSection('xi',1)">↓</a>
+        <div class="sec-dur" id="dur-xi-1"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-xi-2" onclick="playSection('xi', 2)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Two concerns. First and primary: ALMI at 8th percentile is the structural headline. This is the lowest lean mass percentile of any second-scan client in this cycle. The goal is muscle build, not pure fat loss. Losing scale weight without gaining lean mass keeps her at 8th percentile or below, which is a long-term health and metabolism risk. The debrief frame needs to be direct — did lean mass move? Even half a pound to one pound in four weeks is real, meaningful progress. Second concern: nutrition. Iris prep shows average daily protein of 82 grams against a 105 gram target. That is a 23 gram daily shortfall. Calories running around 1,277 per day. The protein gap is the single biggest limiter for lean mass growth in Phase 2. And the timing flag for today: she had a minor medical procedure on June 16, yesterday. She skipped breakfast and lunch. Before anything else, check in on how she is feeling — hydration, energy, whether eating is back to normal. Do not lead with data if she is still recovering.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-xi-2">▶</div>
+        <a class="dl-btn" id="dl-xi-2" title="Download" onclick="downloadSection('xi',2)">↓</a>
+        <div class="sec-dur" id="dur-xi-2"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-xi-3" onclick="playSection('xi', 3)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">Lower back protection is the standing coaching constraint. This is non-negotiable in Phase 2 and beyond. All exercise selection, technique cues, and programming must account for it at every session. Lower back responds better to dumbbell work, which is why the DB-only program has worked well. The form notes flag achiness with certain barbell movements and extended sitting. Core and glute activation is always the correct warm-up entry point. On the positive side: DB Incline Bench hitting 28 pounds for three sets of 15-15-12 shows clean upper body progression. The third set at 15 reps is the near-term target. Bone density is in a healthy place — T-score plus 0.3, Z-score plus 0.3 — so no BMD modifications needed. Four weeks of clean progressive overload with no injury setbacks. Phase 2 should maintain the DB-only format with deliberate upper body emphasis to address the ALMI gap.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-xi-3">▶</div>
+        <a class="dl-btn" id="dl-xi-3" title="Download" onclick="downloadSection('xi',3)">↓</a>
+        <div class="sec-dur" id="dur-xi-3"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-xi-4" onclick="playSection('xi', 4)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">The medical procedure on June 16 is the recovery variable going into today. She skipped breakfast and lunch yesterday, so she may be under-fueled heading into the scan and debrief. Check in first. Ask directly: how are you feeling, hydration okay, eating back to normal? No additional stress or sleep flags from Iris. Training volume at three sessions per week is moderate and appropriate for recovery. The DB-only format keeps joint stress low which is correct for lower back management. Overall recovery capacity looks reasonable for a 51-year-old at this training volume. The main unknown is today's post-procedure status. Let her tell you before you set the tone of the conversation.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-xi-4">▶</div>
+        <a class="dl-btn" id="dl-xi-4" title="Download" onclick="downloadSection('xi',4)">↓</a>
+        <div class="sec-dur" id="dur-xi-4"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-xi-5" onclick="playSection('xi', 5)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No body dysmorphia, no anxiety flags in Iris. Xi is motivated, consistent, and responds to clear data-driven feedback. The ALMI conversation is the nuanced one. She needs to understand that the goal is to add lean mass, not just lose weight. If the scale holds steady or moves slightly while lean mass increases and fat decreases, that is the correct and intended outcome. Frame the 8th percentile as a structural priority for health and longevity — not just aesthetics. At 51, lean mass is directly tied to metabolic rate, bone protection, and independence long-term. The renewal conversation closes the debrief naturally. Make it about the arc: moving the 8th percentile needle takes three to six months minimum. One month is a starting point, not a finish line. She has proven she can show up. The question is whether she extends.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-xi-5">▶</div>
+        <a class="dl-btn" id="dl-xi-5" title="Download" onclick="downloadSection('xi',5)">↓</a>
+        <div class="sec-dur" id="dur-xi-5"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-xi-6" onclick="playSection('xi', 6)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things to set after the scan. One: protein target, 105 grams per day minimum. Structure it as three to four meals of 25 to 35 grams each. This is the primary lever for lean mass at 8th percentile ALMI. The 23 gram daily shortfall closes the moment she adds one protein-forward meal or shake. Two: progressive overload on DB Incline Bench — target 28 pounds for three sets of 15 in Phase 2, then advance to 30 pounds when the third set hits 15 reps. Upper body loading directly addresses the ALMI gap. Three: lower back monitoring protocol for Phase 2 — establish the stop rule for sharp pain versus normal muscular fatigue, keep core activation in every warm-up, flag any new lower back feedback before programming changes. Four: membership renewal. Frame it around the ALMI trajectory. She is at 8th percentile. Moving that needle meaningfully takes three to six months of consistent resistance training with adequate protein. One month was the baseline. Phase 2 is where the real structural change happens.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-xi-6">▶</div>
+        <a class="dl-btn" id="dl-xi-6" title="Download" onclick="downloadSection('xi',6)">↓</a>
+        <div class="sec-dur" id="dur-xi-6"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-xi-7" onclick="playSection('xi', 7)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Xi is exceptional for a first-time member. 100 percent attendance, 13 for 13, PRs on DB Incline Bench — the foundation is as good as it gets at four weeks. The ALMI number is the honest truth and it needs a clear conversation: at 8th percentile, lean mass growth is the health priority, and that takes time and protein. She had a procedure yesterday, so read the room before anything else. Ask how she is doing, make sure she is okay, and let her set the tone before you go into data. The renewal close is the most important logistical moment of today — make it about the arc. She is 51, she has an ALMI that needs real work over the next six months, and she has already proven she will show up every time. That combination is everything. Give her the honest case for extending and let her decide.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-xi-7">▶</div>
+        <a class="dl-btn" id="dl-xi-7" title="Download" onclick="downloadSection('xi',7)">↓</a>
+        <div class="sec-dur" id="dur-xi-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-xi"></div>
+</div>
+
+<!-- ─────────────── FENG TIAN ─────────────── -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Feng Tian</h2>
+      <div class="meta">Fat Loss + Longevity · 52M · Duo w/ Xi Chen · VAT Near High-Risk · Membership Expired Jun 15</div>
+    </div>
+    <div class="time-badge">12:00 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-feng" onclick="generateAll('feng')">
+    <span>⚡</span> Generate All &amp; Play in Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-feng" onclick="stopAll('feng')" disabled>⏹ Stop</button>
+    <button class="dl-all-btn" id="dlAll-feng" onclick="downloadFullBriefing('feng', 'feng-tian-briefing-jun18')">↓ Download Full Briefing</button>
+  </div>
+
+  <div class="sections" id="sections-feng">
+
+    <div class="section" id="sec-feng-0" onclick="playSection('feng', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Feng Tian. 52-year-old man, four-week Kalos member, DB-only upper/lower/full body program. Second Kalos Duo DEXA scan today, June 18, scanning alongside Xi Chen in Campbell. First scan was May 18. Primary goals are fat loss and longevity. VAT at 151.6 centimeters squared is elevated and approaching the high-risk threshold at 160 — this is the primary metabolic target and the headline number for today's debrief. Body fat at 29.7 percent, AM 78th percentile. ALMI at 34th percentile for age and sex — below average but not critical at four weeks. He completed 12 sessions with 100 percent attendance since day one. Membership expired three days ago on June 15. The renewal conversation is the logistical close of today's session.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-feng-0">▶</div>
+        <a class="dl-btn" id="dl-feng-0" title="Download" onclick="downloadSection('feng',0)">↓</a>
+        <div class="sec-dur" id="dur-feng-0"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-feng-1" onclick="playSection('feng', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins — Lead With These</div>
+        <div class="sec-text">Lead with the attendance. 12 for 12. Perfect completion from day one. He hit every session across the full four-week program with no misses. That is the best possible foundation heading into a scan, and in a caloric deficit it is the primary driver of what the body composition results will show. Second win: progressive DB strength across all three movement patterns. He is targeting 45 pounds on bench press, shoulder-accessible row, and Romanian deadlift this week, which represents meaningful progression from a four-week DB-only baseline. Third: week-out messaging sent June 14, opener and lift targets confirmed, food journal tasks added. He responded to every prep step. Fourth: the fact that he scanned at all, given his membership expired June 15, shows intent to complete the process. Name it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-feng-1">▶</div>
+        <a class="dl-btn" id="dl-feng-1" title="Download" onclick="downloadSection('feng',1)">↓</a>
+        <div class="sec-dur" id="dur-feng-1"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-feng-2" onclick="playSection('feng', 2)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">VAT at 151.6 centimeters squared is 8.4 centimeters from the high-risk threshold at 160. That is the number to lead with today. Above 100 centimeters squared is elevated risk. At 151.6, Feng is in the elevated zone and close to the danger threshold. The direction of today's scan result is the key data point — even a small reduction signals the protocol is working and makes the case for continuation. If VAT held flat or moved upward, that is the urgency argument for extending. Either way, 151.6 is not done. BF at 29.7 percent is above age-average and the longer-term fat loss target is 10 to 15 pounds, moving toward the 24 to 26 percent range. Mild BMD at T-score minus 0.8, Z-score minus 0.6 — not critical but worth continued weight-bearing loading. Second flag: membership expired June 15. Three days elapsed. The VAT number makes the renewal case itself.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-feng-2">▶</div>
+        <a class="dl-btn" id="dl-feng-2" title="Download" onclick="downloadSection('feng',2)">↓</a>
+        <div class="sec-dur" id="dur-feng-2"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-feng-3" onclick="playSection('feng', 3)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">No injuries reported. Clean four-week training history. DB-only upper/lower/full body alternating, four sessions per week. Targeting 45 pounds on DB bench press, shoulder-accessible row, and Romanian deadlift this week — that is a meaningful progression benchmark from a DB-only first program. The mild BMD flag, T-score minus 0.8 and Z-score minus 0.6, means weight-bearing exercise is the correct intervention, and the current programming already addresses this with compound lower body and push/pull movements. No BMD adjustments needed at four weeks. One thing to check in the regional breakdown today: Scan 1 showed a lean mass imbalance between left and right arm at 6.83 versus 8.06 pounds. See if that gap has narrowed. It would be a useful coaching data point for Phase 2 unilateral emphasis.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-feng-3">▶</div>
+        <a class="dl-btn" id="dl-feng-3" title="Download" onclick="downloadSection('feng',3)">↓</a>
+        <div class="sec-dur" id="dur-feng-3"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-feng-4" onclick="playSection('feng', 4)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">No specific recovery flags from Iris. Sleep not flagged. Training volume at four sessions per week alternating upper/lower/full body is appropriate and sustainable for a 52-year-old with his profile. Membership expired June 15 means three days between the last official program session and today's scan. Ask whether he kept training in those three days. If protein and calories were maintained through the scan prep window, recovery heading into today should be adequate. No major life stress flagged in Iris. No travel. Recovery picture looks clean overall.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-feng-4">▶</div>
+        <a class="dl-btn" id="dl-feng-4" title="Download" onclick="downloadSection('feng',4)">↓</a>
+        <div class="sec-dur" id="dur-feng-4"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-feng-5" onclick="playSection('feng', 5)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No psychological flags from Iris. Feng is 52, goal-oriented, and executed perfectly on the attendance target. He is a data-responsive person who follows through on what he commits to. The VAT conversation is clinical and motivational simultaneously. Frame 151.6 centimeters squared as proximity to the danger zone — within 9 centimeters of high risk — not as catastrophic, but as unfinished. If VAT moved at all today, that is proof the protocol is working and extension is logical. If it held, it is still elevated and the argument for continuing is the same. The ALMI trajectory to 70th percentile is the long-game frame for a 52-year-old focused on longevity. He is at 34th percentile today. That is a goal for Phase 3 or 4, not something to pressure at this scan. Lead with the wins, anchor to the VAT data, close on the renewal.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-feng-5">▶</div>
+        <a class="dl-btn" id="dl-feng-5" title="Download" onclick="downloadSection('feng',5)">↓</a>
+        <div class="sec-dur" id="dur-feng-5"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-feng-6" onclick="playSection('feng', 6)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things to set. One: renew membership. The VAT is 8 centimeters from high risk. That is not done, and he knows it. Two: protein target, 155 grams per day. Frame it as four feedings of 35 to 40 grams each — shake at breakfast, protein at lunch, shake or protein mid-afternoon, protein at dinner. Caloric deficit maintained, protein emphasis. Three: progressive overload structure for Phase 2. The 45-pound bench, SAR, and RDL are the near-term targets. Phase 2 should push toward those numbers with deliberate periodization and an emphasis on the left arm to close the lean mass imbalance flagged in Scan 1. Four: BMD monitoring. T-score minus 0.8 is not critical at four weeks but weight-bearing loading consistency is what protects it long-term. Current program is correct. Stay on it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-feng-6">▶</div>
+        <a class="dl-btn" id="dl-feng-6" title="Download" onclick="downloadSection('feng',6)">↓</a>
+        <div class="sec-dur" id="dur-feng-6"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-feng-7" onclick="playSection('feng', 7)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Feng showed up perfectly — 12 for 12. The VAT number is the headline: at 151.6 centimeters squared, even a 5 to 10 centimeter reduction today is meaningful forward progress. The trend direction is what you need to communicate clearly. If VAT moved down, that is the proof case for extending. If it held, 151.6 is still close to high-risk and the argument does not change. Membership expired three days ago so the renewal is the logistical close of the debrief. Make it about the VAT arc — he is 9 centimeters from the high-risk zone and moving it below 100 is a 6 to 12 month project minimum. He has proven he will show up every time. That is not nothing. Give him the honest case and let the data speak.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-feng-7">▶</div>
+        <a class="dl-btn" id="dl-feng-7" title="Download" onclick="downloadSection('feng',7)">↓</a>
+        <div class="sec-dur" id="dur-feng-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-feng"></div>
+</div>
+
+<!-- ─────────────── VLADIMIR NOVIKOV ─────────────── -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Vladimir Novikov</h2>
+      <div class="meta">Fat Loss + VAT · CTC · Solo · Rescheduled from Jun 15 · Campbell</div>
+    </div>
+    <div class="time-badge">1:30 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-vladimir" onclick="generateAll('vladimir')">
+    <span>⚡</span> Generate All &amp; Play in Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-vladimir" onclick="stopAll('vladimir')" disabled>⏹ Stop</button>
+    <button class="dl-all-btn" id="dlAll-vladimir" onclick="downloadFullBriefing('vladimir', 'vladimir-novikov-briefing-jun18')">↓ Download Full Briefing</button>
+  </div>
+
+  <div class="sections" id="sections-vladimir">
+
+    <div class="section" id="sec-vladimir-0" onclick="playSection('vladimir', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Vladimir Novikov. Tennis coach, mid-40s range, active lifestyle outside the gym. Second Kalos DEXA scan today, June 18 at 1:30 PM in Campbell. His original scan was scheduled for June 15 and rescheduled to today. First scan was May 14, so this is approximately five weeks of work rather than four. Primary goal is fat loss and visceral fat reduction. He came in with VAT at 195 centimeters squared, which is firmly in the high-risk zone above 100. His ALMI landed at the 88th percentile for age and sex, which is an exceptional muscle foundation and the single biggest asset he has going into a fat loss phase. The job for the next block is to move the VAT needle while protecting that lean mass. He trains at CTC four to five times per week independently, no Everfit program, no session logging. Creatine five grams per day. Approximately six weeks alcohol-free heading into this scan. That is the picture.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-0">▶</div>
+        <a class="dl-btn" id="dl-vladimir-0" title="Download" onclick="downloadSection('vladimir',0)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-0"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-1" onclick="playSection('vladimir', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins — Lead With These</div>
+        <div class="sec-text">Lead with the ALMI. 88th percentile for age and sex is the highest of any second-scan client in this cycle. That is a genuine structural advantage — the muscle base is there to protect through a cut, and it is not something most people walk in with. Open with that number. Second win: approximately six weeks alcohol-free. Alcohol is a direct driver of visceral fat accumulation, so removing it is one of the most effective levers for VAT reduction, and he stuck with it through the scan rescheduling without losing discipline. Third: creatine five grams per day, consistent. Smart supplementation that protects lean mass during a caloric deficit. Fourth: the one food log he submitted on June 4 showed food quality at 8 out of 10. Eggs, Premier Protein, meat. The food choices are right. That matters. The volume is the issue, not the quality. Name each of these explicitly.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-1">▶</div>
+        <a class="dl-btn" id="dl-vladimir-1" title="Download" onclick="downloadSection('vladimir',1)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-1"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-2" onclick="playSection('vladimir', 2)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Two red flags, closely related. First: VAT at 195 centimeters squared is the headline number. Above 100 is elevated risk; 195 is firmly in the danger zone. That is the primary metabolic and cardiovascular target for today and the next block. Second: under-eating is confirmed with data. The only logged day, June 4, showed 128 grams of protein against a 175 gram daily target — a 47 gram daily gap. Calories estimated at 1,495. Given that he trains at CTC four to five times per week, coaches tennis, and plays soccer, that caloric floor is almost certainly too low. Iris flags low energy and drive as a direct consequence of this deficit. The math is straightforward: at his activity level, under-eating does not accelerate fat loss. It risks lean mass. He has an 88th percentile ALMI to protect. The fix is structural: 175 grams of protein consistently and appropriate calories to support his output.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-2">▶</div>
+        <a class="dl-btn" id="dl-vladimir-2" title="Download" onclick="downloadSection('vladimir',2)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-2"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-3" onclick="playSection('vladimir', 3)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">No injuries reported. The first scan showed a slight postural curve in his positioning but it was ruled out as scoliosis. Trains CTC independently four to five times per week, dumbbell and machine-based. Baselines established via DM on June 10: DB Shoulder Press three sets of ten at RPE 8, Goblet Squat three sets of 15, DB Row three sets of ten per side. These are the three anchor movements for progression. He did not log any sessions in Everfit, so there is no data on whether loads moved since June 10. When you see him, ask directly: did the shoulder press feel heavier or lighter than three weeks ago, same for the goblet squat. Specific coaching notes from the week-out message flagged full depth on the Goblet Squat with controlled tempo, and full range on the DB Row. The scan rescheduling from June 15 to June 18 gives him three additional days of training — ask how the last sessions felt.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-3">▶</div>
+        <a class="dl-btn" id="dl-vladimir-3" title="Download" onclick="downloadSection('vladimir',3)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-3"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-4" onclick="playSection('vladimir', 4)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Sleep reportedly good. The main recovery flag is energy and drive, which Iris notes as low. The direct cause is under-fueling at a high total activity level. His daily output is substantial: CTC four to five times per week, plus tennis coaching, plus soccer. That is a lot of output against 1,495 estimated calories and 128 grams of protein on the one logged day. The fatigue is from under-fueling, not overtraining. The good news is that this is immediately correctable. Once he hits protein targets and adds appropriate calories around workouts, energy should recover quickly. No stress flags, no sleep issues beyond the low-energy pattern. The recovery picture is actually solid if you fix the nutrition underneath it. Also worth asking: the scan rescheduling happened on June 15 — confirm there were no logistical stressors or changes to his routine in the three extra days that might affect today's results.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-4">▶</div>
+        <a class="dl-btn" id="dl-vladimir-4" title="Download" onclick="downloadSection('vladimir',4)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-4"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-5" onclick="playSection('vladimir', 5)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No psychological flags from Iris. No body dysmorphia, no anxiety notes, no sensitive framing required. Vladimir is a tennis coach, which means he understands performance, progression, and physical training at a professional level. He responds to concrete data and logical structure. Lead with numbers: VAT 195, ALMI 88th percentile, protein 128 versus 175 grams. Frame the under-eating not as a failure but as a structural problem with a clear fix. The formula is simple: two protein shakes at 30 grams each plus three protein meals at roughly 35 grams each gets him close to 175 grams without overthinking it. Anchor everything to the longevity goal. He is building a body that performs well into the next decade. Protecting the 88th percentile ALMI while reducing 195-centimeter-squared visceral fat is exactly that. One logistical item: the scan was rescheduled from June 15 to today. Confirm whether the original trigger was scheduling or travel, in case it informs World Cup travel timing post-scan.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-5">▶</div>
+        <a class="dl-btn" id="dl-vladimir-5" title="Download" onclick="downloadSection('vladimir',5)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-5"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-6" onclick="playSection('vladimir', 6)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things to set after the scan. One: protein structure. Two shakes at 30 grams each plus three meals at 35 grams each equals 175 grams daily. That is the non-negotiable baseline. Add carbohydrates around CTC sessions, soccer, and tennis coaching to support total energy output without starving the deficit. Two: seven-day food logging task in Everfit starting today. Photo journal, every meal. This is the accountability baseline for scan three and the only way to know if the structure is actually working. Three: decide on a formal Everfit program or confirm the CTC-independent structure with weekly check-ins. Either works, but lift tracking has to start now. Enter baseline loads for DB Shoulder Press, Goblet Squat, and DB Row based on what he confirms today from the last three weeks. Four: confirm World Cup travel dates and build a remote training plan before he departs. If he is traveling two-plus weeks, that plan needs to be in place before he leaves.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-6">▶</div>
+        <a class="dl-btn" id="dl-vladimir-6" title="Download" onclick="downloadSection('vladimir',6)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-6"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-vladimir-7" onclick="playSection('vladimir', 7)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Vladimir has the best muscle foundation of any second-scan client in this cycle. 88th percentile ALMI is rare and it is his. Six weeks alcohol-free is real discipline, especially through a scan rescheduling. The scan today will show what five-plus weeks of consistent training plus alcohol removal plus creatine has done to the VAT number, and even a modest drop from 195 is a meaningful win for long-term cardiovascular health. The conversation has two parts. Part one: celebrate what is real — the alcohol removal, the creatine, the training consistency, the food quality score. Part two: fix the one structural problem — protein volume is 47 grams short per day and calories are likely too low for his output. Give him the two-shakes-plus-three-meals formula and it becomes a solvable problem, not a vague directive. He is a coach. He understands structure. Speak his language. The mission for the next block: protect the 88th percentile ALMI while driving VAT below 100 over the next eight to twelve weeks.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-vladimir-7">▶</div>
+        <a class="dl-btn" id="dl-vladimir-7" title="Download" onclick="downloadSection('vladimir',7)">↓</a>
+        <div class="sec-dur" id="dur-vladimir-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-vladimir"></div>
+</div>
+
+<script>
+const audioCache = {};
+let sharedCtx = null;
+let currentSource = null;
+const stopRequested = {};
+
+function getAudioCtx() {
+  if (!sharedCtx || sharedCtx.state === 'closed') {
+    sharedCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (sharedCtx.state === 'suspended') sharedCtx.resume();
+  return sharedCtx;
+}
+
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  if (currentSource) {
+    currentSource.onended = null;
+    try { currentSource.stop(); } catch(e) {}
+    currentSource = null;
+  }
+  const total = document.querySelectorAll(`#sections-${clientId} .section`).length;
+  for (let i = 0; i < total; i++) {
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const genBtn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (genBtn) { genBtn.disabled = false; genBtn.innerHTML = '<span>⚡</span> Generate All &amp; Play in Sequence'; }
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.', '');
+}
+
+function getConfig() {
+  return {
+    apiKey: document.getElementById('apiKey').value.trim(),
+    voiceId: document.getElementById('voiceId').value.trim(),
+    speed: parseFloat(document.getElementById('speed').value) || 1.2
+  };
+}
+
+function getTextForSection(clientId, idx) {
+  const el = document.querySelector(`#sec-${clientId}-${idx} .sec-text`);
+  return el ? el.innerText.trim() : '';
+}
+
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'loading' ? ' loading' : state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '▶';
+}
+
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+
+async function fetchAudio(text, config) {
+  const key = text.substring(0, 40);
+  if (audioCache[key]) return audioCache[key];
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${config.voiceId}`, {
+    method: 'POST',
+    headers: { 'xi-api-key': config.apiKey, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_multilingual_v2',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0, use_speaker_boost: true },
+      speed: Math.min(config.speed, 1.2)
+    })
+  });
+  if (!resp.ok) { const err = await resp.text(); throw new Error(`ElevenLabs ${resp.status}: ${err}`); }
+  const buf = await resp.arrayBuffer();
+  audioCache[key] = buf;
+  return buf;
+}
+
+async function playBuffer(buf) {
+  const ctx = getAudioCtx();
+  const decoded = await ctx.decodeAudioData(buf.slice(0));
+  return new Promise((resolve, reject) => {
+    if (currentSource) { currentSource.onended = null; try { currentSource.stop(); } catch(e) {} }
+    const src = ctx.createBufferSource();
+    src.buffer = decoded;
+    src.connect(ctx.destination);
+    currentSource = src;
+    src.onended = resolve;
+    src.onerror = reject;
+    src.start(0);
+  });
+}
+
+async function playSection(clientId, idx) {
+  const config = getConfig();
+  if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key above.', 'error'); return; }
+  const total = document.querySelectorAll(`#sections-${clientId} .section`).length;
+  for (let i = 0; i < total; i++) { setBtn(clientId, i, i === idx ? 'loading' : ''); setSectionPlaying(clientId, i, false); }
+  try {
+    const text = getTextForSection(clientId, idx);
+    const buf = await fetchAudio(text, config);
+    markDlReady(clientId, idx);
+    setBtn(clientId, idx, 'playing');
+    setSectionPlaying(clientId, idx, true);
+    setStatus(clientId, `Playing section ${idx + 1}...`);
+    await playBuffer(buf);
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    setStatus(clientId, 'Done.', 'ok');
+  } catch(e) {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    setStatus(clientId, 'Error: ' + e.message, 'error');
+  }
+}
+
+function markDlReady(clientId, idx) {
+  const btn = document.getElementById(`dl-${clientId}-${idx}`);
+  if (btn) btn.classList.add('ready');
+}
+
+function downloadSection(clientId, idx) {
+  const text = getTextForSection(clientId, idx);
+  const key = text.substring(0, 40);
+  if (!audioCache[key]) { setStatus(clientId, 'Play this section first.', 'error'); return; }
+  const title = document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent.replace(/\s+/g,'-').toLowerCase();
+  triggerDownload(audioCache[key], `${clientId}-${idx+1}-${title}.mp3`);
+}
+
+function triggerDownload(buf, filename) {
+  const blob = new Blob([buf], { type: 'audio/mpeg' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+}
+
+async function downloadFullBriefing(clientId, filename) {
+  const config = getConfig();
+  const sections = document.querySelectorAll(`#sections-${clientId} .section`);
+  const total = sections.length;
+  const dlBtn = document.getElementById(`dlAll-${clientId}`);
+  let allCached = true;
+  for (let i = 0; i < total; i++) {
+    if (!audioCache[getTextForSection(clientId, i).substring(0,40)]) { allCached = false; break; }
+  }
+  if (!allCached) {
+    if (!config.apiKey) { setStatus(clientId, 'Enter API key first.', 'error'); return; }
+    dlBtn.textContent = 'Generating...';
+    try {
+      for (let i = 0; i < total; i++) {
+        setStatus(clientId, `Generating ${i+1} of ${total} for download...`);
+        const text = getTextForSection(clientId, i);
+        if (!audioCache[text.substring(0,40)]) await fetchAudio(text, config);
+        markDlReady(clientId, i);
+      }
+    } catch(e) { setStatus(clientId, 'Error: ' + e.message, 'error'); dlBtn.textContent = '↓ Download Full Briefing'; return; }
+  }
+  setStatus(clientId, 'Merging and downloading...');
+  const buffers = [];
+  for (let i = 0; i < total; i++) buffers.push(new Uint8Array(audioCache[getTextForSection(clientId,i).substring(0,40)]));
+  const totalLen = buffers.reduce((s,b) => s+b.length, 0);
+  const merged = new Uint8Array(totalLen);
+  let offset = 0;
+  for (const b of buffers) { merged.set(b, offset); offset += b.length; }
+  triggerDownload(merged.buffer, `${filename}.mp3`);
+  setStatus(clientId, 'Downloaded.', 'ok');
+  dlBtn.textContent = '↓ Download Full Briefing';
+  dlBtn.classList.add('ready');
+}
+
+async function generateAll(clientId) {
+  const config = getConfig();
+  if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key above.', 'error'); return; }
+  const ctx = getAudioCtx();
+  ctx.resume();
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  if (stopBtn) stopBtn.disabled = false;
+  stopRequested[clientId] = false;
+  const sections = document.querySelectorAll(`#sections-${clientId} .section`);
+  const total = sections.length;
+  try {
+    for (let i = 0; i < total; i++) {
+      if (stopRequested[clientId]) break;
+      setStatus(clientId, `Generating ${i+1} of ${total}...`);
+      setBtn(clientId, i, 'loading');
+      await fetchAudio(getTextForSection(clientId, i), config);
+      setBtn(clientId, i, '');
+      markDlReady(clientId, i);
+    }
+    if (stopRequested[clientId]) return;
+    const dlAll = document.getElementById(`dlAll-${clientId}`);
+    if (dlAll) { dlAll.classList.add('ready'); dlAll.textContent = '↓ Download Full Briefing'; }
+    setStatus(clientId, 'All generated. Playing...', 'ok');
+    btn.disabled = false;
+    btn.innerHTML = '<span>⚡</span> Generate All &amp; Play in Sequence';
+    for (let i = 0; i < total; i++) {
+      if (stopRequested[clientId]) break;
+      document.querySelectorAll(`#sections-${clientId} .section`).forEach((s,si) => setSectionPlaying(clientId, si, si === i));
+      setBtn(clientId, i, 'playing');
+      setStatus(clientId, `Section ${i+1} of ${total}: ${document.querySelector(`#sec-${clientId}-${i} .sec-title`).textContent}`);
+      await playBuffer(audioCache[getTextForSection(clientId, i).substring(0,40)]);
+      setBtn(clientId, i, '');
+      setSectionPlaying(clientId, i, false);
+    }
+    if (!stopRequested[clientId]) {
+      setStatus(clientId, 'Briefing complete.', 'ok');
+      if (stopBtn) stopBtn.disabled = true;
+    }
+  } catch(e) {
+    if (!stopRequested[clientId]) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>⚡</span> Generate All &amp; Play in Sequence';
+      if (stopBtn) stopBtn.disabled = true;
+      setStatus(clientId, 'Error: ' + e.message, 'error');
+      const total2 = document.querySelectorAll(`#sections-${clientId} .section`).length;
+      for (let i = 0; i < total2; i++) setBtn(clientId, i, '');
+    }
+  }
+}
+</script>
+</body>
+</html>
