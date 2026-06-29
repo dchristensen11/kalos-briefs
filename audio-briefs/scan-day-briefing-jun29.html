@@ -611,25 +611,17 @@ function triggerDownload(buf, filename) {
 }
 
 async function downloadFullBriefing(clientId, filename) {
-  const config = getConfig();
   const sections = document.querySelectorAll(`#sections-${clientId} .section`);
   const total = sections.length;
   const dlBtn = document.getElementById(`dlAll-${clientId}`);
-  let allCached = true;
+  // Require all sections to be cached — do not attempt auto-generation
+  const missing = [];
   for (let i = 0; i < total; i++) {
-    if (!audioCache[getTextForSection(clientId, i).substring(0,40)]) { allCached = false; break; }
+    if (!audioCache[getTextForSection(clientId, i).substring(0,40)]) missing.push(i + 1);
   }
-  if (!allCached) {
-    if (!config.apiKey) { setStatus(clientId, 'Enter API key first.', 'error'); return; }
-    dlBtn.textContent = 'Generating...';
-    try {
-      for (let i = 0; i < total; i++) {
-        setStatus(clientId, `Generating ${i+1} of ${total} for download...`);
-        const text = getTextForSection(clientId, i);
-        if (!audioCache[text.substring(0,40)]) await fetchAudio(text, config);
-        markDlReady(clientId, i);
-      }
-    } catch(e) { setStatus(clientId, 'Error: ' + e.message, 'error'); dlBtn.textContent = '&#8595; Download Full Briefing'; return; }
+  if (missing.length > 0) {
+    setStatus(clientId, `Sections ${missing.join(', ')} not generated yet — run ⚡ Generate All first.`, 'error');
+    return;
   }
   setStatus(clientId, 'Merging and downloading...');
   const buffers = [];
@@ -640,8 +632,6 @@ async function downloadFullBriefing(clientId, filename) {
   for (const b of buffers) { merged.set(b, offset); offset += b.length; }
   triggerDownload(merged.buffer, `${filename}.mp3`);
   setStatus(clientId, 'Downloaded.', 'ok');
-  dlBtn.textContent = '&#8595; Download Full Briefing';
-  dlBtn.classList.add('ready');
 }
 
 async function generateAll(clientId) {
@@ -668,7 +658,7 @@ async function generateAll(clientId) {
     }
     if (stopRequested[clientId]) return;
     const dlAll = document.getElementById(`dlAll-${clientId}`);
-    if (dlAll) { dlAll.classList.add('ready'); dlAll.textContent = '&#8595; Download Full Briefing'; }
+    if (dlAll) { dlAll.classList.add('ready'); dlAll.innerHTML = '&#8595; Download Full Briefing'; }
     setStatus(clientId, 'All generated. Playing...', 'ok');
     btn.disabled = false;
     btn.innerHTML = '<span>&#9889;</span> Generate All &amp; Play in Sequence';
