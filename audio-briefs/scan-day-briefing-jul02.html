@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing - July 2, 2026</title>
+<!-- 1 client: Terri Yoon (9:00 AM) -->
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 24px; }
+
+  .config-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 10px;
+    padding: 16px 20px; margin-bottom: 28px;
+  }
+  .config-card label { font-size: 11px; color: #888; display: block; margin-bottom: 4px; }
+  .config-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .config-field { flex: 1; min-width: 180px; }
+  .config-field input {
+    width: 100%; background: #0f0f18; border: 1px solid #333; border-radius: 6px;
+    color: #e8eaf0; font-size: 13px; padding: 8px 10px; font-family: monospace;
+  }
+
+  .client-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%);
+    padding: 18px 22px 14px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge {
+    background: #7c8aff22; border: 1px solid #7c8aff55;
+    color: #a0acff; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .gen-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%);
+    color: #fff; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .btn-row { display: flex; }
+  .stop-btn {
+    flex: 1; padding: 11px;
+    background: #2a1a1a; border: none; border-top: 1px solid #3a2020;
+    color: #f87171; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+    border-right: 1px solid #1e1e2e;
+  }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn {
+    flex: 1; padding: 11px;
+    background: #1a2a1a; border: none; border-top: 1px solid #2a3a20;
+    color: #6b7280; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .dl-all-btn.ready { color: #4ade80; cursor: pointer; }
+  .dl-all-btn:hover.ready { background: #1e2e1e; }
+
+  .sections { padding: 0 4px 4px; }
+  .section {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #1e1e2e;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    min-width: 70px; justify-content: flex-end;
+  }
+  .play-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #7c8aff22; border: 1px solid #7c8aff44;
+    color: #a0acff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .play-btn.loading { animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .dl-btn {
+    font-size: 16px; color: #444; cursor: pointer; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .dl-btn.ready { color: #4ade80; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+
+  .status-bar {
+    padding: 10px 18px; font-size: 12px; color: #666;
+    border-top: 1px solid #1e1e2e; min-height: 38px;
+    display: flex; align-items: center;
+  }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Thursday, July 2, 2026 &middot; 1 client &middot; Terri Yoon (9:00 AM)</div>
+
+<div class="config-card">
+  <div class="config-row">
+    <div class="config-field">
+      <label>ElevenLabs API Key</label>
+      <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" autocomplete="off">
+    </div>
+    <div class="config-field">
+      <label>Voice ID</label>
+      <input type="text" id="voiceId" value="gWaDC0oXAheKoZfljzuI">
+    </div>
+    <div class="config-field" style="max-width:120px">
+      <label>Speed</label>
+      <input type="number" id="speed" value="1.2" min="0.7" max="1.2" step="0.05">
+    </div>
+  </div>
+</div>
+
+<!-- TERRI YOON -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Terri Yoon</h2>
+      <div class="meta">Recomposition &middot; City Sports Cherry Ave &middot; 3x/wk Solidify P1 &middot; 75% Consistency &middot; ALMI 8th %ile</div>
+    </div>
+    <div class="time-badge">9:00 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-terri" onclick="generateAll('terri')">
+    <span>&#9889;</span> Generate All &amp; Play in Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-terri" onclick="stopAll('terri')" disabled>&#9632; Stop</button>
+    <button class="dl-all-btn" id="dlAll-terri" onclick="downloadFullBriefing('terri', 'terri-yoon-briefing-jul02')">&#8595; Download Full Briefing</button>
+  </div>
+
+  <div class="sections" id="sections-terri">
+
+    <div class="section" id="sec-terri-0" onclick="playSection('terri', 0)">
+      <div class="sec-icon">&#128075;</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Terri Yoon. Female, 56 years old, 5 feet tall. Second DEXA scan today, July 2, at 9 AM. Four weeks on Solidify Phase 1, three times per week at City Sports on Cherry Ave, machine and dumbbell based since she is more comfortable there than with barbells. She came into Scan 1 on June 3 at 114.6 pounds, 36.7 percent body fat, 69.4 pounds lean mass, VAT at 71.9 centimeters squared, and ALMI at the 8th percentile. Recomposition is the goal: build muscle, reduce fat, protect long-term muscle mass at her age. ALMI at the 8th percentile is the number that matters most today. After this review, she moves into Phase 2. The exercise selection changes but the strength base she has built carries forward.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-terri-0">&#9654;</div>
+        <a class="dl-btn" id="dl-terri-0" title="Download" onclick="downloadSection('terri',0)">&#8595;</a>
+        <div class="sec-dur" id="dur-terri-0"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-terri-1" onclick="playSection('terri', 1)">
+      <div class="sec-icon">&#127942;</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Three wins to lead with today.
+
+First: 75 percent consistency over the last 30 days, 9 out of 12 sessions, and she hit every session that was actually scheduled around two rest weeks, adding load on multiple lifts along the way while managing ongoing right knee and ankle discomfort by using the built-in alternates. That is real follow-through given the physical limitation she is working around.
+
+Second: the SM Bent Over Row. She has been hitting 60 pounds for 10 reps, which puts her estimated one-rep max around 80 pounds. That already exceeds the lat pulldown equivalent gold standard of 75 pounds for someone her age and size. Real upper back strength worth naming directly in the debrief.
+
+Third: on the days she logs her food, the meals are high quality. Multiple 30 to 45 gram protein meals using preferred meats, right in line with the fist-sized-serving-plus-shakes target. When she tracks, she executes well.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-terri-1">&#9654;</div>
+        <a class="dl-btn" id="dl-terri-1" title="Download" onclick="downloadSection('terri',1)">&#8595;</a>
+        <div class="sec-dur" id="dur-terri-1"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-terri-2" onclick="playSection('terri', 2)">
+      <div class="sec-icon">&#9888;&#65039;</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Food logging is sparse, and that makes the protein picture uncertain heading into today. Iris shows only 16 meals logged over 9 of the last 28 days. The target is 115 grams of protein per day across 3 animal protein meals and 2 shakes.
+
+This does not necessarily mean she is under-eating protein. It means the journal cannot confirm one way or the other. On the days she does log, the meals hit the target cleanly. The real question for the debrief is whether that quality holds on the days that were not logged, or whether those gaps are also gaps in actual intake.
+
+Whatever the scan shows on lean mass today, tie it back to this. If lean mass held or improved, protein compliance was probably better than the sparse logging suggests. If it is flat, tightening up daily logging, not just logging when convenient, is the highest-leverage fix going into Phase 2.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-terri-2">&#9654;</div>
+        <a class="dl-btn" id="dl-terri-2" title="Download" onclick="downloadSection('terri',2)">&#8595;</a>
+        <div class="sec-dur" id="dur-terri-2"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-terri-3" onclick="playSection('terri', 3)">
+      <div class="sec-icon">&#127987;</div>
+      <div class="sec-body">
+        <div class="sec-title">Training and Movement</div>
+        <div class="sec-text">Right knee and ankle discomfort has been ongoing all block, with some swelling that has not fully resolved. Bulgarian Split Squat has been excluded from her program the entire time, and she has been using the built-in alternates whenever something aggravates it. That has not stopped her from adding load elsewhere.
+
+Two sessions were missed in the last 30 days: June 19 and today's slot, Wednesday July 1, the day before the scan. Her last completed workout was Monday, June 29. That dip is why she showed up on the check-in dashboard as moving from on-track to at-risk this week, even though the underlying trend all block has been positive.
+
+Lift targets sent June 28 for these final sessions: SM Bent Over Row up to 65 pounds for 10 reps, SM RDL up to 75 pounds for 8 to 10 reps, DB Shoulder Press up to 17.5 pounds for 8 reps. No confirmation back from Terri on whether those specific numbers were hit, so ask her directly at the debrief rather than assuming.
+
+One more data point to watch: VAT increased from 56 centimeters squared back on April 13 to 71.9 at Scan 1 in June. Still well within the healthy range under 100, but the upward trend is worth a mention today as something to track at Scan 2.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-terri-3">&#9654;</div>
+        <a class="dl-btn" id="dl-terri-3" title="Download" onclick="downloadSection('terri',3)">&#8595;</a>
+        <div class="sec-dur" id="dur-terri-3"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-terri-4" onclick="playSection('terri', 4)">
+      <div class="sec-icon">&#128564;</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Nothing flagged in Iris on sleep or stress this block. The main recovery-relevant note is the two missed sessions in the final stretch, June 19 and yesterday, which gave her a bit more rest than planned heading into the scan rather than less. Her last completed workout was three days ago on June 29, so she is walking in reasonably fresh.
+
+She also reported an A1c of 5.6 on June 28, which is in the borderline pre-diabetic range. Not a clinical emergency, but relevant context for how the nutrition conversation gets framed today. Strength training and consistent protein timing are the right interventions, and she is already doing both when she logs.
+
+Standard scan-morning protocol applies: no training this morning, normal hydration, nothing heavy before the scan.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-terri-4">&#9654;</div>
+        <a class="dl-btn" id="dl-terri-4" title="Download" onclick="downloadSection('terri',4)">&#8595;</a>
+        <div class="sec-dur" id="dur-terri-4"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-terri-5" onclick="playSection('terri', 5)">
+      <div class="sec-icon">&#129504;</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">Terri is detail-oriented. She values printed notes and clear written numbers rather than vague verbal summaries, and she pushes herself harder when she feels encouraged rather than corrected. Lead with affirmation of her strength gains before getting into anything that needs improvement.
+
+If she brings up bloating or how her midsection looks, keep the frame on data, not appearance. The bloating is transient. The muscle she is building is the long-term solution to the waist and stomach concerns she has mentioned, especially with summer travel coming up that will make consistency harder to control day to day.
+
+One more thing worth knowing: her 4-week membership technically expired back on June 1, over a month ago, and she has kept training and shown up for this scan anyway. That is a strong signal of buy-in. Moving into Phase 2 today is a natural point to have the renewal conversation, framed as continuing a program that is already working, not as a hard sell.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-terri-5">&#9654;</div>
+        <a class="dl-btn" id="dl-terri-5" title="Download" onclick="downloadSection('terri',5)">&#8595;</a>
+        <div class="sec-dur" id="dur-terri-5"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-terri-6" onclick="playSection('terri', 6)">
+      <div class="sec-icon">&#127919;</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four priorities heading into Phase 2.
+
+First: daily food logging, not just logging when it is convenient. Only 16 of 28 days had any meals logged this block. Ask her to log every day for at least the first two weeks of Phase 2 so the protein picture is actually verifiable.
+
+Second: protect the training habit through summer travel. Her schedule is filling up with events and trips. Pre-plan alternate days or preload workouts before travel weeks so the 3-times-a-week habit that has driven her recent strength gains does not slip.
+
+Third: keep managing the knee and ankle with the existing alternates, and keep rating every session so any flare-up gets caught early rather than becoming a bigger issue in Phase 2.
+
+Fourth: watch the VAT trend. It is healthy today at 71.9, but it has moved up from 56 in April. Not urgent, but worth a specific look at Scan 3 to confirm it is not continuing to climb.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-terri-6">&#9654;</div>
+        <a class="dl-btn" id="dl-terri-6" title="Download" onclick="downloadSection('terri',6)">&#8595;</a>
+        <div class="sec-dur" id="dur-terri-6"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-terri-7" onclick="playSection('terri', 7)">
+      <div class="sec-icon">&#9989;</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Terri Yoon. 114.6 pounds, 36.7 percent body fat, ALMI 8th percentile, VAT 71.9 coming in from Scan 1 on June 3. Four weeks: 75 percent consistency, 9 of 12 sessions, added load on multiple lifts while managing ongoing knee and ankle discomfort, and executed cleanly on protein whenever she actually logged it.
+
+Lead with the resilience story. She kept training and kept progressing through a real physical limitation. If ALMI or lean mass moved up even slightly, that is the headline for someone at the 8th percentile starting point. If the numbers are flat, the sparse food logging is the most honest explanation, not a lack of effort in the gym.
+
+This is not a finish line. Her membership already lapsed a month ago and she kept showing up anyway. Frame today as the transition into Phase 2, affirm the strength gains first, and make the next block's plan concrete before she leaves: daily logging, a travel plan for the summer, and continued knee and ankle management.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-terri-7">&#9654;</div>
+        <a class="dl-btn" id="dl-terri-7" title="Download" onclick="downloadSection('terri',7)">&#8595;</a>
+        <div class="sec-dur" id="dur-terri-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-terri">Ready. Click a section to play or Generate All to run the full briefing.</div>
+</div>
+
+<script>
+const audioCache = {};
+const stopRequested = {};
+let currentSource = null;
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  if (currentSource) { currentSource.onended = null; try { currentSource.stop(); } catch(e) {} currentSource = null; }
+  const total = document.querySelectorAll(`#sections-${clientId} .section`).length;
+  for (let i = 0; i < total; i++) { setBtn(clientId, i, ''); setSectionPlaying(clientId, i, false); }
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9889;</span> Generate All &amp; Play in Sequence'; }
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+
+function getConfig() {
+  return {
+    apiKey: document.getElementById('apiKey').value.trim(),
+    voiceId: document.getElementById('voiceId').value.trim(),
+    speed: parseFloat(document.getElementById('speed').value) || 1.2
+  };
+}
+
+function getTextForSection(clientId, idx) {
+  const el = document.querySelector(`#sec-${clientId}-${idx} .sec-text`);
+  return el ? el.innerText.trim() : '';
+}
+
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'loading' ? ' loading' : state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '►';
+}
+
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+
+async function fetchAudio(text, config) {
+  const key = text.substring(0, 40);
+  if (audioCache[key]) return audioCache[key];
+  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${config.voiceId}`, {
+    method: 'POST',
+    headers: { 'xi-api-key': config.apiKey, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_multilingual_v2',
+      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0, use_speaker_boost: true },
+      speed: Math.min(config.speed, 1.2)
+    })
+  });
+  if (!resp.ok) { const err = await resp.text(); throw new Error(`ElevenLabs ${resp.status}: ${err}`); }
+  const buf = await resp.arrayBuffer();
+  audioCache[key] = buf;
+  return buf;
+}
+
+async function playBuffer(buf) {
+  const ctx = getAudioCtx();
+  const decoded = await ctx.decodeAudioData(buf.slice(0));
+  return new Promise((resolve, reject) => {
+    if (currentSource) { currentSource.onended = null; try { currentSource.stop(); } catch(e) {} }
+    const src = ctx.createBufferSource();
+    src.buffer = decoded;
+    src.connect(ctx.destination);
+    currentSource = src;
+    src.onended = resolve;
+    src.onerror = reject;
+    src.start(0);
+  });
+}
+
+async function playSection(clientId, idx) {
+  const config = getConfig();
+  if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key above.', 'error'); return; }
+  const total = document.querySelectorAll(`#sections-${clientId} .section`).length;
+  for (let i = 0; i < total; i++) { setBtn(clientId, i, i === idx ? 'loading' : ''); setSectionPlaying(clientId, i, false); }
+  try {
+    const text = getTextForSection(clientId, idx);
+    const buf = await fetchAudio(text, config);
+    markDlReady(clientId, idx);
+    setBtn(clientId, idx, 'playing');
+    setSectionPlaying(clientId, idx, true);
+    setStatus(clientId, `Playing section ${idx + 1}...`);
+    await playBuffer(buf);
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    setStatus(clientId, 'Done.', 'ok');
+  } catch(e) {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    setStatus(clientId, 'Error: ' + e.message, 'error');
+  }
+}
+
+function markDlReady(clientId, idx) {
+  const btn = document.getElementById(`dl-${clientId}-${idx}`);
+  if (btn) btn.classList.add('ready');
+}
+
+function downloadSection(clientId, idx) {
+  const text = getTextForSection(clientId, idx);
+  const key = text.substring(0, 40);
+  if (!audioCache[key]) { setStatus(clientId, 'Play this section first.', 'error'); return; }
+  const title = document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent.replace(/\s+/g,'-').toLowerCase();
+  triggerDownload(audioCache[key], `${clientId}-${idx+1}-${title}.mp3`);
+}
+
+function triggerDownload(buf, filename) {
+  const blob = new Blob([buf], { type: 'audio/mpeg' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+}
+
+async function downloadFullBriefing(clientId, filename) {
+  const sections = document.querySelectorAll(`#sections-${clientId} .section`);
+  const total = sections.length;
+  const dlBtn = document.getElementById(`dlAll-${clientId}`);
+  // Require all sections to be cached, do not attempt auto-generation
+  const missing = [];
+  for (let i = 0; i < total; i++) {
+    if (!audioCache[getTextForSection(clientId, i).substring(0,40)]) missing.push(i + 1);
+  }
+  if (missing.length > 0) {
+    setStatus(clientId, `Sections ${missing.join(', ')} not generated yet, run Generate All first.`, 'error');
+    return;
+  }
+  setStatus(clientId, 'Merging and downloading...');
+  const buffers = [];
+  for (let i = 0; i < total; i++) buffers.push(new Uint8Array(audioCache[getTextForSection(clientId,i).substring(0,40)]));
+  const totalLen = buffers.reduce((s,b) => s+b.length, 0);
+  const merged = new Uint8Array(totalLen);
+  let offset = 0;
+  for (const b of buffers) { merged.set(b, offset); offset += b.length; }
+  triggerDownload(merged.buffer, `${filename}.mp3`);
+  setStatus(clientId, 'Downloaded.', 'ok');
+}
+
+async function generateAll(clientId) {
+  const config = getConfig();
+  if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key above.', 'error'); return; }
+  const ctx = getAudioCtx();
+  ctx.resume();
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  if (stopBtn) stopBtn.disabled = false;
+  stopRequested[clientId] = false;
+  const sections = document.querySelectorAll(`#sections-${clientId} .section`);
+  const total = sections.length;
+  try {
+    for (let i = 0; i < total; i++) {
+      if (stopRequested[clientId]) break;
+      setStatus(clientId, `Generating ${i+1} of ${total}...`);
+      setBtn(clientId, i, 'loading');
+      await fetchAudio(getTextForSection(clientId, i), config);
+      setBtn(clientId, i, '');
+      markDlReady(clientId, i);
+    }
+    if (stopRequested[clientId]) return;
+    const dlAll = document.getElementById(`dlAll-${clientId}`);
+    if (dlAll) { dlAll.classList.add('ready'); dlAll.innerHTML = '&#8595; Download Full Briefing'; }
+    setStatus(clientId, 'All generated. Playing...', 'ok');
+    btn.disabled = false;
+    btn.innerHTML = '<span>&#9889;</span> Generate All &amp; Play in Sequence';
+    for (let i = 0; i < total; i++) {
+      if (stopRequested[clientId]) break;
+      document.querySelectorAll(`#sections-${clientId} .section`).forEach((s,si) => setSectionPlaying(clientId, si, si === i));
+      setBtn(clientId, i, 'playing');
+      setStatus(clientId, `Section ${i+1} of ${total}: ${document.querySelector(`#sec-${clientId}-${i} .sec-title`).textContent}`);
+      await playBuffer(audioCache[getTextForSection(clientId, i).substring(0,40)]);
+      setBtn(clientId, i, '');
+      setSectionPlaying(clientId, i, false);
+    }
+    if (!stopRequested[clientId]) {
+      setStatus(clientId, 'Briefing complete.', 'ok');
+      if (stopBtn) stopBtn.disabled = true;
+    }
+  } catch(e) {
+    if (!stopRequested[clientId]) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>&#9889;</span> Generate All &amp; Play in Sequence';
+      if (stopBtn) stopBtn.disabled = true;
+      setStatus(clientId, 'Error: ' + e.message, 'error');
+      const total2 = document.querySelectorAll(`#sections-${clientId} .section`).length;
+      for (let i = 0; i < total2; i++) setBtn(clientId, i, '');
+    }
+  }
+}
+</script>
+</body>
+</html>
