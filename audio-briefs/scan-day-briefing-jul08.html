@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing, July 8, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+
+  .client-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%);
+    padding: 18px 22px 14px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge {
+    background: #7c8aff22; border: 1px solid #7c8aff55;
+    color: #a0acff; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .gen-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%);
+    color: #fff; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .btn-row { display: flex; }
+  .stop-btn {
+    flex: 1; padding: 11px;
+    background: #2a1a1a; border: none; border-top: 1px solid #3a2020;
+    color: #f87171; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+    border-right: 1px solid #1e1e2e;
+  }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn {
+    flex: 1; padding: 11px;
+    background: #1a2a1a; border: none; border-top: 1px solid #2a3a20;
+    color: #4ade80; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .dl-all-btn:hover { background: #1e2e1e; }
+
+  .sections { padding: 0 4px 4px; }
+  .section {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #1e1e2e;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    min-width: 70px; justify-content: flex-end;
+  }
+  .play-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #7c8aff22; border: 1px solid #7c8aff44;
+    color: #a0acff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn {
+    font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+
+  .status-bar {
+    padding: 10px 18px; font-size: 12px; color: #666;
+    border-top: 1px solid #1e1e2e; min-height: 38px;
+    display: flex; align-items: center;
+  }
+  .status-bar.ok { color: #4ade80; }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Wednesday, July 8, 2026 &middot; 1 client &middot; Solo: Blake Capella (10:45 AM)</div>
+<div class="source-line">&#9679; Audio pre-rendered locally with Voicebox (Kokoro) &mdash; no external API calls, this page makes no network requests to play</div>
+
+<!-- BLAKE CAPELLA -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Blake Capella</h2>
+      <div class="meta">LBM Build &middot; 27M &middot; Solo &middot; DB Only FUL P2 &middot; Office + Climbing Gym &middot; 3rd %ile ALMI</div>
+    </div>
+    <div class="time-badge">10:45 AM</div>
+  </div>
+
+  <button class="gen-btn" id="playAllBtn" onclick="playAll()">&#9654; Play Full Briefing</button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn" onclick="stopAll()" disabled>&#9632; Stop</button>
+    <button class="dl-all-btn" onclick="downloadAll()">&#8681; Download All</button>
+  </div>
+
+  <div class="sections" id="sections"></div>
+
+  <div class="status-bar" id="statusBar">Ready</div>
+</div>
+
+<script>
+const sections = [
+  { icon: "\u{1F44B}", title: "Intro", file: "assets/blake-01-intro.wav",
+    text: "Blake Capella, 27 years old, five foot eleven. His second scan is tomorrow, July 8th, at 10:45 in the morning at Campbell. This is a lean body mass build, the goal is to build muscle, move well, and feel strong to support climbing, surfing, running, and biking. His four week membership actually ends the day of the scan, so this is also a renewal conversation." },
+  { icon: "\u{1F3C6}", title: "Wins, Lead With These", file: "assets/blake-02-wins.wav",
+    text: "He had a huge session on July 3rd, a full body day where he hit fifteen personal bests in one workout. His dumbbell front squat estimated one rep max jumped from 58 pounds all the way to 130 pounds. Then on July 6th he hit the single arm row target you sent him, 35 pounds for 15 reps on the very first set. Consistency is sitting at 79 percent over the last 30 days, holding steady through a full phase transition from P1 to P2. And he's just a genuinely engaged member, he sends form check videos without being asked and flags soreness and technique questions on his own." },
+  { icon: "\u{26A0}\u{FE0F}", title: "Biggest Concern", file: "assets/blake-03-concern.wav",
+    text: "His ALMI is sitting in the third percentile for his age and height, that's the number that matters most right now and it's well below average. That's the primary target driving this entire build phase. The good news is his VAT is healthy, so there's no metabolic risk flag, this is purely a lean mass building project." },
+  { icon: "\u{1F9B4}", title: "Training and Movement", file: "assets/blake-04-training.wav",
+    text: "Watch the left hand grip. Step ups, RDLs, anything left hand loaded shows recurring grip fatigue, that lines up with the wrist break about six months ago and possible left arm atrophy, so don't force through it, just monitor it. Lower back sensitivity on heavy RDLs has actually resolved itself, he identified the exhale before you rise breathing cue on his own and it's working, just keep reinforcing that one cue. He's also got idiopathic scoliosis which limits axial loading, and a healed ankle sprain from about two months back." },
+  { icon: "\u{1F634}", title: "Recovery Load", file: "assets/blake-05-recovery.wav",
+    text: "Sleep has been solid, around nine and a half hours a night. Heart rate trends look normal. On the nutrition side, protein target is 126 grams a day, plant based, no dairy or eggs, built around two pea and rice shakes plus food. The second shake is still the sticking point, logging shows he's only getting one shake in most days. Food journal had gone quiet since June 27th but a two day photo log was assigned July 6th and 7th and he's already completed it." },
+  { icon: "\u{1F9E0}", title: "Coaching Frame", file: "assets/blake-06-frame.wav",
+    text: "This is the important one. Blake is guarding against a lifelong pattern of over pushing without recovery, he's told us directly he's a little concerned about pushing too hard too quickly. Lead with validation, not more pressure. Frame all of this progress as sustainable capacity for climbing, surfing, running, and biking, not something to chase harder. He's earned the right to feel solid about this without needing to prove more." },
+  { icon: "\u{1F3AF}", title: "Next Block Priorities", file: "assets/blake-07-priorities.wav",
+    text: "Get the second protein shake locked in as a daily habit, especially on rest and climbing days. Keep leaning on that RDL breathing cue since it's working. Keep an eye on the left grip without forcing it. And have the membership renewal conversation, frame it as continuing the arc he's already on, not a finish line." },
+  { icon: "\u{2705}", title: "Closing", file: "assets/blake-08-closing.wav",
+    text: "Bottom line going in. Strength is moving fast across the board. Consistency is holding at 79 percent. The single arm row target is already hit. ALMI in the third percentile is still the north star. And the coaching job tonight is validation and sustainability, not pushing harder." }
+];
+
+const container = document.getElementById('sections');
+const audios = [];
+sections.forEach((s, i) => {
+  const div = document.createElement('div');
+  div.className = 'section';
+  div.id = 'sec-' + i;
+  div.innerHTML = `
+    <div class="sec-icon">${s.icon}</div>
+    <div class="sec-body">
+      <div class="sec-title">${s.title}</div>
+      <div class="sec-text">${s.text}</div>
+    </div>
+    <div class="sec-controls">
+      <div class="play-btn" id="play-${i}" onclick="playOne(${i})">&#9654;</div>
+      <a class="dl-btn" href="${s.file}" download title="Download">&#8681;</a>
+      <div class="sec-dur" id="dur-${i}">--</div>
+    </div>`;
+  container.appendChild(div);
+  const audio = new Audio(s.file);
+  audio.addEventListener('loadedmetadata', () => {
+    const d = Math.round(audio.duration);
+    document.getElementById('dur-' + i).textContent = Math.floor(d/60) + ':' + String(d%60).padStart(2,'0');
+  });
+  audios.push(audio);
+});
+
+let currentIndex = -1;
+let playAllMode = false;
+
+function clearActive() {
+  document.querySelectorAll('.section').forEach(el => el.classList.remove('playing'));
+  document.querySelectorAll('.play-btn').forEach(el => { el.classList.remove('active'); el.innerHTML = '&#9654;'; });
+}
+
+function stopAll() {
+  audios.forEach(a => { a.pause(); a.currentTime = 0; a.onended = null; });
+  clearActive();
+  currentIndex = -1;
+  playAllMode = false;
+  document.getElementById('stopBtn').disabled = true;
+  document.getElementById('playAllBtn').disabled = false;
+  document.getElementById('statusBar').textContent = 'Ready';
+  document.getElementById('statusBar').className = 'status-bar';
+}
+
+function playOne(i) {
+  audios.forEach((a, idx) => { if (idx !== i) { a.pause(); a.currentTime = 0; } });
+  clearActive();
+  playAllMode = false;
+  currentIndex = i;
+  const audio = audios[i];
+  audio.onended = null;
+  document.getElementById('sec-' + i).classList.add('playing');
+  const btn = document.getElementById('play-' + i);
+  btn.classList.add('active');
+  btn.innerHTML = '&#10074;&#10074;';
+  document.getElementById('stopBtn').disabled = false;
+  document.getElementById('statusBar').textContent = 'Playing: ' + sections[i].title;
+  audio.currentTime = 0;
+  audio.play();
+  audio.onended = () => {
+    clearActive();
+    document.getElementById('stopBtn').disabled = true;
+    document.getElementById('statusBar').textContent = 'Ready';
+  };
+}
+
+function playAll() {
+  playAllMode = true;
+  document.getElementById('playAllBtn').disabled = true;
+  document.getElementById('stopBtn').disabled = false;
+  playIndex(0);
+}
+
+function playIndex(i) {
+  if (i >= sections.length || !playAllMode) {
+    stopAll();
+    return;
+  }
+  clearActive();
+  currentIndex = i;
+  const audio = audios[i];
+  document.getElementById('sec-' + i).classList.add('playing');
+  const btn = document.getElementById('play-' + i);
+  btn.classList.add('active');
+  btn.innerHTML = '&#10074;&#10074;';
+  document.getElementById('statusBar').textContent = 'Playing (' + (i+1) + '/' + sections.length + '): ' + sections[i].title;
+  audio.currentTime = 0;
+  audio.onended = null;
+  audio.play();
+  audio.onended = () => { if (playAllMode) playIndex(i + 1); };
+}
+
+function downloadAll() {
+  sections.forEach((s, i) => {
+    setTimeout(() => {
+      const a = document.createElement('a');
+      a.href = s.file;
+      a.download = s.file.split('/').pop();
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }, i * 300);
+  });
+  document.getElementById('statusBar').textContent = 'Downloading all sections...';
+  document.getElementById('statusBar').className = 'status-bar ok';
+}
+</script>
+
+</body>
+</html>
