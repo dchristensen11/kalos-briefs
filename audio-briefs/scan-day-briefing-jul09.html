@@ -14,19 +14,8 @@
     padding: 24px 16px 48px;
   }
   h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
-  .date-line { font-size: 12px; color: #666; margin-bottom: 24px; }
-
-  .config-card {
-    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 10px;
-    padding: 16px 20px; margin-bottom: 28px;
-  }
-  .config-card label { font-size: 11px; color: #888; display: block; margin-bottom: 4px; }
-  .config-row { display: flex; gap: 12px; flex-wrap: wrap; }
-  .config-field { flex: 1; min-width: 180px; }
-  .config-field input {
-    width: 100%; background: #0f0f18; border: 1px solid #333; border-radius: 6px;
-    color: #e8eaf0; font-size: 13px; padding: 8px 10px; font-family: monospace;
-  }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
 
   .client-card {
     background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
@@ -68,11 +57,10 @@
   .dl-all-btn {
     flex: 1; padding: 11px;
     background: #1a2a1a; border: none; border-top: 1px solid #2a3a20;
-    color: #6b7280; font-size: 13px; font-weight: 600;
+    color: #4ade80; font-size: 13px; font-weight: 600;
     cursor: pointer; transition: all 0.15s;
   }
-  .dl-all-btn.ready { color: #4ade80; cursor: pointer; }
-  .dl-all-btn:hover.ready { background: #1e2e1e; }
+  .dl-all-btn:hover { background: #1e2e1e; }
 
   .sections { padding: 0 4px 4px; }
   .section {
@@ -102,10 +90,9 @@
   .play-btn.loading { animation: pulse 1s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
   .dl-btn {
-    font-size: 16px; color: #444; cursor: pointer; text-decoration: none;
+    font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none;
     transition: color 0.2s;
   }
-  .dl-btn.ready { color: #4ade80; }
   .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
 
   .status-bar {
@@ -121,23 +108,7 @@
 
 <h1>Scan Day Briefing</h1>
 <div class="date-line">Thursday, July 9, 2026 &middot; 1 client &middot; Solo: Justin Vidamo (10:30 AM)</div>
-
-<div class="config-card">
-  <div class="config-row">
-    <div class="config-field">
-      <label>ElevenLabs API Key</label>
-      <input type="password" id="apiKey" value="a68d364a4ad58d5018e080c1a3fc363de089e6c9303b8b189f9898c0895e60da" autocomplete="off">
-    </div>
-    <div class="config-field">
-      <label>Voice ID</label>
-      <input type="text" id="voiceId" value="gWaDC0oXAheKoZfljzuI">
-    </div>
-    <div class="config-field" style="max-width:120px">
-      <label>Speed</label>
-      <input type="number" id="speed" value="1.2" min="0.7" max="1.2" step="0.05">
-    </div>
-  </div>
-</div>
+<div class="source-line">&#9679; Pre-rendered via Voicebox (Kokoro engine, "Kalos Coach" profile)</div>
 
 <!-- JUSTIN VIDAMO -->
 <div class="client-card">
@@ -149,12 +120,12 @@
     <div class="time-badge">10:30 AM</div>
   </div>
 
-  <button class="gen-btn" id="genBtn-justin" onclick="generateAll('justin')">
-    <span>&#9889;</span> Generate All &amp; Play in Sequence
+  <button class="gen-btn" id="genBtn-justin" onclick="playAll('justin')">
+    <span>&#9654;</span> Play All In Sequence
   </button>
   <div class="btn-row">
     <button class="stop-btn" id="stopBtn-justin" onclick="stopAll('justin')" disabled>&#9632; Stop</button>
-    <button class="dl-all-btn" id="dlAll-justin" onclick="downloadFullBriefing('justin', 'justin-vidamo-briefing-jul09')">&#8595; Download Full Briefing</button>
+    <button class="dl-all-btn" id="dlAll-justin" onclick="downloadAllInfo('justin')">&#8595; Files are in assets/</button>
   </div>
 
   <div class="sections" id="sections-justin">
@@ -167,7 +138,7 @@
       </div>
       <div class="sec-controls">
         <div class="play-btn" id="btn-justin-0">&#9654;</div>
-        <a class="dl-btn" id="dl-justin-0" title="Download" onclick="downloadSection('justin',0)">&#8595;</a>
+        <a class="dl-btn" id="dl-justin-0" title="Download" href="assets/justin-01-intro.wav" download>&#8595;</a>
         <div class="sec-dur" id="dur-justin-0"></div>
       </div>
     </div>
@@ -180,7 +151,7 @@
       </div>
       <div class="sec-controls">
         <div class="play-btn" id="btn-justin-1">&#9654;</div>
-        <a class="dl-btn" id="dl-justin-1" title="Download" onclick="downloadSection('justin',1)">&#8595;</a>
+        <a class="dl-btn" id="dl-justin-1" title="Download" href="assets/justin-02-wins.wav" download>&#8595;</a>
         <div class="sec-dur" id="dur-justin-1"></div>
       </div>
     </div>
@@ -193,7 +164,7 @@
       </div>
       <div class="sec-controls">
         <div class="play-btn" id="btn-justin-2">&#9654;</div>
-        <a class="dl-btn" id="dl-justin-2" title="Download" onclick="downloadSection('justin',2)">&#8595;</a>
+        <a class="dl-btn" id="dl-justin-2" title="Download" href="assets/justin-03-concern.wav" download>&#8595;</a>
         <div class="sec-dur" id="dur-justin-2"></div>
       </div>
     </div>
@@ -206,7 +177,7 @@
       </div>
       <div class="sec-controls">
         <div class="play-btn" id="btn-justin-3">&#9654;</div>
-        <a class="dl-btn" id="dl-justin-3" title="Download" onclick="downloadSection('justin',3)">&#8595;</a>
+        <a class="dl-btn" id="dl-justin-3" title="Download" href="assets/justin-04-training.wav" download>&#8595;</a>
         <div class="sec-dur" id="dur-justin-3"></div>
       </div>
     </div>
@@ -219,7 +190,7 @@
       </div>
       <div class="sec-controls">
         <div class="play-btn" id="btn-justin-4">&#9654;</div>
-        <a class="dl-btn" id="dl-justin-4" title="Download" onclick="downloadSection('justin',4)">&#8595;</a>
+        <a class="dl-btn" id="dl-justin-4" title="Download" href="assets/justin-05-recovery.wav" download>&#8595;</a>
         <div class="sec-dur" id="dur-justin-4"></div>
       </div>
     </div>
@@ -232,7 +203,7 @@
       </div>
       <div class="sec-controls">
         <div class="play-btn" id="btn-justin-5">&#9654;</div>
-        <a class="dl-btn" id="dl-justin-5" title="Download" onclick="downloadSection('justin',5)">&#8595;</a>
+        <a class="dl-btn" id="dl-justin-5" title="Download" href="assets/justin-06-frame.wav" download>&#8595;</a>
         <div class="sec-dur" id="dur-justin-5"></div>
       </div>
     </div>
@@ -245,7 +216,7 @@
       </div>
       <div class="sec-controls">
         <div class="play-btn" id="btn-justin-6">&#9654;</div>
-        <a class="dl-btn" id="dl-justin-6" title="Download" onclick="downloadSection('justin',6)">&#8595;</a>
+        <a class="dl-btn" id="dl-justin-6" title="Download" href="assets/justin-07-priorities.wav" download>&#8595;</a>
         <div class="sec-dur" id="dur-justin-6"></div>
       </div>
     </div>
@@ -258,49 +229,45 @@
       </div>
       <div class="sec-controls">
         <div class="play-btn" id="btn-justin-7">&#9654;</div>
-        <a class="dl-btn" id="dl-justin-7" title="Download" onclick="downloadSection('justin',7)">&#8595;</a>
+        <a class="dl-btn" id="dl-justin-7" title="Download" href="assets/justin-08-closing.wav" download>&#8595;</a>
         <div class="sec-dur" id="dur-justin-7"></div>
       </div>
     </div>
 
   </div>
-  <div class="status-bar" id="status-justin">Ready. Hit Generate to build and play all sections.</div>
+  <div class="status-bar" id="status-justin">Ready. Files are pre-rendered, tap play or hit Play All.</div>
 </div>
 
 <script>
-const audioCache = {};
+const files = {
+  justin: [
+    'assets/justin-01-intro.wav',
+    'assets/justin-02-wins.wav',
+    'assets/justin-03-concern.wav',
+    'assets/justin-04-training.wav',
+    'assets/justin-05-recovery.wav',
+    'assets/justin-06-frame.wav',
+    'assets/justin-07-priorities.wav',
+    'assets/justin-08-closing.wav'
+  ]
+};
+
+const audios = {};
 const stopRequested = {};
-let currentSource = null;
-let audioCtx = null;
+let playAllMode = false;
 
-function getAudioCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
-
-function stopAll(clientId) {
-  stopRequested[clientId] = true;
-  if (currentSource) { currentSource.onended = null; try { currentSource.stop(); } catch(e) {} currentSource = null; }
-  const total = document.querySelectorAll(`#sections-${clientId} .section`).length;
-  for (let i = 0; i < total; i++) { setBtn(clientId, i, ''); setSectionPlaying(clientId, i, false); }
-  const btn = document.getElementById(`genBtn-${clientId}`);
-  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
-  if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9889;</span> Generate All &amp; Play in Sequence'; }
-  if (stopBtn) stopBtn.disabled = true;
-  setStatus(clientId, 'Stopped.');
-}
-
-function getConfig() {
-  return {
-    apiKey: document.getElementById('apiKey').value.trim(),
-    voiceId: document.getElementById('voiceId').value.trim(),
-    speed: parseFloat(document.getElementById('speed').value) || 1.2
-  };
-}
-
-function getTextForSection(clientId, idx) {
-  const el = document.querySelector(`#sec-${clientId}-${idx} .sec-text`);
-  return el ? el.innerText.trim() : '';
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const d = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(d/60)}:${String(d%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
 }
 
 function setStatus(clientId, msg, type='') {
@@ -311,7 +278,7 @@ function setStatus(clientId, msg, type='') {
 function setBtn(clientId, idx, state) {
   const btn = document.getElementById(`btn-${clientId}-${idx}`);
   if (!btn) return;
-  btn.className = 'play-btn' + (state === 'loading' ? ' loading' : state === 'playing' ? ' active' : '');
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
   btn.textContent = state === 'playing' ? '■' : '►';
 }
 
@@ -320,170 +287,72 @@ function setSectionPlaying(clientId, idx, playing) {
   if (sec) sec.className = 'section' + (playing ? ' playing' : '');
 }
 
-async function fetchAudio(text, config) {
-  const key = text.substring(0, 40);
-  if (audioCache[key]) return audioCache[key];
-  const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${config.voiceId}`, {
-    method: 'POST',
-    headers: { 'xi-api-key': config.apiKey, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
-    body: JSON.stringify({
-      text,
-      model_id: 'eleven_multilingual_v2',
-      voice_settings: { stability: 0.45, similarity_boost: 0.80, style: 0, use_speaker_boost: true },
-      speed: Math.min(config.speed, 1.2)
-    })
-  });
-  if (!resp.ok) { const err = await resp.text(); throw new Error(`ElevenLabs ${resp.status}: ${err}`); }
-  const buf = await resp.arrayBuffer();
-  audioCache[key] = buf;
-  return buf;
-}
-
-async function playBuffer(buf) {
-  const ctx = getAudioCtx();
-  const decoded = await ctx.decodeAudioData(buf.slice(0));
-  return new Promise((resolve, reject) => {
-    if (currentSource) { currentSource.onended = null; try { currentSource.stop(); } catch(e) {} }
-    const src = ctx.createBufferSource();
-    src.buffer = decoded;
-    src.connect(ctx.destination);
-    currentSource = src;
-    src.onended = resolve;
-    src.onerror = reject;
-    src.start(0);
-  });
-}
-
-async function playSection(clientId, idx) {
-  const config = getConfig();
-  if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key above.', 'error'); return; }
-  const total = document.querySelectorAll(`#sections-${clientId} .section`).length;
-  for (let i = 0; i < total; i++) { setBtn(clientId, i, i === idx ? 'loading' : ''); setSectionPlaying(clientId, i, false); }
-  try {
-    const text = getTextForSection(clientId, idx);
-    const buf = await fetchAudio(text, config);
-    markDlReady(clientId, idx);
-    setBtn(clientId, idx, 'playing');
-    setSectionPlaying(clientId, idx, true);
-    setStatus(clientId, `Playing section ${idx + 1}...`);
-    await playBuffer(buf);
-    setBtn(clientId, idx, '');
-    setSectionPlaying(clientId, idx, false);
-    setStatus(clientId, 'Done.', 'ok');
-  } catch(e) {
-    setBtn(clientId, idx, '');
-    setSectionPlaying(clientId, idx, false);
-    setStatus(clientId, 'Error: ' + e.message, 'error');
-  }
-}
-
-function markDlReady(clientId, idx) {
-  const btn = document.getElementById(`dl-${clientId}-${idx}`);
-  if (btn) btn.classList.add('ready');
-}
-
-function downloadSection(clientId, idx) {
-  const text = getTextForSection(clientId, idx);
-  const key = text.substring(0, 40);
-  if (!audioCache[key]) { setStatus(clientId, 'Play this section first.', 'error'); return; }
-  const title = document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent.replace(/\s+/g,'-').toLowerCase();
-  triggerDownload(audioCache[key], `${clientId}-${idx+1}-${title}.mp3`);
-}
-
-function triggerDownload(buf, filename) {
-  const blob = new Blob([buf], { type: 'audio/mpeg' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = filename;
-  document.body.appendChild(a); a.click();
-  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
-}
-
-async function downloadFullBriefing(clientId, filename) {
-  const config = getConfig();
-  const sections = document.querySelectorAll(`#sections-${clientId} .section`);
-  const total = sections.length;
-  const dlBtn = document.getElementById(`dlAll-${clientId}`);
-  let allCached = true;
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
   for (let i = 0; i < total; i++) {
-    if (!audioCache[getTextForSection(clientId, i).substring(0,40)]) { allCached = false; break; }
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
   }
-  if (!allCached) {
-    if (!config.apiKey) { setStatus(clientId, 'Enter API key first.', 'error'); return; }
-    dlBtn.textContent = 'Generating...';
-    try {
-      for (let i = 0; i < total; i++) {
-        setStatus(clientId, `Generating ${i+1} of ${total} for download...`);
-        const text = getTextForSection(clientId, i);
-        if (!audioCache[text.substring(0,40)]) await fetchAudio(text, config);
-        markDlReady(clientId, i);
-      }
-    } catch(e) { setStatus(clientId, 'Error: ' + e.message, 'error'); dlBtn.textContent = '&#8595; Download Full Briefing'; return; }
-  }
-  setStatus(clientId, 'Merging and downloading...');
-  const buffers = [];
-  for (let i = 0; i < total; i++) buffers.push(new Uint8Array(audioCache[getTextForSection(clientId,i).substring(0,40)]));
-  const totalLen = buffers.reduce((s,b) => s+b.length, 0);
-  const merged = new Uint8Array(totalLen);
-  let offset = 0;
-  for (const b of buffers) { merged.set(b, offset); offset += b.length; }
-  triggerDownload(merged.buffer, `${filename}.mp3`);
-  setStatus(clientId, 'Downloaded.', 'ok');
-  dlBtn.textContent = '&#8595; Download Full Briefing';
-  dlBtn.classList.add('ready');
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
 }
 
-async function generateAll(clientId) {
-  const config = getConfig();
-  if (!config.apiKey) { setStatus(clientId, 'Enter your ElevenLabs API key above.', 'error'); return; }
-  const ctx = getAudioCtx();
-  ctx.resume();
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
   const btn = document.getElementById(`genBtn-${clientId}`);
   const stopBtn = document.getElementById(`stopBtn-${clientId}`);
-  btn.disabled = true;
-  btn.textContent = 'Generating...';
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
   if (stopBtn) stopBtn.disabled = false;
-  stopRequested[clientId] = false;
-  const sections = document.querySelectorAll(`#sections-${clientId} .section`);
-  const total = sections.length;
-  try {
-    for (let i = 0; i < total; i++) {
-      if (stopRequested[clientId]) break;
-      setStatus(clientId, `Generating ${i+1} of ${total}...`);
-      setBtn(clientId, i, 'loading');
-      await fetchAudio(getTextForSection(clientId, i), config);
-      setBtn(clientId, i, '');
-      markDlReady(clientId, i);
-    }
-    if (stopRequested[clientId]) return;
-    const dlAll = document.getElementById(`dlAll-${clientId}`);
-    if (dlAll) { dlAll.classList.add('ready'); dlAll.textContent = '&#8595; Download Full Briefing'; }
-    setStatus(clientId, 'All generated. Playing...', 'ok');
-    btn.disabled = false;
-    btn.innerHTML = '<span>&#9889;</span> Generate All &amp; Play in Sequence';
-    for (let i = 0; i < total; i++) {
-      if (stopRequested[clientId]) break;
-      document.querySelectorAll(`#sections-${clientId} .section`).forEach((s,si) => setSectionPlaying(clientId, si, si === i));
-      setBtn(clientId, i, 'playing');
-      setStatus(clientId, `Section ${i+1} of ${total}: ${document.querySelector(`#sec-${clientId}-${i} .sec-title`).textContent}`);
-      await playBuffer(audioCache[getTextForSection(clientId, i).substring(0,40)]);
-      setBtn(clientId, i, '');
-      setSectionPlaying(clientId, i, false);
-    }
-    if (!stopRequested[clientId]) {
-      setStatus(clientId, 'Briefing complete.', 'ok');
-      if (stopBtn) stopBtn.disabled = true;
-    }
-  } catch(e) {
-    if (!stopRequested[clientId]) {
-      btn.disabled = false;
-      btn.innerHTML = '<span>&#9889;</span> Generate All &amp; Play in Sequence';
-      if (stopBtn) stopBtn.disabled = true;
-      setStatus(clientId, 'Error: ' + e.message, 'error');
-      const total2 = document.querySelectorAll(`#sections-${clientId} .section`).length;
-      for (let i = 0; i < total2; i++) setBtn(clientId, i, '');
-    }
-  }
+  playIndex(clientId, 0);
+}
+
+function downloadAllInfo(clientId) {
+  setStatus(clientId, 'Each section has its own download arrow above. Files also live in audio-briefs/assets/.', 'ok');
 }
 </script>
 </body>
