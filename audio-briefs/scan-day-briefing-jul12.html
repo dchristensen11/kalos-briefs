@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing, July 12, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+
+  .client-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%);
+    padding: 18px 22px 14px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge {
+    background: #7c8aff22; border: 1px solid #7c8aff55;
+    color: #a0acff; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .gen-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%);
+    color: #fff; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .btn-row { display: flex; }
+  .stop-btn {
+    flex: 1; padding: 11px;
+    background: #2a1a1a; border: none; border-top: 1px solid #3a2020;
+    color: #f87171; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+    border-right: 1px solid #1e1e2e;
+  }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn {
+    flex: 1; padding: 11px;
+    background: #1a2a1a; border: none; border-top: 1px solid #2a3a20;
+    color: #4ade80; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .dl-all-btn:hover { background: #1e2e1e; }
+
+  .sections { padding: 0 4px 4px; }
+  .section {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #1e1e2e;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    min-width: 70px; justify-content: flex-end;
+  }
+  .play-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #7c8aff22; border: 1px solid #7c8aff44;
+    color: #a0acff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .play-btn.loading { animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .dl-btn {
+    font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+
+  .status-bar {
+    padding: 10px 18px; font-size: 12px; color: #666;
+    border-top: 1px solid #1e1e2e; min-height: 38px;
+    display: flex; align-items: center;
+  }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Sunday, July 12, 2026 &middot; 1 client &middot; Solo: Hina Naseer (8:15 AM)</div>
+<div class="source-line">&#9679; Pre-rendered via ElevenLabs (eleven_multilingual_v2, Snap voice, 1.2x speed)</div>
+
+<!-- HINA NASEER -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Hina Naseer</h2>
+      <div class="meta">Recomp, Muscle Build &amp; Bone Health &middot; Female &middot; Solo &middot; CrossFit Almaden + Home DB &middot; 34th %ile ALMI</div>
+    </div>
+    <div class="time-badge">8:15 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-hina" onclick="playAll('hina')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-hina" onclick="stopAll('hina')" disabled>&#9632; Stop</button>
+    <button class="dl-all-btn" id="dlAll-hina" onclick="downloadAllInfo('hina')">&#8595; Files are in assets/</button>
+  </div>
+
+  <div class="sections" id="sections-hina">
+
+    <div class="section" id="sec-hina-0" onclick="playSection('hina', 0)">
+      <div class="sec-icon">&#128075;</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Hina Naseer, solo second scan tomorrow, Sunday July 12th, at 8 15 in the morning at Campbell. Scan one was June 14th, so this is right at the 4 week mark, and her membership ends the day of the scan too. Her goal is recomp, building muscle and improving bone density while navigating menopause, with an ALMI at the 34th percentile and a bone density Z score of negative 1 point 0 as the two big long term levers. Walk in knowing this has been about as strong a 4 weeks as you could ask for.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-0">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-0" title="Download" href="assets/hina-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-0"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-hina-1" onclick="playSection('hina', 1)">
+      <div class="sec-icon">&#127942;</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Open with this one, it is a big week. She put up 19 combined personal bests across her last two sessions, 4 on Saturday and 15 on Thursday, with 10 all time PRs now on record. Every single lift target you sent on July 8th got hit and exceeded, Romanian Deadlift jumped to 68 pounds for 12 reps against a 55 to 60 target, Bench Press hit 40 pounds for 8, Kickstand Deadlift hit 50 for 10, and the Goblet Cossack Squat hit 20 pounds for 12 to 14 across all three sets. On top of that she has not missed a single primary session, 100 percent consistency across all 4 weeks.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-1">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-1" title="Download" href="assets/hina-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-1"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-hina-2" onclick="playSection('hina', 2)">
+      <div class="sec-icon">&#9888;&#65039;</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">The one flag still standing is intensity. Even with these big weight jumps, her workout logs show load added to later sets in 6 of the last 8 sessions, meaning she is still warming up into her working sets rather than starting near her hardest effort on set one. It is not a red flag on effort, she is clearly pushing herself, it is more about sequencing, get her loading closer to her ceiling from the first working set instead of building into it. The other thing to hold gently is the weight and clothes worry she voiced back on July 8th, you already walked her through the muscle versus fat framing and she responded well, but the read is that she is still a little anxious underneath it, worth a quick genuine check in before the scan.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-2">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-2" title="Download" href="assets/hina-03-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-2"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-hina-3" onclick="playSection('hina', 3)">
+      <div class="sec-icon">&#129460;</div>
+      <div class="sec-body">
+        <div class="sec-title">Training and Movement</div>
+        <div class="sec-text">She is running a dumbbell only home program two days a week plus CrossFit Almaden and regular biking to work, no current pain from her one minor prior hiking injury. All 4 of her July 8th targets landed inside the week, which is fast progress from a home dumbbell setup. The main coaching adjustment for the next block is intensity sequencing, cue her to load heavier from the very first set rather than building up across a session, since the ascending pattern is showing up in 6 of her last 8 logged workouts despite the strength gains.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-3">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-3" title="Download" href="assets/hina-04-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-3"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-hina-4" onclick="playSection('hina', 4)">
+      <div class="sec-icon">&#128564;</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">No new sleep or step data came through this block, so treat any recovery conversation today as a fresh check in rather than something to reference against old numbers. Worth keeping in mind that her training load is not just the two weekly Kalos sessions, she is also doing CrossFit Almaden classes and biking to work regularly, so the total volume behind these personal bests is meaningfully higher than the Kalos sessions alone. That is useful context if soreness or fatigue comes up during the debrief.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-4">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-4" title="Download" href="assets/hina-05-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-4"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-hina-5" onclick="playSection('hina', 5)">
+      <div class="sec-icon">&#129504;</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">Keep the weight and clothes conversation grounded in the data rather than appearance, the scan itself is the best tool you have today to show her that the number on the scale reflects muscle being built, not fat being gained. She is highly engaged, asks thoughtful nutrition questions, and upgraded her own home dumbbells without being asked, so she responds well to being trusted with more autonomy and detail rather than being over managed. Lead with the PR numbers before anything else, she has earned that opener.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-5">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-5" title="Download" href="assets/hina-06-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-5"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-hina-6" onclick="playSection('hina', 6)">
+      <div class="sec-icon">&#127919;</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things to set before she leaves today. First, her 4 week membership ends today, use this scan and this week's numbers as the proof point for a renewal conversation, she is in her strongest position yet to have that talk. Second, set new lift targets based on this week's jumps, the current numbers are already out of date. Third, reinforce the intensity sequencing cue, first working set at or near her hardest effort rather than building into it. Fourth, keep the protein and macro consistency habit going now that direct review shows she is hitting target most days.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-6">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-6" title="Download" href="assets/hina-07-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-6"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-hina-7" onclick="playSection('hina', 7)">
+      <div class="sec-icon">&#9989;</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Hina had one of the strongest 4 week blocks you have seen, 19 combined personal bests, every single lift target exceeded, and 100 percent consistency the entire time. The only real coaching thread left is intensity sequencing and a quiet weight worry that is more emotional than physical, both are easy conversations to have from a position of strength. This is a great scan to lean into the renewal conversation.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-7">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-7" title="Download" href="assets/hina-08-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-hina">Ready. Files are pre-rendered, tap play or hit Play All.</div>
+</div>
+
+<script>
+const files = {
+  hina: [
+    'assets/hina-01-intro.wav',
+    'assets/hina-02-wins.wav',
+    'assets/hina-03-concern.wav',
+    'assets/hina-04-training.wav',
+    'assets/hina-05-recovery.wav',
+    'assets/hina-06-frame.wav',
+    'assets/hina-07-priorities.wav',
+    'assets/hina-08-closing.wav'
+  ]
+};
+
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const d = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(d/60)}:${String(d%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '►';
+}
+
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+
+function downloadAllInfo(clientId) {
+  setStatus(clientId, 'Each section has its own download arrow above. Files also live in audio-briefs/assets/.', 'ok');
+}
+</script>
+</body>
+</html>
