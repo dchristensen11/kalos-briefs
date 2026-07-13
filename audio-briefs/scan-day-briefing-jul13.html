@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing, July 13, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+
+  .client-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%);
+    padding: 18px 22px 14px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge {
+    background: #7c8aff22; border: 1px solid #7c8aff55;
+    color: #a0acff; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .gen-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%);
+    color: #fff; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .btn-row { display: flex; }
+  .stop-btn {
+    flex: 1; padding: 11px;
+    background: #2a1a1a; border: none; border-top: 1px solid #3a2020;
+    color: #f87171; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+    border-right: 1px solid #1e1e2e;
+  }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn {
+    flex: 1; padding: 11px;
+    background: #1a2a1a; border: none; border-top: 1px solid #2a3a20;
+    color: #4ade80; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .dl-all-btn:hover { background: #1e2e1e; }
+
+  .sections { padding: 0 4px 4px; }
+  .section {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #1e1e2e;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    min-width: 70px; justify-content: flex-end;
+  }
+  .play-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #7c8aff22; border: 1px solid #7c8aff44;
+    color: #a0acff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .play-btn.loading { animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .dl-btn {
+    font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+
+  .status-bar {
+    padding: 10px 18px; font-size: 12px; color: #666;
+    border-top: 1px solid #1e1e2e; min-height: 38px;
+    display: flex; align-items: center;
+  }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Monday, July 13, 2026 &middot; 1 client &middot; Solo: Jennifer Russell (12:00 PM)</div>
+<div class="source-line">&#9679; Pre-rendered locally via Voicebox (Kokoro, bm_george, 1.2x speed)</div>
+
+<!-- JENNIFER RUSSELL -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Jennifer Russell</h2>
+      <div class="meta">Recomp, Performance &amp; Longevity &middot; Female &middot; 59 &middot; Solo &middot; Gym w/ Trainer (DB Only) &middot; 13th %ile ALMI</div>
+    </div>
+    <div class="time-badge">12:00 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-jennifer" onclick="playAll('jennifer')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-jennifer" onclick="stopAll('jennifer')" disabled>&#9632; Stop</button>
+    <button class="dl-all-btn" id="dlAll-jennifer" onclick="downloadAllInfo('jennifer')">&#8595; Files are in assets/</button>
+  </div>
+
+  <div class="sections" id="sections-jennifer">
+
+    <div class="section" id="sec-jennifer-0" onclick="playSection('jennifer', 0)">
+      <div class="sec-icon">&#128075;</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Jennifer Russell, 59, second DEXA scan today at noon in San Jose. Recomp goal. Her 4-week membership started June 3 and ends today, so this is both a results conversation and a renewal conversation. Baseline June 3: 153.4 lb, 40.6% body fat (58th AM %ile), 89.8 lb lean, 61.5 lb fat, VAT 128.2 cm2 (elevated band), ALMI 13th AM %ile. That ALMI number is the whole story. Goal was +2 lb muscle, fat loss a bonus. Deeper why: performance and longevity, a faster marathon, better recovery, fewer injuries, and protecting her brain long term.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jennifer-0">&#9654;</div>
+        <a class="dl-btn" id="dl-jennifer-0" title="Download" href="assets/jennifer-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jennifer-0"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-jennifer-1" onclick="playSection('jennifer', 1)">
+      <div class="sec-icon">&#127942;</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">51 personal bests across her final three sessions: 15 on Jul 8, 18 on Jul 10, 18 on Jul 12. She finished the block harder than she started it. She completed every pre-scan session while wearing a wrist brace and after her lower back went out Jul 9. Program-long strength: DB Bench 30x12 to 60x12 (+100%), Goblet Squat +48%, Reverse Lunge +35%, RDL +35%, 11 all-time PRs. Half marathon in Lake Tahoe through heat and elevation. And during a 10-day trip with no gym she did hotel workouts, hikes, a swim, and walks instead of writing the week off.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jennifer-1">&#9654;</div>
+        <a class="dl-btn" id="dl-jennifer-1" title="Download" href="assets/jennifer-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jennifer-1"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-jennifer-2" onclick="playSection('jennifer', 2)">
+      <div class="sec-icon">&#9888;&#65039;</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Her lower back went out Thursday Jul 9. She still trained Friday, then ran sumo deadlifts 30x12 and goblet split squats at 40 lb on Sunday. She has a prior left-side back injury and an unresolved left hip. This is a flare on top of history, and she trained through it twice without being cleared. Put hands on it before she loads heavy again. Second: protein. 59 meals over 21 of 39 days, but intake keeps landing in only 1-2 meals a day, well under 125g. Root cause is GI nausea and vomiting since ~Jun 21. Fix is simplification, not more volume.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jennifer-2">&#9654;</div>
+        <a class="dl-btn" id="dl-jennifer-2" title="Download" href="assets/jennifer-03-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jennifer-2"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-jennifer-3" onclick="playSection('jennifer', 3)">
+      <div class="sec-icon">&#129460;</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">Right wrist injury Jul 8, at worst she couldn&#x27;t open a door or hold a cup. In a brace, improving. You walked back her bench target that same day, and she pressed 30 lb x 12 x 3 anyway on Jul 10 without complaint, so ask how it actually felt. Goblet Split Squat: prescribed 20-25 lb, she ran 40 lb for all 3 sets. Smashed it. RDL is the one miss: target 50x12 or 40x14, she held 40x12, matching her Jun 24 load. Her back had gone out the day before, so that&#x27;s the sensible call, not a lapse. Overhead triceps already swapped to skull crushers. Left arm lean mass 4.11 lb vs 4.94 right.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jennifer-3">&#9654;</div>
+        <a class="dl-btn" id="dl-jennifer-3" title="Download" href="assets/jennifer-04-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jennifer-3"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-jennifer-4" onclick="playSection('jennifer', 4)">
+      <div class="sec-icon">&#128564;</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">High and mixed. Marathon runner training for a December race, running Tue/Thu/Sat/Sun, lifting 3 days, hiking at elevation. Just came off a 10-day travel block and a half marathon. Steps ~6,200/day. No sleep data. Consistency 69% last 30d (11/16), 75% last 7d (3/4). Iris shows 92% in June collapsing to 50% in July, entirely the travel window. And underneath it, three weeks of nausea and vomiting quietly eating her appetite, protein, and recovery. If lean mass hasn&#x27;t moved as much as her effort deserves, undereating is the likeliest reason, not her training.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jennifer-4">&#9654;</div>
+        <a class="dl-btn" id="dl-jennifer-4" title="Download" href="assets/jennifer-05-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jennifer-4"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-jennifer-5" onclick="playSection('jennifer', 5)">
+      <div class="sec-icon">&#129504;</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">Handle gently. Her husband has brain cancer. That is the stressful home situation in her file, and part of why she lifts heavy is protecting her own brain, the dementia and myokine angle. She has never asked to make sessions about it, so do not open with it. Lead with empathy on the wrist, back, and stomach, then let her set the depth. She is very high ownership: reports problems fast, modifies, finishes. She responds to direct, specific, numeric coaching and pushes back with good questions. Give her real numbers and real reasons and she runs with them.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jennifer-5">&#9654;</div>
+        <a class="dl-btn" id="dl-jennifer-5" title="Download" href="assets/jennifer-06-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jennifer-5"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-jennifer-6" onclick="playSection('jennifer', 6)">
+      <div class="sec-icon">&#127919;</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">One, back triage. Assess it before writing another program and decide whether the next block starts with reduced axial loading. Two, protein, made stupidly simple: two shakes that sit well plus a fist of protein per meal. Less friction, not more logging. If the GI issues haven&#x27;t improved in two weeks, she needs a doctor. Say it out loud. Three, intensity on the back half of her sets. Load was added to later sets in only 3 of 15 workouts. Teach her to start with last session&#x27;s heaviest weight. Four, the left side, bias unilateral work. And build around the December marathon rather than fighting it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jennifer-6">&#9654;</div>
+        <a class="dl-btn" id="dl-jennifer-6" title="Download" href="assets/jennifer-07-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jennifer-6"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-jennifer-7" onclick="playSection('jennifer', 7)">
+      <div class="sec-icon">&#9989;</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">She did the work. 51 PBs in three sessions, every session completed, through a wrist brace and a back that gave out. If the scan looks flat, the cause is nutrition and the stomach, not effort, and say so before she draws her own conclusion. ALMI at the 13th percentile is still the number that matters and what the next block is built around. Her membership ends today, so the renewal conversation is live: foundation phase ending, not a finish line. And her back needs a look before she touches load again. Empathy first, numbers second, plan third.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jennifer-7">&#9654;</div>
+        <a class="dl-btn" id="dl-jennifer-7" title="Download" href="assets/jennifer-08-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jennifer-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-jennifer">Ready. Files are pre-rendered, tap play or hit Play All.</div>
+</div>
+
+<script>
+const files = {
+  jennifer: [
+    'assets/jennifer-01-intro.wav',
+    'assets/jennifer-02-wins.wav',
+    'assets/jennifer-03-concern.wav',
+    'assets/jennifer-04-training.wav',
+    'assets/jennifer-05-recovery.wav',
+    'assets/jennifer-06-frame.wav',
+    'assets/jennifer-07-priorities.wav',
+    'assets/jennifer-08-closing.wav'
+  ]
+};
+
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const d = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(d/60)}:${String(d%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '►';
+}
+
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+
+function downloadAllInfo(clientId) {
+  setStatus(clientId, 'Each section has its own download arrow above. Files also live in audio-briefs/assets/.', 'ok');
+}
+</script>
+</body>
+</html>
