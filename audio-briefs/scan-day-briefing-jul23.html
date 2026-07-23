@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing, July 23, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+
+  .client-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%);
+    padding: 18px 22px 14px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge {
+    background: #7c8aff22; border: 1px solid #7c8aff55;
+    color: #a0acff; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .gen-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%);
+    color: #fff; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .btn-row { display: flex; }
+  .stop-btn {
+    flex: 1; padding: 11px;
+    background: #2a1a1a; border: none; border-top: 1px solid #3a2020;
+    color: #f87171; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+    border-right: 1px solid #1e1e2e;
+  }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn {
+    flex: 1; padding: 11px;
+    background: #1a2a1a; border: none; border-top: 1px solid #2a3a20;
+    color: #4ade80; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .dl-all-btn:hover { background: #1e2e1e; }
+
+  .sections { padding: 0 4px 4px; }
+  .section {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #1e1e2e;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    min-width: 70px; justify-content: flex-end;
+  }
+  .play-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #7c8aff22; border: 1px solid #7c8aff44;
+    color: #a0acff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .play-btn.loading { animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .dl-btn {
+    font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+
+  .status-bar {
+    padding: 10px 18px; font-size: 12px; color: #666;
+    border-top: 1px solid #1e1e2e; min-height: 38px;
+    display: flex; align-items: center;
+  }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Thursday, July 23, 2026 &middot; 1 client &middot; Solo: Lorin Kennedy (9:45 AM)</div>
+<div class="source-line">&#9679; Pre-rendered locally via Voicebox (Kokoro, bm_george, 1.2x speed)</div>
+
+<!-- LORIN KENNEDY -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Lorin Kennedy</h2>
+      <div class="meta">Recomp / Fat Loss &middot; Female &middot; 58 &middot; Solo &middot; Home Gym (BB + DB + Cable) &middot; 38th %ile ALMI</div>
+    </div>
+    <div class="time-badge">9:45 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-lorin" onclick="playAll('lorin')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-lorin" onclick="stopAll('lorin')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-lorin" href="assets/lorin-full-brief.mp3" download="lorin-kennedy-brief-jul23.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (3:47 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-lorin">
+
+    <div class="section" id="sec-lorin-0" onclick="playSection('lorin', 0)">
+      <div class="sec-icon">&#128075;</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Good evening. This is your briefing for Lorin Kennedy's second scan tomorrow, July 23rd, at 9:45 AM, solo. Lorin is 58, training at home with a full barbell and dumbbell setup. Her focus is recomposition, losing midsection and arm fat while building muscle, all pointed at feeling strong for skiing, running, hiking, and her 60th birthday trip to Hawaii.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-lorin-0">&#9654;</div>
+        <a class="dl-btn" id="dl-lorin-0" title="Download" href="assets/lorin-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-lorin-0"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-lorin-1" onclick="playSection('lorin', 1)">
+      <div class="sec-icon">&#127942;</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">94% training consistency over the last 30 days, 100% over the last 7, 18 for 18 sessions by Iris's count. 22 all-time PRs this block. DB bench press est. 1RM up 100%, 20 to 40 lb. Barbell hip thrust up 55%, 45 to 70 lb. Cable seated row, the exercise she flagged as not working for her machine, she found a fix (sitting on the floor) and kept PRing since, up 68%. Fat mass already down 2.3 lb and visceral fat down 12 cm² in under a month.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-lorin-1">&#9654;</div>
+        <a class="dl-btn" id="dl-lorin-1" title="Download" href="assets/lorin-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-lorin-1"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-lorin-2" onclick="playSection('lorin', 2)">
+      <div class="sec-icon">&#9888;&#65039;</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Left shoulder, torn labrum, frozen shoulder history, still symptomatic. Shoulders pitching forward on heavier squat days, taking load off the legs, she's already asked whether to cut the weight. Reduced BB back squat from 95 to 70-75 lb, but the form issue hasn't fully resolved. Worth discussing whether that lift needs a different variation entirely, not just less weight.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-lorin-2">&#9654;</div>
+        <a class="dl-btn" id="dl-lorin-2" title="Download" href="assets/lorin-03-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-lorin-2"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-lorin-3" onclick="playSection('lorin', 3)">
+      <div class="sec-icon">&#129460;</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">Barbell hip thrust: pushed past the 65 lb target to 70 lb x8/8/8, heavier load, short of the clean 10 reps, real progress either way. DB cyclist squat: at target weight, 40 x10/10/8, close to but not the clean 12 yet. Lat pulldown needs a check with her directly, Tuesday's log shows 50 lb under a different exercise name (chest supported), lighter than her 55 lb benchmark, could be a deliberate swap. Iris also flags load being added late in sets rather than starting heavy on set one in most sessions, worth a cue to load heavier from the start.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-lorin-3">&#9654;</div>
+        <a class="dl-btn" id="dl-lorin-3" title="Download" href="assets/lorin-04-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-lorin-3"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-lorin-4" onclick="playSection('lorin', 4)">
+      <div class="sec-icon">&#128564;</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">No sleep or heart rate data logged. Frequent traveler, about once a month, just back from a month skiing in Europe and Austria, family cabin trip coming up. Nothing in her messages suggests fatigue or overtraining.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-lorin-4">&#9654;</div>
+        <a class="dl-btn" id="dl-lorin-4" title="Download" href="assets/lorin-05-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-lorin-4"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-lorin-5" onclick="playSection('lorin', 5)">
+      <div class="sec-icon">&#129504;</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">Food logging essentially perfect, 125 meals over 31 straight days, no gaps. Reliably taking her daily shake and creatine now too. The one soft spot is the shake specifically on non-training days, still takes more intention. Responds well to seeing the numbers directly, lead with the 22 PRs and fat loss trend. No sensitive psychological flags, motivated and detail oriented.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-lorin-5">&#9654;</div>
+        <a class="dl-btn" id="dl-lorin-5" title="Download" href="assets/lorin-06-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-lorin-5"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-lorin-6" onclick="playSection('lorin', 6)">
+      <div class="sec-icon">&#127919;</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Nail down a long-term fix for the shoulder/squat pattern rather than just trimming weight, get a clear read on the lat pulldown swap, push for a true first-set effort, and keep the shake and creatine habit going on non-training days. This is also a renewal conversation, her four week membership ends the day of the scan, today.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-lorin-6">&#9654;</div>
+        <a class="dl-btn" id="dl-lorin-6" title="Download" href="assets/lorin-07-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-lorin-6"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-lorin-7" onclick="playSection('lorin', 7)">
+      <div class="sec-icon">&#9989;</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line: phenomenal first block, 94% consistency, 22 personal records, real fat loss already on the scan. The shoulder and squat form is the one to manage carefully, a physical therapy level conversation, not just a load reduction. Confirm the lat pulldown swap, and membership renewal is on the table too. Great scan to walk into.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-lorin-7">&#9654;</div>
+        <a class="dl-btn" id="dl-lorin-7" title="Download" href="assets/lorin-08-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-lorin-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-lorin">Ready. Files are pre-rendered, tap play or hit Play All.</div>
+</div>
+
+<script>
+const files = {
+  lorin: [
+    'assets/lorin-01-intro.wav',
+    'assets/lorin-02-wins.wav',
+    'assets/lorin-03-concern.wav',
+    'assets/lorin-04-training.wav',
+    'assets/lorin-05-recovery.wav',
+    'assets/lorin-06-coaching.wav',
+    'assets/lorin-07-priorities.wav',
+    'assets/lorin-08-closing.wav'
+  ]
+};
+
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const d = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(d/60)}:${String(d%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '►';
+}
+
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+
+function downloadAllInfo(clientId) {
+  setStatus(clientId, 'Each section has its own download arrow above. Files also live in audio-briefs/assets/.', 'ok');
+}
+</script>
+</body>
+</html>
