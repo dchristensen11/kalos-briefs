@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing, July 27, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+
+  .client-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%);
+    padding: 18px 22px 14px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge {
+    background: #7c8aff22; border: 1px solid #7c8aff55;
+    color: #a0acff; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .gen-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%);
+    color: #fff; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .btn-row { display: flex; }
+  .stop-btn {
+    flex: 1; padding: 11px;
+    background: #2a1a1a; border: none; border-top: 1px solid #3a2020;
+    color: #f87171; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+    border-right: 1px solid #1e1e2e;
+  }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn {
+    flex: 1; padding: 11px;
+    background: #1a2a1a; border: none; border-top: 1px solid #2a3a20;
+    color: #4ade80; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .dl-all-btn:hover { background: #1e2e1e; }
+
+  .sections { padding: 0 4px 4px; }
+  .section {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #1e1e2e;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    min-width: 70px; justify-content: flex-end;
+  }
+  .play-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #7c8aff22; border: 1px solid #7c8aff44;
+    color: #a0acff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn {
+    font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+
+  .status-bar {
+    padding: 10px 18px; font-size: 12px; color: #666;
+    border-top: 1px solid #1e1e2e; min-height: 38px;
+    display: flex; align-items: center;
+  }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Monday, July 27, 2026 &middot; 1 client &middot; Solo: Alexander Hoffman (12:45 PM)</div>
+<div class="source-line">&#9679; Pre-rendered locally via Voicebox (Kokoro, bm_george, 1.2x speed)</div>
+
+<!-- ALEXANDER HOFFMAN -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Alexander Hoffman</h2>
+      <div class="meta">Muscle Build / Recomp &middot; Male &middot; 32 &middot; Solo &middot; Home Gym (DB + Cable) &middot; 15th %ile ALMI</div>
+    </div>
+    <div class="time-badge">12:45 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-alexander" onclick="playAll('alexander')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-alexander" onclick="stopAll('alexander')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-alexander" href="assets/alexander-full-brief.mp3" download="alexander-hoffman-brief-jul27.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (4:12 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-alexander">
+
+    <div class="section" id="sec-alexander-0" onclick="playSection('alexander', 0)">
+      <div class="sec-icon">&#128075;</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Second DEXA today at 12:45 PM, Campbell studio, solo. Alexander is 32, 5'8", 142 lb at Scan 1 (Jun 29), a busy Google software engineer. Already lean at 18.2% body fat, so this is a pure build block: drive ALMI from the 15th percentile toward the 60 to 70th and rebuild muscle lost in a rapid weight loss stretch.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alexander-0">&#9654;</div>
+        <a class="dl-btn" id="dl-alexander-0" title="Download" href="assets/alexander-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alexander-0"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-alexander-1" onclick="playSection('alexander', 1)">
+      <div class="sec-icon">&#127942;</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Protein dialed the entire four weeks: 130g+ daily through three Fairlife Core Power shakes plus meals, held even while skipping logging. Training habit survived a brutal Google schedule, so the exercise is not the friction point. Buy-in is high, rated motivation and commitment 10 out of 10 after the walkthrough. Open by naming the protein consistency win.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alexander-1">&#9654;</div>
+        <a class="dl-btn" id="dl-alexander-1" title="Download" href="assets/alexander-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alexander-1"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-alexander-2" onclick="playSection('alexander', 2)">
+      <div class="sec-icon">&#9888;&#65039;</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Logging, not effort. Zero workouts and 0 of 10 primary lifts logged across all four weeks; one day of food (Jul 13, 3 meals) out of 27. The Jul 23 lift targets went to his Jul 24 and 26 sessions, but both came back marked missed, so we go in without a captured strength number, and the Jul 25-26 food-log task was not completed. Affirm the training, frame two log days as low-friction data.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alexander-2">&#9654;</div>
+        <a class="dl-btn" id="dl-alexander-2" title="Download" href="assets/alexander-03-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alexander-2"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-alexander-3" onclick="playSection('alexander', 3)">
+      <div class="sec-icon">&#129460;</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">Watch the left side: recent left wrist discomfort with lifting and left arm more than 10% behind the right. Prioritize unilateral left-side work and pain-free substitutions, back off if the wrist flares. Dumbbells-only home setup (bench + two Voltra cables to 200 lb) on Recomp Dumbbells Only 4-Day, training 3 to 4x a week. Steps low at ~2,000 a day, easy headroom there.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alexander-3">&#9654;</div>
+        <a class="dl-btn" id="dl-alexander-3" title="Download" href="assets/alexander-04-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alexander-3"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-alexander-4" onclick="playSection('alexander', 4)">
+      <div class="sec-icon">&#128564;</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Little recovery data since he logs so little. Picture is a busy Google engineer carrying a heavy cognitive load, with training getting done around it. Low step count suggests most movement is the sessions themselves. Recovery conversation is about protecting sleep and keeping sessions sustainable, not adding volume.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alexander-4">&#9654;</div>
+        <a class="dl-btn" id="dl-alexander-4" title="Download" href="assets/alexander-05-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alexander-4"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-alexander-5" onclick="playSection('alexander', 5)">
+      <div class="sec-icon">&#129504;</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No sensitive flags. Personality read is the key thing: a busy engineer who protects autonomy and prefers intuitive eating over tracking. Not resistant to training, resistant to the friction of logging. Frame it as respect for his time: a tiny bit of data, top three compounds and a couple of food days, is what lets you coach him. Logging as leverage, not homework.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alexander-5">&#9654;</div>
+        <a class="dl-btn" id="dl-alexander-5" title="Download" href="assets/alexander-06-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alexander-5"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-alexander-6" onclick="playSection('alexander', 6)">
+      <div class="sec-icon">&#127919;</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">One, get the top three compounds logged, DB bench, DB bent over row, DB front squat, at RPE 8+, for a strength baseline. Two, lock in two photo food-log days. Three, keep driving unilateral left-side work for the wrist and arm imbalance. Four, membership: his four-week ends today, so have the next-phase program and renewal recommendation ready right after the results walkthrough.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alexander-6">&#9654;</div>
+        <a class="dl-btn" id="dl-alexander-6" title="Download" href="assets/alexander-07-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alexander-6"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-alexander-7" onclick="playSection('alexander', 7)">
+      <div class="sec-icon">&#9989;</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line: a lean, bought-in guy whose training and protein are both solid. The only real gap is logging, and that is the whole ballgame for the next block. Lead with the protein win, be honest that we have no logged lifts or food data yet, and sell the small amount of tracking as what unlocks faster muscle rebuild. Watch the left wrist. Be ready to talk renewal, his membership ends today.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alexander-7">&#9654;</div>
+        <a class="dl-btn" id="dl-alexander-7" title="Download" href="assets/alexander-08-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alexander-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-alexander">Ready. Files are pre-rendered, tap play or hit Play All.</div>
+</div>
+
+<script>
+const files = {
+  alexander: [
+    'assets/alexander-01-intro.wav',
+    'assets/alexander-02-wins.wav',
+    'assets/alexander-03-concern.wav',
+    'assets/alexander-04-training.wav',
+    'assets/alexander-05-recovery.wav',
+    'assets/alexander-06-frame.wav',
+    'assets/alexander-07-priorities.wav',
+    'assets/alexander-08-closing.wav'
+  ]
+};
+
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const d = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(d/60)}:${String(d%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '►';
+}
+
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
