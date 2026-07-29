@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing, July 29, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+
+  .client-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%);
+    padding: 18px 22px 14px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge {
+    background: #7c8aff22; border: 1px solid #7c8aff55;
+    color: #a0acff; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .gen-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%);
+    color: #fff; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .btn-row { display: flex; }
+  .stop-btn {
+    flex: 1; padding: 11px;
+    background: #2a1a1a; border: none; border-top: 1px solid #3a2020;
+    color: #f87171; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+    border-right: 1px solid #1e1e2e;
+  }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn {
+    flex: 1; padding: 11px;
+    background: #1a2a1a; border: none; border-top: 1px solid #2a3a20;
+    color: #4ade80; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .dl-all-btn:hover { background: #1e2e1e; }
+
+  .sections { padding: 0 4px 4px; }
+  .section {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #1e1e2e;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    min-width: 70px; justify-content: flex-end;
+  }
+  .play-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #7c8aff22; border: 1px solid #7c8aff44;
+    color: #a0acff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn {
+    font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+
+  .status-bar {
+    padding: 10px 18px; font-size: 12px; color: #666;
+    border-top: 1px solid #1e1e2e; min-height: 38px;
+    display: flex; align-items: center;
+  }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Wednesday, July 29, 2026 &middot; 2 clients &middot; John Smrdeli (9:15 AM), Linda Cortinas (1:45 PM)</div>
+<div class="source-line">&#9679; Pre-rendered locally via Voicebox (Kokoro, bm_george, 1.2x speed)</div>
+
+<!-- JOHN SMRDELI -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>John Smrdeli</h2>
+      <div class="meta">Visceral Fat Loss / Recomp &middot; Male &middot; 62 &middot; Solo &middot; Exercise Coach (hydraulic) &middot; 84th %ile ALMI</div>
+    </div>
+    <div class="time-badge">9:15 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-john" onclick="playAll('john')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-john" onclick="stopAll('john')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-john" href="assets/john-full-brief.mp3" download="john-brief-jul29.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (3:39 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-john">
+
+    <div class="section" id="sec-john-0" onclick="playSection('john', 0)">
+      <div class="sec-icon">&#128075;</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">John Smrdeli, 62 years old, second DEXA scan today, July 29th. His primary goal is visceral fat loss and body recomposition. One important framing note before you read anything: his program is measured from the June 29th four-week baseline, not the June 7th intro scan. The intro sits three weeks earlier and is context only. He is a triple bypass patient from early April, so everything here stays health-first and moderate.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-john-0">&#9654;</div>
+        <a class="dl-btn" id="dl-john-0" title="Download" href="assets/john-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-john-0"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-john-1" onclick="playSection('john', 1)">
+      <div class="sec-icon">&#127942;</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Lead with these. The real story is his logged daily weight, which is trending down steadily. Weekly average has fallen from about 258 pounds in late June to roughly 254 now, about four pounds in four weeks, off a June 25th peak of 261 and a half. Sleep is dialed in at seven and a half to eight hours a night with a consistent nine to nine thirty bedtime, which is a strong recovery base post-bypass. His protein framework is solid at around 200 grams a day through shakes, bedtime Greek yogurt, salmon and Core Power. And after being historically light on food logging, he is now logging meals for the pre-scan window, so we should finally get a real read.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-john-1">&#9654;</div>
+        <a class="dl-btn" id="dl-john-1" title="Download" href="assets/john-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-john-1"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-john-2" onclick="playSection('john', 2)">
+      <div class="sec-icon">&#9888;&#65039;</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">The biggest concern is visceral fat. His VAT at the baseline was 308 point 7 centimeters squared, which is well above the healthy under 100 range, and that is the primary thing this program is attacking. The secondary issue has been food logging. Historically he logged only about a third of his days, so we lacked a clean calorie and carb-timing picture. That is turning the corner now with the pre-scan log. But the number to lead the conversation with is visceral fat.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-john-2">&#9654;</div>
+        <a class="dl-btn" id="dl-john-2" title="Download" href="assets/john-03-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-john-2"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-john-3" onclick="playSection('john', 3)">
+      <div class="sec-icon">&#129460;</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">On movement, watch the groin. He has a pulled right groin and adductor, about a four to five out of ten, so he switched to upper body and core only, and that should stay the rule until it is pain free. He also has an L4 L5 disc issue and early shoulder arthritis, which limit overhead and heavily loaded work. On the cardiac side, keep intensity moderate with no maximal or breath-holding efforts. He trains on hydraulic machines at Exercise Coach two to three times a week, and none of it logs in Everfit, so there is no barbell data to anchor from. The gap is logging and steps, not effort.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-john-3">&#9654;</div>
+        <a class="dl-btn" id="dl-john-3" title="Download" href="assets/john-04-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-john-3"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-john-4" onclick="playSection('john', 4)">
+      <div class="sec-icon">&#128564;</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Recovery load looks good. Sleep is his strength, seven and a half to eight hours with that steady bedtime, which matters a lot after a bypass. His resting heart rate sits in the low 60s, which is expected on a beta-blocker, so do not read that as a red flag. The one lever to raise gradually is steps, which are lowish at around 5,000 a day. Son care on Tuesdays and Wednesdays disrupts his fasted walks, so raise steps as the groin heals rather than forcing it now.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-john-4">&#9654;</div>
+        <a class="dl-btn" id="dl-john-4" title="Download" href="assets/john-05-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-john-4"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-john-5" onclick="playSection('john', 5)">
+      <div class="sec-icon">&#129504;</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">On coaching frame, this is a cardiac patient four months out from a triple bypass, so keep it encouraging and centered on health and capability, not aesthetics. What drives him is longevity, staying capable for his special-needs son, and getting back to his 225 pound contour. The family constraints are real and worth acknowledging. There are no dysmorphia or anxiety flags on file, so lead with wins, respect the medical picture, and frame everything around steady, sustainable progress.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-john-5">&#9654;</div>
+        <a class="dl-btn" id="dl-john-5" title="Download" href="assets/john-06-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-john-5"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-john-6" onclick="playSection('john', 6)">
+      <div class="sec-icon">&#127919;</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">For the next block, set these. First, confirm portions and carb timing from his full food journal at the scan, since grains and processed carbs have shown up outside workout windows. Second, raise hydration to two to three liters a day, which is the next nutrition lever on top of the protein anchor. Third, nudge steps up gradually as the groin settles. Fourth, hold protein around 200 grams and preserve his lean mass and his 84th percentile ALMI. And have the next-phase program and renewal recommendation ready, because his four-week membership ends the day of the scan.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-john-6">&#9654;</div>
+        <a class="dl-btn" id="dl-john-6" title="Download" href="assets/john-07-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-john-6"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-john-7" onclick="playSection('john', 7)">
+      <div class="sec-icon">&#9989;</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. The DEXA to DEXA drifted slightly the wrong way, but his logged daily weight is down about four pounds and heading the right direction, so lead with that. Visceral fat is the number to attack. Protect his lean mass and his 84th percentile ALMI, which are already strong. Keep it health-first around the cardiac status and the groin. And walk in with the renewal recommendation ready, because today is the last day of his current block.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-john-7">&#9654;</div>
+        <a class="dl-btn" id="dl-john-7" title="Download" href="assets/john-08-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-john-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-john">Ready. Files are pre-rendered, tap play or hit Play All.</div>
+</div>
+
+<!-- LINDA CORTINAS -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Linda Cortinas</h2>
+      <div class="meta">Recomp / Bone Health &middot; Female &middot; 56 &middot; Duo &middot; Commercial Gym &middot; 19th %ile ALMI</div>
+    </div>
+    <div class="time-badge">1:45 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-linda" onclick="playAll('linda')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-linda" onclick="stopAll('linda')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-linda" href="assets/linda-full-brief.mp3" download="linda-brief-jul29.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (3:40 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-linda">
+
+    <div class="section" id="sec-linda-0" onclick="playSection('linda', 0)">
+      <div class="sec-icon">&#128075;</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Linda Cortinas, 56 years old, second DEXA scan today, July 29th. Her goals are body recomposition and bone health, measured from the June 28th four-week baseline. Important context: she ran a half marathon this past Sunday, July 26th, so she is walking in off a big endurance week.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-linda-0">&#9654;</div>
+        <a class="dl-btn" id="dl-linda-0" title="Download" href="assets/linda-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-linda-0"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-linda-1" onclick="playSection('linda', 1)">
+      <div class="sec-icon">&#127942;</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Lead with these. She took on the hardest possible block and kept showing up: training for a half marathon while lifting three times a week, at 75 percent consistency, and she logs and comments on nearly every session. Engagement is not the issue. She is genuinely getting stronger too. Her barbell hip thrust estimated one-rep max is up 119 percent this block, from 37 to 81 pounds, and her dumbbell bench is up 21 pounds, and she did that with running as the priority. And her visceral fat is moving the right way, from about 68 down to 65 centimeters squared, closing in on her sub-60 goal.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-linda-1">&#9654;</div>
+        <a class="dl-btn" id="dl-linda-1" title="Download" href="assets/linda-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-linda-1"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-linda-2" onclick="playSection('linda', 2)">
+      <div class="sec-icon">&#9888;&#65039;</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">The biggest concern is under-fueling, and it is the number one lever. On the days she tracked, protein came in around 99 grams against her 116 gram target, and calories ran low, and she reported real exhaustion, in bed by five or six pm on two days. That under-fueling is what cost her lean tissue, about two and a half pounds down from May to June. The fix here is eating enough, not doing more. She needs to hit her roughly 1,950 calorie moderate surplus and her 116 grams of protein to protect and build muscle.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-linda-2">&#9654;</div>
+        <a class="dl-btn" id="dl-linda-2" title="Download" href="assets/linda-03-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-linda-2"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-linda-3" onclick="playSection('linda', 3)">
+      <div class="sec-icon">&#129460;</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">On training, a couple of things to watch. She has two fresh-arm lift targets, bench at 32 and a half and row at 17 and a half, that are still untested, because she has not logged a strength session since July 22nd with the race in the way. Hold heavy hip thrust and lower-body work until her legs recover from the half. She also has mild sciatica, lower-back pain with some foot tingling and prior PT, so swap any exercise that provokes it. And the Bulgarian split squat setup still feels unstable to her. She swapped to lunges twice and said she is not ready for it, so re-review the shoelace-on-bench cue or give her a supported variation to keep lower-body loading consistent.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-linda-3">&#9654;</div>
+        <a class="dl-btn" id="dl-linda-3" title="Download" href="assets/linda-04-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-linda-3"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-linda-4" onclick="playSection('linda', 4)">
+      <div class="sec-icon">&#128564;</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Recovery load is the thing to respect this week. She is walking in off a half marathon on Sunday layered on top of three lifting days, so the total load is high. Her sleep is around seven hours 45 minutes, her resting heart rate sits in the low 40s as an endurance athlete, and steps are around 4,500 a day. Keep hard leg work away from her long-run days so the two do not collide.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-linda-4">&#9654;</div>
+        <a class="dl-btn" id="dl-linda-4" title="Download" href="assets/linda-05-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-linda-4"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-linda-5" onclick="playSection('linda', 5)">
+      <div class="sec-icon">&#129504;</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">On coaching frame, she is highly engaged and coachable, logs her workouts, comments, and asks sharp questions about macros, calorie math, and program structure. She is a dream client to build with. Frame the conversation around fueling to build, and around bone-loading, because progressive strength work directly serves her osteopenia and her stated why. She has said plainly that she is not sure how to fit running and lifting together, so give her clear, concrete guidance on balancing the two.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-linda-5">&#9654;</div>
+        <a class="dl-btn" id="dl-linda-5" title="Download" href="assets/linda-06-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-linda-5"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-linda-6" onclick="playSection('linda', 6)">
+      <div class="sec-icon">&#127919;</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">For the next block, set these. First, get the real calorie and carb read from her July 27th and 28th food log at the scan. Second, lock the fueling, 116 grams of protein and the roughly 1,950 calorie surplus, since that is the whole game for her. Third, test the fresh-arm bench at 32 and a half and row at 17 and a half once she has recovered. Fourth, plan the New Jersey block, since she is there for two to two and a half weeks right after the scan, so Crunch if available, otherwise a bodyweight and band plan, and pack protein. Keep progressing loaded strength for lean mass and bone, and have the renewal recommendation ready, because her membership ends today.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-linda-6">&#9654;</div>
+        <a class="dl-btn" id="dl-linda-6" title="Download" href="assets/linda-07-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-linda-6"></div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-linda-7" onclick="playSection('linda', 7)">
+      <div class="sec-icon">&#9989;</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Her engagement is elite, her strength is climbing, and her visceral fat is trending toward goal. The one lever that matters is fueling. Get her eating enough to turn all that effort into lean tissue and stronger bone. Protect against the sciatica and the split-squat instability. And walk in with the New Jersey plan and the renewal recommendation ready, because today is the last day of her current block.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-linda-7">&#9654;</div>
+        <a class="dl-btn" id="dl-linda-7" title="Download" href="assets/linda-08-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-linda-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-linda">Ready. Files are pre-rendered, tap play or hit Play All.</div>
+</div>
+
+
+<script>
+const files = {
+  john: [
+    'assets/john-01-intro.wav',
+    'assets/john-02-wins.wav',
+    'assets/john-03-concern.wav',
+    'assets/john-04-training.wav',
+    'assets/john-05-recovery.wav',
+    'assets/john-06-frame.wav',
+    'assets/john-07-priorities.wav',
+    'assets/john-08-closing.wav'
+  ],
+  linda: [
+    'assets/linda-01-intro.wav',
+    'assets/linda-02-wins.wav',
+    'assets/linda-03-concern.wav',
+    'assets/linda-04-training.wav',
+    'assets/linda-05-recovery.wav',
+    'assets/linda-06-frame.wav',
+    'assets/linda-07-priorities.wav',
+    'assets/linda-08-closing.wav'
+  ]
+};
+
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '\u25A0' : '\u25BA';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
