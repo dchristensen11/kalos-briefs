@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing, July 30, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+
+  .client-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%);
+    padding: 18px 22px 14px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge {
+    background: #7c8aff22; border: 1px solid #7c8aff55;
+    color: #a0acff; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .gen-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%);
+    color: #fff; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .btn-row { display: flex; }
+  .stop-btn {
+    flex: 1; padding: 11px;
+    background: #2a1a1a; border: none; border-top: 1px solid #3a2020;
+    color: #f87171; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+    border-right: 1px solid #1e1e2e;
+  }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn {
+    flex: 1; padding: 11px;
+    background: #1a2a1a; border: none; border-top: 1px solid #2a3a20;
+    color: #4ade80; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .dl-all-btn:hover { background: #1e2e1e; }
+
+  .sections { padding: 0 4px 4px; }
+  .section {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #1e1e2e;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    min-width: 70px; justify-content: flex-end;
+  }
+  .play-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #7c8aff22; border: 1px solid #7c8aff44;
+    color: #a0acff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn {
+    font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+
+  .status-bar {
+    padding: 10px 18px; font-size: 12px; color: #666;
+    border-top: 1px solid #1e1e2e; min-height: 38px;
+    display: flex; align-items: center;
+  }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Thursday, July 30, 2026 &middot; 1 client &middot; Anristie Kho (10:30 AM)</div>
+<div class="source-line">&#9679; Pre-rendered locally via Voicebox (Kokoro, bm_george, 1.2x speed)</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Anristie Kho</h2>
+      <div class="meta">Muscle Rebuild / Recomp &middot; Female &middot; 51 &middot; Home (DB + Bench + TRX) + Villa Sport &middot; 2nd %ile ALMI</div>
+    </div>
+    <div class="time-badge">10:30 AM</div>
+  </div>
+  <button class="gen-btn" id="genBtn-anristie" onclick="playAll('anristie')"><span>&#9654;</span> Play All In Sequence</button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-anristie" onclick="stopAll('anristie')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-anristie" href="assets/anristie-full-brief.mp3" download="anristie-brief-jul30.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (3:47 MP3)</a>
+  </div>
+  <div class="sections" id="sections-anristie">
+    <div class="section" id="sec-anristie-0" onclick="playSection('anristie', 0)">
+      <div class="sec-icon">&#128075;</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Anristie Kho, 51 years old, second DEXA scan tomorrow, Thursday, at 10:30 in the morning, measured from her June 21st intro baseline. Her primary goal is rebuilding the muscle she lost during a 40 to 50 pound weight loss on a GLP-1 medication. Her ALMI is sitting at just the 2nd percentile, so building lean tissue is the single biggest lever she has. She is a former dancer, newer to lifting, a busy mom who trains mostly at home with some Villa Sport access, and she leaves for Taiwan right after the scan.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anristie-0">&#9654;</div>
+        <a class="dl-btn" id="dl-anristie-0" title="Download" href="assets/anristie-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anristie-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-anristie-1" onclick="playSection('anristie', 1)">
+      <div class="sec-icon">&#127942;</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Lead with these, because when she trains, the numbers move. Three personal records in just four logged sessions: dumbbell bench estimated one-rep max up 57 percent, from 14 to 22 pounds, plus hammer curl to press and reverse lunge both up somewhere between 57 and 108 percent. On nutrition, the prescribed shakes are doing their job, holding her near the 115 gram protein target on the days she logs, even when whole-food portions fall short. And her starting point is excellent: visceral fat at 35.2 is already in the ideal range and her bone density is above average, so this is a clean, pure build with nothing to fight against.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anristie-1">&#9654;</div>
+        <a class="dl-btn" id="dl-anristie-1" title="Download" href="assets/anristie-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anristie-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-anristie-2" onclick="playSection('anristie', 2)">
+      <div class="sec-icon">&#9888;&#65039;</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">The biggest concern is consistency, and it is the whole ballgame here. She is at 23 percent over the last 30 days and zero over the last 7, with her last logged workout back on July 9th, about 20 days ago. The week-out re-engagement messages went out on July 24th. She saw them, but there was no reply, no sessions, and the pre-scan food log did not happen. The encouraging part is that the friction was real, the home versus gym equipment question, and that is now resolved. So walk in treating this as a comeback conversation, not a scolding.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anristie-2">&#9654;</div>
+        <a class="dl-btn" id="dl-anristie-2" title="Download" href="assets/anristie-03-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anristie-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-anristie-3" onclick="playSection('anristie', 3)">
+      <div class="sec-icon">&#129460;</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">On training, her program is Recomp Dumbbells, three days a week, Tuesday, Thursday, Saturday. Her home setup is dumbbells, a bench, TRX and a pull-up bar, topping out around 10 to 15 pounds, with full Villa Sport access when she can get there. Because the home weights are light, effort to failure and adding reps matter more than load. Her bench was clean at 15 pounds for 12 reps across four sets, so the cue is add reps until set three starts to slow, or go heavier at Villa Sport. One thing to keep live: she reported knee pain, so keep swapping out any jumping movements. She has no barbell experience yet.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anristie-3">&#9654;</div>
+        <a class="dl-btn" id="dl-anristie-3" title="Download" href="assets/anristie-04-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anristie-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-anristie-4" onclick="playSection('anristie', 4)">
+      <div class="sec-icon">&#128564;</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">There is not much of a training load to manage right now, honestly, because her volume has been low. Steps are sitting around 2,200 a day, and there is no sleep or heart-rate data coming through. So the recovery conversation is really about removing friction and making the sessions easy to start again, not about backing anything off.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anristie-4">&#9654;</div>
+        <a class="dl-btn" id="dl-anristie-4" title="Download" href="assets/anristie-05-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anristie-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-anristie-5" onclick="playSection('anristie', 5)">
+      <div class="sec-icon">&#129504;</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">On coaching frame, she is a busy mom who came through a big GLP-1 weight loss and responds best to encouragement and clear, concrete equipment fixes. She is genuinely good raw material: a former dancer with real body awareness, clean logged sets, and three personal records whenever she shows up. Open by confirming her Villa Sport access and celebrating those PRs to build momentum. Frame the muscle rebuild as protecting everything she gained from the weight loss, so the loss does not keep coming out of her muscle.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anristie-5">&#9654;</div>
+        <a class="dl-btn" id="dl-anristie-5" title="Download" href="assets/anristie-06-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anristie-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-anristie-6" onclick="playSection('anristie', 6)">
+      <div class="sec-icon">&#127919;</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">For the next block, set these. First, lock in consistency, the three scheduled days, now that the equipment question is settled. Second, close the protein gap: she is landing around 60 to 70 percent of her 115 gram target, so reinforce three meals plus two shakes and ask for a couple of photo-log days. Third, keep progressing the lifts by effort, adding reps on the light home dumbbells and going heavier at Villa Sport. And fourth, her membership ends on scan day and she leaves for Taiwan right after, so position the renewal around a fresh start when she is back.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anristie-6">&#9654;</div>
+        <a class="dl-btn" id="dl-anristie-6" title="Download" href="assets/anristie-07-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anristie-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-anristie-7" onclick="playSection('anristie', 7)">
+      <div class="sec-icon">&#9989;</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in: an excellent metabolic canvas, real strength when she trains, and one clear lever, which is simply getting her back in the gym consistently. Lead with the three PRs and the equipment fix. Keep it a comeback, not a scolding. Protect the muscle after the GLP-1 loss, close the protein gap, watch the knee, and set the renewal around her return from Taiwan.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anristie-7">&#9654;</div>
+        <a class="dl-btn" id="dl-anristie-7" title="Download" href="assets/anristie-08-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anristie-7"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-anristie">Ready. Files are pre-rendered, tap play or hit Play All.</div>
+</div>
+
+<script>
+const files = {
+  anristie: [
+    'assets/anristie-01-intro.wav',
+    'assets/anristie-02-wins.wav',
+    'assets/anristie-03-concern.wav',
+    'assets/anristie-04-training.wav',
+    'assets/anristie-05-recovery.wav',
+    'assets/anristie-06-frame.wav',
+    'assets/anristie-07-priorities.wav',
+    'assets/anristie-08-closing.wav'
+  ]
+};
+const audios={}, stopRequested={}; let playAllMode=false;
+function getAudio(c,i){audios[c]=audios[c]||[];if(!audios[c][i]){const a=new Audio(files[c][i]);a.addEventListener('loadedmetadata',()=>{const dd=Math.round(a.duration);const el=document.getElementById(`dur-${c}-${i}`);if(el)el.textContent=`${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;});audios[c][i]=a;}return audios[c][i];}
+function setStatus(c,m,t=''){const el=document.getElementById(`status-${c}`);if(el){el.textContent=m;el.className='status-bar'+(t?' '+t:'');}}
+function setBtn(c,i,s){const b=document.getElementById(`btn-${c}-${i}`);if(!b)return;b.className='play-btn'+(s==='playing'?' active':'');b.textContent=s==='playing'?'\u25A0':'\u25BA';}
+function setSectionPlaying(c,i,p){const s=document.getElementById(`sec-${c}-${i}`);if(s)s.className='section'+(p?' playing':'');}
+function stopAll(c){stopRequested[c]=true;playAllMode=false;const n=files[c].length;for(let i=0;i<n;i++){const a=audios[c]&&audios[c][i];if(a){a.pause();a.currentTime=0;a.onended=null;}setBtn(c,i,'');setSectionPlaying(c,i,false);}const sb=document.getElementById(`stopBtn-${c}`);if(sb)sb.disabled=true;setStatus(c,'Stopped.');}
+function playSection(c,i){stopAll(c);stopRequested[c]=false;const a=getAudio(c,i);setBtn(c,i,'playing');setSectionPlaying(c,i,true);setStatus(c,`Playing section ${i+1}...`);a.currentTime=0;a.onended=()=>{setBtn(c,i,'');setSectionPlaying(c,i,false);if(!playAllMode)setStatus(c,'Done.','ok');};a.play();const sb=document.getElementById(`stopBtn-${c}`);if(sb)sb.disabled=false;}
+function playIndex(c,i){const n=files[c].length;if(stopRequested[c]||i>=n){playAllMode=false;setStatus(c,stopRequested[c]?'Stopped.':'Briefing complete.','ok');const b=document.getElementById(`genBtn-${c}`);const sb=document.getElementById(`stopBtn-${c}`);if(b){b.disabled=false;b.innerHTML='<span>&#9654;</span> Play All In Sequence';}if(sb)sb.disabled=true;return;}const a=getAudio(c,i);document.querySelectorAll(`#sections-${c} .section`).forEach((s,si)=>setSectionPlaying(c,si,si===i));setBtn(c,i,'playing');setStatus(c,`Section ${i+1} of ${n}: ${document.querySelector(`#sec-${c}-${i} .sec-title`).textContent}`);a.currentTime=0;a.onended=()=>{if(playAllMode)playIndex(c,i+1);};a.play();}
+function playAll(c){stopAll(c);stopRequested[c]=false;playAllMode=true;const b=document.getElementById(`genBtn-${c}`);const sb=document.getElementById(`stopBtn-${c}`);if(b){b.disabled=true;b.textContent='Playing...';}if(sb)sb.disabled=false;playIndex(c,0);}
+</script>
+</body>
+</html>
