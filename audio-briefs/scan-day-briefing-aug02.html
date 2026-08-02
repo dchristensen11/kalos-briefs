@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing, August 2, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #e8eaf0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+
+  .client-card {
+    background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%);
+    padding: 18px 22px 14px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge {
+    background: #7c8aff22; border: 1px solid #7c8aff55;
+    color: #a0acff; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+  }
+
+  .gen-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%);
+    color: #fff; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .btn-row { display: flex; }
+  .stop-btn {
+    flex: 1; padding: 11px;
+    background: #2a1a1a; border: none; border-top: 1px solid #3a2020;
+    color: #f87171; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s;
+    border-right: 1px solid #1e1e2e;
+  }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn {
+    flex: 1; padding: 11px;
+    background: #1a2a1a; border: none; border-top: 1px solid #2a3a20;
+    color: #4ade80; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .dl-all-btn:hover { background: #1e2e1e; }
+
+  .sections { padding: 0 4px 4px; }
+  .section {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid #1e1e2e;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls {
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    min-width: 70px; justify-content: flex-end;
+  }
+  .play-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #7c8aff22; border: 1px solid #7c8aff44;
+    color: #a0acff; font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn {
+    font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+
+  .status-bar {
+    padding: 10px 18px; font-size: 12px; color: #666;
+    border-top: 1px solid #1e1e2e; min-height: 38px;
+    display: flex; align-items: center;
+  }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Sunday, August 2, 2026 &middot; 1 client &middot; Umar Khan Pathan (12:00 PM)</div>
+<div class="source-line">&#9679; Pre-rendered locally via Voicebox (Kokoro, bm_george, 1.2x speed)</div>
+
+<!-- UMAR KHAN PATHAN -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Umar Khan Pathan</h2>
+      <div class="meta">Fat Loss / Health &middot; Male &middot; 31 &middot; Solo &middot; Machine-based &middot; 44th %ile ALMI</div>
+    </div>
+    <div class="time-badge">12:00 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-umar" onclick="playAll('umar')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-umar" onclick="stopAll('umar')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-umar" href="assets/umar-full-brief.mp3" download="umar-brief-aug02.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (3:59 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-umar">
+
+    <div class="section" id="sec-umar-0" onclick="playSection('umar', 0)">
+      <div class="sec-icon">&#128075;</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Alright, this is your briefing for Umar Khan Pathan, coming in today at noon for his second Kalos DEXA scan at Campbell. Umar is thirty-one, a dad, and his whole reason for doing this is longevity and having the energy to keep up with his kids. He wants to lose weight, build some muscle, and bring his visceral fat down over the long haul. Here is the thing to hold in your head before he walks in. His first four weeks got cut short. He had a family loss and some travel, so he trained hard for a couple of weeks in May and then had to step away. This is a restart conversation, not a report card. Lead with the human stuff first.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-umar-0">&#9654;</div>
+        <a class="dl-btn" id="dl-umar-0" title="Download" href="assets/umar-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-umar-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-umar-1" onclick="playSection('umar', 1)">
+      <div class="sec-icon">&#127942;</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Start with what went right, because there is real signal here. In the eight sessions he logged, every single one produced a personal record. His leg press went from one forty for ten reps up to two hundred for ten. His lat pulldown climbed from seventy to a hundred and ten. His seated shoulder press jumped from sixty all the way to ninety, that is a seventy-six percent increase. And he told us the workouts felt great, that he felt really good afterward. On top of that, his lean mass moved the right way, up three point six pounds, from a hundred thirty point six to a hundred thirty-four point three, with a small drop in fat. Some of that early jump is probably water or activity we did not capture, but the direction is exactly what we want. The bottom line on the wins is simple. When this guy trains, he progresses fast, and he enjoys it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-umar-1">&#9654;</div>
+        <a class="dl-btn" id="dl-umar-1" title="Download" href="assets/umar-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-umar-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-umar-2" onclick="playSection('umar', 2)">
+      <div class="sec-icon">&#9888;&#65039;</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Now the concern. His visceral fat is the number to watch. It actually went up about eight and a half points between his two April scans, from one fifty-four to one sixty-two, and his body fat is sitting at thirty-eight point seven percent, which is very high, up at the ninety-ninth percentile. So even with the lean gain, the health markers he came here to fix have not moved yet. That is not a criticism, it is just where the starting line really is. Visceral fat is the priority, and the levers are consistency and fueling once life settles down for him.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-umar-2">&#9654;</div>
+        <a class="dl-btn" id="dl-umar-2" title="Download" href="assets/umar-03-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-umar-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-umar-3" onclick="playSection('umar', 3)">
+      <div class="sec-icon">&#129460;</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">On the training side, two things. First, his left knee has been bothering him since April. It still limits stairs and sitting cross-legged, so keep his lower body work machine-based and pain-free, and swap anything that aggravates it. The good news is he is already training almost entirely on machines, leg press, chest press, lat pulldown, shoulder press machine, cable row, so that suits the knee well. Second, there is an intensity flag. In six of his eight sessions he added load to the later sets instead of the first one, that reverse pyramid pattern. So coach him to bring a true top-set effort, make the first hard set the hardest one.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-umar-3">&#9654;</div>
+        <a class="dl-btn" id="dl-umar-3" title="Download" href="assets/umar-04-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-umar-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-umar-4" onclick="playSection('umar', 4)">
+      <div class="sec-icon">&#128564;</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">On recovery and overall load, the honest picture is that he has been on pause. He logged eight sessions in May at about fifty-seven percent consistency, then June and July were both zero, because of the family loss and the travel. His sessions averaged around forty-nine minutes when he was in. So there is no overtraining or recovery red flag here. If anything, the challenge is just getting back into a rhythm. Do not walk in expecting recent training data, because there is not any since May.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-umar-4">&#9654;</div>
+        <a class="dl-btn" id="dl-umar-4" title="Download" href="assets/umar-05-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-umar-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-umar-5" onclick="playSection('umar', 5)">
+      <div class="sec-icon">&#129504;</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">Here is how to handle the conversation. The Iris coaching read is clear on this. The family loss and the travel are still recent, so open with empathy about life and about the knee before you put any pressure on nutrition or logging. He is coming back after a hard stretch, so meet him there first. He responds well to training and he clearly enjoys the progress, so once you have acknowledged the life stuff, you can lean into how well his body responded when he was consistent. That is your bridge into the next block.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-umar-5">&#9654;</div>
+        <a class="dl-btn" id="dl-umar-5" title="Download" href="assets/umar-06-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-umar-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-umar-6" onclick="playSection('umar', 6)">
+      <div class="sec-icon">&#127919;</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">For the next block, here are the priorities to set. One, rebuild a consistent, knee-friendly rhythm, the simple machine-based three-days-a-week plan he already responds to. Two, get the fueling and the food logging dialed in. His protein target is a hundred eighty grams a day with a meal, shake, meal, shake, meal structure, two shakes, but his logging has been partial, only thirty-five meals over eight days, and he skips that second shake on busy days. So verify the two daily shakes. Three, make visceral fat and body fat the scoreboard, not just the scale. And four, because his four-week membership ends today, have the renewal and the next block ready to present.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-umar-6">&#9654;</div>
+        <a class="dl-btn" id="dl-umar-6" title="Download" href="assets/umar-07-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-umar-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-umar-7" onclick="playSection('umar', 7)">
+      <div class="sec-icon">&#9989;</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">So the bottom line going in. This is a restart, not a review, so lead with empathy on the loss and the knee. When he trained, he crushed it, eight sessions, eight personal records, and lean mass up. The real work still ahead is visceral fat, body fat, and consistency. Keep it machine-based and knee-safe, fix the fueling and the logging, and frame the renewal around the momentum he already showed. He has got the engine. He just needs a clear, gentle runway back in. Go get him.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-umar-7">&#9654;</div>
+        <a class="dl-btn" id="dl-umar-7" title="Download" href="assets/umar-08-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-umar-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-umar">Ready. Files are pre-rendered, tap play or hit Play All.</div>
+</div>
+
+
+<script>
+const files = {
+  umar: [
+    'assets/umar-01-intro.wav',
+    'assets/umar-02-wins.wav',
+    'assets/umar-03-concern.wav',
+    'assets/umar-04-training.wav',
+    'assets/umar-05-recovery.wav',
+    'assets/umar-06-frame.wav',
+    'assets/umar-07-priorities.wav',
+    'assets/umar-08-closing.wav'
+  ]
+};
+
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '\u25A0' : '\u25BA';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
