@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing, August 22, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Saturday, August 22, 2026 &middot; 1 client &middot; Kedar Lahurikar (12:00 PM)</div>
+<div class="source-line">&#9679; Pre-rendered locally via Voicebox (Kokoro, bm_george, 1.2x speed)</div>
+
+<!-- KEDAR LAHURIKAR -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Kedar Lahurikar</h2>
+      <div class="meta">Lean Mass Gain &middot; Male &middot; 38 &middot; Solo &middot; BB / DB / machine &middot; 8th %ile ALMI &middot; conversion (4-week program closes)</div>
+    </div>
+    <div class="time-badge">12:00 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-kedar" onclick="playAll('kedar')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-kedar" onclick="stopAll('kedar')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-kedar" href="assets/kedar-full-brief.mp3" download="kedar-brief-aug22.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (4:49 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-kedar">
+
+    <div class="section" id="sec-kedar-0" onclick="playSection('kedar', 0)">
+      <div class="sec-icon">&#128075;</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Alright Daniel, next up is Kedar Lahurikar, his second Kalos scan today at noon in Campbell. Kedar is thirty eight, five foot eight, and this one is a conversion moment, his four week entry program closes at this scan. Two important framing points before he walks in. First, this is a lean mass mission, not fat loss. His body fat is a healthy twenty percent and his visceral fat is well inside normal, so he does not need to lose anything, he needs to build muscle. Second, use the July fifteenth baseline, not the June eighteenth intro. A family emergency wiped out his first month, so July fifteenth is the fair starting line, and that is the number we compare against today. His why is functional strength and energy for weekend cricket and tennis, and the post workout endorphins are what is driving the routine right now.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kedar-0">&#9654;</div>
+        <a class="dl-btn" id="dl-kedar-0" title="Download" href="assets/kedar-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kedar-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-kedar-1" onclick="playSection('kedar', 1)">
+      <div class="sec-icon">&#127942;</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Lead with the comeback, because it is a good one. That family emergency cost him his entire first month, and since the July fifteenth baseline he has rebuilt all the way to one hundred percent consistency over the last thirty days, thirteen of fifteen sessions across the block. The slow start is completely over. And this is a guy who does exactly what he is told. On August sixth you wrote bump the squat to fifty, and he squatted fifty for twelve. Then you gave him a Friday target of fifty five for twelve, and he went out and hit fifty five for fifteen, beat it clean. His pressing is climbing across the board too, dumbbell bench holding fifty pounds for twelve, incline moving from thirty to thirty five, and a dumbbell shoulder press at fifty five for ten even with a cranky right shoulder. Give this man a specific number and he chases it down.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kedar-1">&#9654;</div>
+        <a class="dl-btn" id="dl-kedar-1" title="Download" href="assets/kedar-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kedar-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-kedar-2" onclick="playSection('kedar', 2)">
+      <div class="sec-icon">&#9888;&#65039;</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Now the number that matters most, and it is the whole reason for the conversion conversation, his ALMI is at the eighth age matched percentile, and his total lean for his height is even lower. At thirty eight, five foot eight, one hundred thirty eight pounds, he is under muscled for his frame, and that is the single most important thing to walk him through today. Do not lead with body fat, lead with lean mass. At twenty percent body fat and healthy visceral fat he does not need a cut, he needs a build, and that build is a six to twelve month project, not a four week one. Getting that framing right is what makes the next program obviously necessary rather than optional.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kedar-2">&#9654;</div>
+        <a class="dl-btn" id="dl-kedar-2" title="Download" href="assets/kedar-03-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kedar-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-kedar-3" onclick="playSection('kedar', 3)">
+      <div class="sec-icon">&#129460;</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">On training and movement, he is on a three day recomposition program, currently in phase two hypertrophy, and his sessions run long, about two hours forty on average. A few flags to hold. His lower left back is fading but still present, so do not chase load on hinges, and in fact his deadlift went backwards on August twelfth, worth asking whether that was the back, fatigue, or a busy week. His right shoulder is non acute and currently tolerating a fifty five pound dumbbell press fine. He has prior knee issues on both sides from cricket. And the intensity flag from the ten day call is still there a little, his working sets look a touch too clean, so keep reinforcing that the last couple reps should actually be hard.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kedar-3">&#9654;</div>
+        <a class="dl-btn" id="dl-kedar-3" title="Download" href="assets/kedar-04-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kedar-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-kedar-4" onclick="playSection('kedar', 4)">
+      <div class="sec-icon">&#128564;</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">On recovery and overall load, the picture is solid. He is training consistently, three times a week, and recovering well enough to keep setting personal records. The one thing to note is his daily steps are low, averaging around four thousand three hundred, so outside the gym he is fairly sedentary at a desk. That is not a recovery problem, it is an opportunity, a bit more daily movement would help the lean mass build and his energy through the week. No overtraining or red flags here, the sessions are long but he is handling them.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kedar-4">&#9654;</div>
+        <a class="dl-btn" id="dl-kedar-4" title="Download" href="assets/kedar-05-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kedar-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-kedar-5" onclick="playSection('kedar', 5)">
+      <div class="sec-icon">&#129504;</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">For the coaching frame, the key thing about Kedar is he is quiet. He rarely replies in the app, so do not read his messages for the signal, read his training log, and right now that log is trending up hard. He responds extremely well to specific numbers and not at all to general principles, so give him targets, not philosophy. Told to bump the squat to fifty, he bumped it to exactly fifty. The post workout endorphins are his real adherence driver, so keep tying the plan back to how good he feels after a session, that is the hook that keeps him coming back.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kedar-5">&#9654;</div>
+        <a class="dl-btn" id="dl-kedar-5" title="Download" href="assets/kedar-06-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kedar-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-kedar-6" onclick="playSection('kedar', 6)">
+      <div class="sec-icon">&#127919;</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">For the next block, here are the priorities. One, this is a lean mass build, so program it as a six to twelve month strength project and set the expectation clearly. Two, close the nutrition loop, his protein target is one hundred forty one grams, he is dairy free with two pea protein shakes, and his food logging has been the gap, empty since July thirtieth with breakfast as the specific hole, so if the fresh photo logs landed, use them to set calories and carb timing. Three, give him live lift targets at the scan, he just beat his squat number so give him the next one. And four, this is the conversion, the four week entry program closes today, so have the membership recommendation ready and tie it straight to his cricket and tennis goals.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kedar-6">&#9654;</div>
+        <a class="dl-btn" id="dl-kedar-6" title="Download" href="assets/kedar-07-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kedar-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-kedar-7" onclick="playSection('kedar', 7)">
+      <div class="sec-icon">&#9989;</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Open with the comeback, a family emergency took his first month and he came back to one hundred percent consistency and beat his squat target. Then make the whole conversation about lean mass, his ALMI at the eighth percentile is the mission, not body fat. Compare to the July fifteenth baseline, and skip bone density, thirty eight days is far too short to read anything into it. Stay off heavy hinges while his back settles, close the nutrition loop, and frame the renewal as a six to twelve month strength build for the cricket and tennis and energy he came here for. He is quiet, compliant, and responding to every number you give him. Give him the next one.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kedar-7">&#9654;</div>
+        <a class="dl-btn" id="dl-kedar-7" title="Download" href="assets/kedar-08-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kedar-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-kedar">Ready. Files are pre-rendered, tap play or hit Play All.</div>
+</div>
+
+
+<script>
+const files = {
+  kedar: [
+    'assets/kedar-01-intro.wav',
+    'assets/kedar-02-wins.wav',
+    'assets/kedar-03-concern.wav',
+    'assets/kedar-04-training.wav',
+    'assets/kedar-05-recovery.wav',
+    'assets/kedar-06-coaching.wav',
+    'assets/kedar-07-priorities.wav',
+    'assets/kedar-08-closing.wav'
+  ]
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '\u25A0' : '\u25BA';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
