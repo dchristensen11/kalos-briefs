@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scan Day Briefing, August 23, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Sunday, August 23, 2026 &middot; 2 clients &middot; Julie Garden (7:30 AM) &middot; Craig Rodrigues (8:15 AM)</div>
+<div class="source-line">&#9679; Pre-rendered locally via Voicebox (Kokoro, bm_george, 1.2x speed)</div>
+
+<!-- JULIE GARDEN -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Julie Garden</h2>
+      <div class="meta">Lean Mass / Bone / Visceral Fat &middot; Female &middot; 60 &middot; Solo &middot; home gym &middot; 25th %ile ALMI &middot; BMD Z &minus;2.1 &middot; 6-Month Core (no renewal cliff)</div>
+    </div>
+    <div class="time-badge">7:30 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-julie" onclick="playAll('julie')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-julie" onclick="stopAll('julie')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-julie" href="assets/julie-full-brief.mp3" download="julie-brief-aug23.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (5:41 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-julie">
+
+    <div class="section" id="sec-julie-0" onclick="playSection('julie', 0)">
+      <div class="sec-icon">&#128075;</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Morning Daniel. First up today is Julie Garden, sixty years old, and this is her package scan at seven thirty, fasted, the way she asked for it. Her baseline was July sixth, so this is a forty eight day window, longer than a standard four week package because the original August sixteenth date moved on your conflict. She is on six month core through January fifteenth, so there is no renewal cliff here. This is a checkpoint. What she came in for is post menopause longevity, bone density, and getting away from frailty. The number that carries this conversation is lean mass, with visceral fat second. Her stated goal was about two pounds of lean tissue.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-julie-0">&#9654;</div>
+        <a class="dl-btn" id="dl-julie-0" title="Download" href="assets/julie-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-julie-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-julie-1" onclick="playSection('julie', 1)">
+      <div class="sec-icon">&#127942;</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Lead with the attendance, because it is remarkable. Twenty two out of twenty two primary sessions. One hundred percent in July, one hundred percent in August, not a single missed workout since July fifteenth, at sixty years old. Average session an hour and five minutes. Second, twenty four all time personal records. The barbell hip thrust is the star, sixty pounds for eight up to eighty five for ten, a fifty three percent jump in estimated one rep max, and she moved herself off dumbbells onto a barbell after the form session. Walking lunge is up two hundred percent, incline bench ninety one percent, lat pulldown fifty five percent. Third, she self corrects. After the July nineteenth form session she rebuilt the hip thrust setup on her own and the next lower day logged fifteen personal bests. And fourth, she completed the two day food log in full, both days, itemised with macros.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-julie-1">&#9654;</div>
+        <a class="dl-btn" id="dl-julie-1" title="Download" href="assets/julie-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-julie-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-julie-2" onclick="playSection('julie', 2)">
+      <div class="sec-icon">&#9888;&#65039;</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Here is what changed since the week out. As of seven fifteen this evening, her Saturday core and glutes session is not logged. That was the only session between the targets you sent Friday and the scan. Her last logged training was Thursday the twentieth. Friday was an elliptical activity only. Everfit has dropped her to ninety four percent over thirty days and seventy five percent over seven. So all three targets, the hip thrust at ninety and ninety five, the goblet squat at fifty for eight, and the seated hamstring curl at thirty five, are untested. She may still train tonight. Do not open on this. Open on the twenty two out of twenty two, then ask how the week landed and let her raise it. The second concern is carbs. Even on a fully logged day she is at roughly one hundred and fifteen grams against a one hundred and eighty five gram target. The log shows exactly why. A mango and blueberry smoothie every morning, then almost nothing the rest of the day. She is front loading and then running out of appetite.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-julie-2">&#9654;</div>
+        <a class="dl-btn" id="dl-julie-2" title="Download" href="assets/julie-03-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-julie-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-julie-3" onclick="playSection('julie', 3)">
+      <div class="sec-icon">&#129460;</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">Movement constraints to keep in mind. Past knee injuries mean squats feel scary to her, and she avoids axial loading through the neck and upper back, so barbell back squat is off the table and she uses goblet squats and leg press instead. Left shoulder gets tight overhead, and Arnold press is the workaround that already works. Old dance injuries cramp her foot in the split squat position, and the ball of foot setup is the current fix. She avoids calf work because of boot fitting history. Two lifts are trending backwards. The Bulgarian split squat is down thirteen percent, twenty five pounds for eight down to twenty two, and that one has the known foot cramping cause. The dumbbell single arm row is down twenty seven percent, thirty four pounds for twelve down to twenty five, and that one has no explanation in the data. Ask her about it directly. The big technical win is the hip thrust, rib tuck and heel drive, she owns it now.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-julie-3">&#9654;</div>
+        <a class="dl-btn" id="dl-julie-3" title="Download" href="assets/julie-04-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-julie-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-julie-4" onclick="playSection('julie', 4)">
+      <div class="sec-icon">&#128564;</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">On the load picture. She cut cardio from six days a week on the elliptical down to two, and she has been anxious about that since August third. She is worried about losing cardiovascular fitness. You answered it by message on August fourth but she has not seen scan data to confirm the trade was right. This scan is that evidence, so say it plainly if lean mass moved. Her weekend step count gets wiped out by babysitting her two year old grandson, which she has flagged herself. And one note from Friday. Her eight fifty four p m entry just says day totals, I was out with friends, with no itemisation. Given the Napa conversation and the visceral fat target, that is worth one light question, not a lecture.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-julie-4">&#9654;</div>
+        <a class="dl-btn" id="dl-julie-4" title="Download" href="assets/julie-05-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-julie-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-julie-5" onclick="playSection('julie', 5)">
+      <div class="sec-icon">&#129504;</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">On how to run the room. Julie is health driven and practical. She responds to education on mechanism and she values autonomy in the planning. Iris regenerated her read this evening and it now frames the session around sustaining bone health momentum through her vacation with simple adjustments, which makes the September plan the natural close rather than an afterthought. One thing to handle carefully. Her bone density z score is minus two point one, with a medical scan showing osteopenia, lumbar worse than hip. That is her actual why. But forty eight days does not move bone. Say that clearly, then use the number to explain why the program looks the way it does. Progressive loading through hip thrusts, romanian deadlifts and leg press is the intervention. That is the strongest argument you have for the next six months. Also, she disputed her own logged protein numbers in Iris on Friday, saying most days are one hundred and ten grams and above. Validate the logging before you quote any number back at her.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-julie-5">&#9654;</div>
+        <a class="dl-btn" id="dl-julie-5" title="Download" href="assets/julie-06-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-julie-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-julie-6" onclick="playSection('julie', 6)">
+      <div class="sec-icon">&#127919;</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things to set after the scan. One, the intensity fix. Load added to later sets in twenty one of her last twenty two workouts. Set one is functionally a warm up and it is free progress she is leaving behind. Show her the leg press log and the fact that dumbbell bench has only moved two percent while everything else climbed. Two, carbs. Not more discipline, better placement. She has the mango and the rice cakes already, the problem is everything after lunch. Three, phase three starts August twenty sixth, so frame the next block as the one where the loading gets serious for bone. Four, the vacation. September seventh through twenty sixth. Her next scan lands after she returns, around early October. Set that expectation at the table so the gap does not feel like drift, and give her a travel and maintenance plan before she leaves.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-julie-6">&#9654;</div>
+        <a class="dl-btn" id="dl-julie-6" title="Download" href="assets/julie-07-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-julie-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-julie-7" onclick="playSection('julie', 7)">
+      <div class="sec-icon">&#9989;</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Twenty two out of twenty two is the headline and she earned it. Lean mass and the muscle percentile are the numbers that matter, visceral fat second, and bone is the reason for all of it but not a result today. The targets are untested, so ask, do not assume. Carbs are the one real gap and they have not moved. And the close is the vacation plan, not a renewal pitch, because she is already on six month core. Give her the mechanism and she will run with it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-julie-7">&#9654;</div>
+        <a class="dl-btn" id="dl-julie-7" title="Download" href="assets/julie-08-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-julie-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-julie">Ready.</div>
+</div>
+
+<!-- CRAIG RODRIGUES -->
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Craig Rodrigues</h2>
+      <div class="meta">Visceral Fat / Recomp &middot; Male &middot; 52 &middot; Solo &middot; machines / DB / Smith &middot; 12th %ile ALMI &middot; VAT 205 cm&sup2; &middot; 6-Month Core (no renewal cliff)</div>
+    </div>
+    <div class="time-badge">8:15 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-craig" onclick="playAll('craig')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-craig" onclick="stopAll('craig')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-craig" href="assets/craig-full-brief.mp3" download="craig-brief-aug23.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (5:08 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-craig">
+
+    <div class="section" id="sec-craig-0" onclick="playSection('craig', 0)">
+      <div class="sec-icon">&#128075;</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Next is Craig Rodrigues at eight fifteen, fifty two years old, package scan and his first follow up since the July twenty third intro. Thirty one day window. He is on six month core through January twenty third, so like Julie this is a checkpoint, not a renewal cliff. What he walked in for is longevity and health. Specifically he wants to move L D L, blood pressure and blood sugar through lifestyle so he can reduce medication if possible. The number that carries this conversation is visceral fat at two hundred and five, roughly double the hundred threshold where cardiometabolic risk starts climbing.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-craig-0">&#9654;</div>
+        <a class="dl-btn" id="dl-craig-0" title="Download" href="assets/craig-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-craig-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-craig-1" onclick="playSection('craig', 1)">
+      <div class="sec-icon">&#127942;</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Lead with the build. Four weeks ago he was sedentary with no recent training history. He reactivated a twenty four hour gym membership fifteen minutes from home and ran three sessions a week through weeks one, two and three at one hundred percent while learning the machines. Twelve all time personal records. Dumbbell bench went twenty pounds for ten up to fifty for fourteen, a one hundred and eighty nine percent jump in estimated one rep max. Seated hamstring curl doubled. Shoulder press machine up sixty nine percent. And the food logging is excellent, eighty six meals across twenty four of thirty days, including both days of the log you assigned this week. He completed those. Logging is the one thing he has never let slip, and that is the lever to pull on when you get to the harder conversation.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-craig-1">&#9654;</div>
+        <a class="dl-btn" id="dl-craig-1" title="Download" href="assets/craig-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-craig-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-craig-2" onclick="playSection('craig', 2)">
+      <div class="sec-icon">&#9888;&#65039;</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Here is the thing that changed and it is the most important item in this brief. Craig has not trained since Monday August seventeenth. He missed August nineteenth, twentieth and twenty first. Three sessions in a row, and the last one was the session your targets were written for. So dumbbell bench at fifty five, smith squat at thirty and lat pulldown at one fifteen are all untested, and bench and squat were also issued on August fourteenth and not taken then either. Week four is at twenty five percent against one hundred percent in weeks one through three. What makes this worth naming is the sequence. On August seventeenth he told you, in his own words, that he missed a few days because he was feeling off and not sleeping, but that he was feeling better and back in his gym routine. Then he missed the next three. One more thing. Iris still lists back in routine after the sleep dip as a top win, because it is reading his message and not his calendar. Do not repeat that line back to him.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-craig-2">&#9654;</div>
+        <a class="dl-btn" id="dl-craig-2" title="Download" href="assets/craig-03-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-craig-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-craig-3" onclick="playSection('craig', 3)">
+      <div class="sec-icon">&#129460;</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">On the training itself. He is in phase two since August eighteenth, so the current block is higher volume at three by twelve. His gym has machines, dumbbells and a smith machine. There is no barbell bench, squat or deadlift in his program, so the gold standards in the modal are long term framing only. One lift is going backwards. Chest press machine was seventy pounds for twelve in late July and ninety for fifteen on August fifth, then dropped to seventy for nine on August seventeenth, an eleven percent decline. That is the only lift trending the wrong way and it is worth one direct question. He also flagged left tricep pain on a first rep at one point and stopped the set immediately, which was the right call. Review the warm up on overhead pressing rather than dropping the movement.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-craig-3">&#9654;</div>
+        <a class="dl-btn" id="dl-craig-3" title="Download" href="assets/craig-04-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-craig-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-craig-4" onclick="playSection('craig', 4)">
+      <div class="sec-icon">&#128564;</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">On recovery and load. Sleep is the recurring theme and it is the thing he has named twice now. He tied his first missed block to feeling off and sleeping badly, and the second gap has the same shape. His steps are averaging around four thousand one hundred a day, which is low and is not helping the visceral fat number. His body weight logged in Everfit on August seventeenth was one hundred and ninety one pounds, up about three and a half pounds from the one eighty seven point six at the July baseline. Worth knowing before the scale reading tomorrow so it does not surprise either of you.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-craig-4">&#9654;</div>
+        <a class="dl-btn" id="dl-craig-4" title="Download" href="assets/craig-05-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-craig-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-craig-5" onclick="playSection('craig', 5)">
+      <div class="sec-icon">&#129504;</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">On how to run the room with Craig. He values autonomy and data driven control. Give him the numbers and let him reach the conclusion, do not give directives. He faxed his DEXA to his own doctor the same week he got it, he chose the gym that removed friction, and he praised the app for replacing his spreadsheets. That is a man who acts on information. So put the calendar in front of him rather than telling him he needs to be more consistent. Weeks one through three at one hundred percent, week four at twenty five. Ask what specifically broke, since he named sleep last time and the same thing recurred. He is not defensive about it, he volunteered the first one unprompted. He also has three open questions waiting on you. Whether to switch ribeye to leaner sirloin for visceral fat, how to track fiber, and whether to add psyllium husk. Answer all three, it builds the trust the rest of the conversation runs on.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-craig-5">&#9654;</div>
+        <a class="dl-btn" id="dl-craig-5" title="Download" href="assets/craig-06-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-craig-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-craig-6" onclick="playSection('craig', 6)">
+      <div class="sec-icon">&#127919;</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things to set. One, attendance, and be direct about it. A three session gap the week before a scan is the thing most likely to decide his next three months, whatever the numbers say. Two, intensity. Load added to later sets in nine of nine workouts. Seated leg press is the clearest case, one hundred and fifteen pounds for seventeen reps, nowhere near failure for a man his size. Fix the weight, not the reps. Three, protein. He is running about one hundred and thirty nine grams against a one hundred and seventy gram target, and his best days were one eighty eight and one sixty nine, so he knows how. The floor is the problem, not the ceiling. Four, the whole milk in his shakes is still there against the prescription to switch to water or almond, and Iris flagged it again this evening.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-craig-6">&#9654;</div>
+        <a class="dl-btn" id="dl-craig-6" title="Download" href="assets/craig-07-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-craig-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-craig-7" onclick="playSection('craig', 7)">
+      <div class="sec-icon">&#9989;</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Weeks one through three were excellent and he earned every one of the twelve personal records. Week four fell apart, three sessions missed, and it happened right after he told you he was back on track. Lead the numbers with visceral fat at two hundred and five, then the muscle percentile, because he is under muscled as well as over fat and recomp is the honest prescription. His food logging never slipped, so use that as proof he can hold a habit. The targets are untested for the second time. Answer his three questions. And make the case that this is a six to twelve month project, not a four week one.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-craig-7">&#9654;</div>
+        <a class="dl-btn" id="dl-craig-7" title="Download" href="assets/craig-08-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-craig-7"></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="status-bar" id="status-craig">Ready.</div>
+</div>
+
+<script>
+const files = {
+  julie: ['assets/julie-01-intro.wav','assets/julie-02-wins.wav','assets/julie-03-concern.wav','assets/julie-04-training.wav','assets/julie-05-recovery.wav','assets/julie-06-coaching.wav','assets/julie-07-priorities.wav','assets/julie-08-closing.wav'],
+  craig: ['assets/craig-01-intro.wav','assets/craig-02-wins.wav','assets/craig-03-concern.wav','assets/craig-04-training.wav','assets/craig-05-recovery.wav','assets/craig-06-coaching.wav','assets/craig-07-priorities.wav','assets/craig-08-closing.wav']
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '\u25A0' : '\u25BA';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
