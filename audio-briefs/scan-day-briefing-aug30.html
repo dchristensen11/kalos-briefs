@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing, August 30, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Sunday, August 30, 2026 &middot; 3 clients &middot; Beatriz Velez (8:15 AM) &middot; Amir &amp; Megan Ahmari (10:30 AM, duo)</div>
+<div class="source-line">Generated locally with Voicebox &middot; night-before refresh Aug 29</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Beatriz Velez</h2>
+      <div class="meta">Fat Loss / Recomp &middot; Female &middot; 36 &middot; 3rd Package Scan &middot; routine checkpoint, no renewal due &middot; squat already past Gold Standard</div>
+    </div>
+    <div class="time-badge">8:15 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-beatriz" onclick="playAll('beatriz')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-beatriz" onclick="stopAll('beatriz')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-beatriz" href="assets/beatriz-full-brief.mp3" download="beatriz-brief-aug30.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (1:15 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-beatriz">
+
+    <div class="section" id="sec-beatriz-0" onclick="playSection('beatriz', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Beatriz, third package scan, Sunday August 30th at 8:15 in the morning.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-beatriz-0">&#9654;</div>
+        <a class="dl-btn" id="dl-beatriz-0" title="Download" href="assets/beatriz-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-beatriz-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-beatriz-1" onclick="playSection('beatriz', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Her squat is already past her Gold Standard at an estimated 310 pounds. Hip thrust is up to 375 for 5, estimated 438. Since the midpoint she completed her weekly check-in form and stayed engaged. Correction to make in the room: her file said she missed two sessions in a row, but live Everfit shows she actually completed Wednesday&#x27;s Core and Glutes session, 9 of 10 exercises tracked, and only missed Friday&#x27;s Full Body session, so don&#x27;t repeat the two-miss claim. She also moved her lifting to 4 PM now that school started, keeping her 5 AM fasted walks separate, which is probably why Friday got missed. In her own words this week, Planet Fitness is wearing on her, dumbbell hand-offs are stressful and she&#x27;s finding it hard to avoid pyramiding on heavy sets over 100 pounds because bailing out causes a scene. That&#x27;s a real, specific reason the pyramiding habit flagged since the midpoint has been hard to break there.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-beatriz-1">&#9654;</div>
+        <a class="dl-btn" id="dl-beatriz-1" title="Download" href="assets/beatriz-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-beatriz-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-beatriz-2" onclick="playSection('beatriz', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">Consistency has been strong, and she&#x27;s still logging food and workouts consistently even through the schedule change. No new sleep or stress flags beyond the gym-environment stress noted above.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-beatriz-2">&#9654;</div>
+        <a class="dl-btn" id="dl-beatriz-2" title="Download" href="assets/beatriz-03-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-beatriz-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-beatriz-3" onclick="playSection('beatriz', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Help her find a way to hit true working weight on heavy sets at Planet Fitness despite the crowd, maybe using a rack instead of loose dumbbells for load. Keep protein at 156 grams, it&#x27;s a genuine challenge on a pescatarian diet. No renewal conversation needed, she&#x27;s mid contract on a 1 year plan through next July.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-beatriz-3">&#9654;</div>
+        <a class="dl-btn" id="dl-beatriz-3" title="Download" href="assets/beatriz-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-beatriz-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-beatriz-4" onclick="playSection('beatriz', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Squat past standard, consistency intact through a real schedule change, and one factual correction to make about which session she actually missed.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-beatriz-4">&#9654;</div>
+        <a class="dl-btn" id="dl-beatriz-4" title="Download" href="assets/beatriz-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-beatriz-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-beatriz"></div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Amir Ahmari</h2>
+      <div class="meta">Visceral Fat / Fat Loss &middot; Male &middot; 36 &middot; Duo Second Scan &middot; conversion moment, 4-week ends this day</div>
+    </div>
+    <div class="time-badge">10:30 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-amir" onclick="playAll('amir')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-amir" onclick="stopAll('amir')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-amir" href="assets/amir-full-brief.mp3" download="amir-brief-aug30.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (1:50 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-amir">
+
+    <div class="section" id="sec-amir-0" onclick="playSection('amir', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Amir, 36, duo second scan with Megan, Sunday August 30th at 10:30 AM in Campbell. Primary goal is cutting visceral fat while protecting the strong muscle base he already has.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-amir-0">&#9654;</div>
+        <a class="dl-btn" id="dl-amir-0" title="Download" href="assets/amir-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-amir-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-amir-1" onclick="playSection('amir', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">92 percent consistency and the best food logging on the board, four to five entries a day for a month. Leg press estimated one rep max of 403 pounds. Twelve pull-ups at 238 pounds bodyweight, the best number in his file. All three sessions before the scan got done, Monday, Wednesday and Friday.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-amir-1">&#9654;</div>
+        <a class="dl-btn" id="dl-amir-1" title="Download" href="assets/amir-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-amir-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-amir-2" onclick="playSection('amir', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In Their Own Words</div>
+        <div class="sec-text">Asked what he noticed, he said he&#x27;s a little trimmer in the waist and even his face, hasn&#x27;t noticed a difference in energy, occasional lower back pain in the mornings, feels stronger and more intentional. Asked where he sees himself in 6 to 12 months, he said he wants his body composition numbers in healthy ranges, and if he could trim down to 200 to 210 pounds that would be a dream. He&#x27;s not chasing the mirror, he&#x27;s chasing health markers.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-amir-2">&#9654;</div>
+        <a class="dl-btn" id="dl-amir-2" title="Download" href="assets/amir-03-own-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-amir-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-amir-3" onclick="playSection('amir', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Visceral fat is at 133.8 square centimeters, well past the 100 threshold where cardiometabolic risk climbs. He asked directly this week whether the slow scale movement was a concern, and you tightened his carbs by about 50 grams outside the workout window on Wednesday. Ask how the last two days felt with that change in place.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-amir-3">&#9654;</div>
+        <a class="dl-btn" id="dl-amir-3" title="Download" href="assets/amir-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-amir-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-amir-4" onclick="playSection('amir', 4)">
+      <div class="sec-icon">🪴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">Barbell squat and bench each still only have one logged session from early August, everything else has been machines and dumbbells. That&#x27;s the fastest lever to protect lean mass in a deficit. Occasional hip tightness getting out of bed, not limiting anything, just monitor it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-amir-4">&#9654;</div>
+        <a class="dl-btn" id="dl-amir-4" title="Download" href="assets/amir-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-amir-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-amir-5" onclick="playSection('amir', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Sleep 7 to 8 hours, energy good. Caffeine 300 to 400 milligrams a day, reasonable for now. A weekly 4 to 5 mile run on top of three strength sessions, activity is not the problem here.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-amir-5">&#9654;</div>
+        <a class="dl-btn" id="dl-amir-5" title="Download" href="assets/amir-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-amir-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-amir-6" onclick="playSection('amir', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No sensitive flags. He responds well to simplicity and repetition, don&#x27;t hand him a redesigned program, give him the same structure with better numbers.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-amir-6">&#9654;</div>
+        <a class="dl-btn" id="dl-amir-6" title="Download" href="assets/amir-07-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-amir-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-amir-7" onclick="playSection('amir', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Get barbell squat and bench into the regular rotation. Keep protein at 200 grams. Keep the carb-timing discipline that was just tightened. His membership ends the same day as this scan, so the conversion conversation is clean and in the room, just remember Megan&#x27;s already lapsed so they&#x27;re not on the same footing even though they scan together.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-amir-7">&#9654;</div>
+        <a class="dl-btn" id="dl-amir-7" title="Download" href="assets/amir-08-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-amir-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-amir-8" onclick="playSection('amir', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Strong man carrying visceral fat, not a guy out of shape. Lead with the pull-ups and the leg press, then bring in the visceral fat number. He&#x27;s earned the credibility for a direct conversation about fat loss.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-amir-8">&#9654;</div>
+        <a class="dl-btn" id="dl-amir-8" title="Download" href="assets/amir-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-amir-8"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-amir"></div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Megan Ahmari</h2>
+      <div class="meta">Fat Loss / Recomp &middot; Female &middot; 39 &middot; Duo Second Scan &middot; membership already lapsed Aug 23</div>
+    </div>
+    <div class="time-badge">10:30 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-megan" onclick="playAll('megan')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-megan" onclick="stopAll('megan')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-megan" href="assets/megan-full-brief.mp3" download="megan-brief-aug30.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (1:58 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-megan">
+
+    <div class="section" id="sec-megan-0" onclick="playSection('megan', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Megan, 39, duo second scan with Amir, Sunday August 30th at 10:30 AM in Campbell. Primary goals are recomposition toward under 30 percent body fat and building a base for Hyrox.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-megan-0">&#9654;</div>
+        <a class="dl-btn" id="dl-megan-0" title="Download" href="assets/megan-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-megan-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-megan-1" onclick="playSection('megan', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">92 percent consistency through a travel week, adapting in hotel gyms by raising reps instead of skipping. Steps averaging over 9,000 a day, the highest on the board. Leg press held 180 pounds for four more reps between early and late August. Food logging resumed the night before this scan after a gap.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-megan-1">&#9654;</div>
+        <a class="dl-btn" id="dl-megan-1" title="Download" href="assets/megan-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-megan-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-megan-2" onclick="playSection('megan', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In Their Own Words</div>
+        <div class="sec-text">Asked what she noticed, she said she definitely feels stronger, pushing more weight in ways that surprise her, and that focusing on higher protein has been good because diet was her biggest opportunity. Asked where she sees herself in 6 to 12 months, she said she wants to get through Hyrox, she&#x27;s added short runs after leg days to build endurance, and she wants more muscle and less fat. Hyrox is her big rock and she already knows what both pieces, the run and the strength, need from her.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-megan-2">&#9654;</div>
+        <a class="dl-btn" id="dl-megan-2" title="Download" href="assets/megan-03-own-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-megan-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-megan-3" onclick="playSection('megan', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">Her food logging stopped August 11th and just resumed August 28th, a 17 day gap. Raise it as a question, not a correction, she was one of the best loggers on the roster before that and travel is the likely trigger. Also, her membership already lapsed August 23rd, a week before Amir&#x27;s, so handle the duo pitch knowing they&#x27;re not on the same footing.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-megan-3">&#9654;</div>
+        <a class="dl-btn" id="dl-megan-3" title="Download" href="assets/megan-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-megan-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-megan-4" onclick="playSection('megan', 4)">
+      <div class="sec-icon">🪴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">Leg press and pull-ups were both flat for a while, reps climbing while the weight stayed put. She flagged her own squat session on Monday citing hip soreness from extra running, worth asking how the hips are doing several sessions later. Her elbow hardware from an old fracture came back clean this week, pec fly and triceps bother it more than bench or pull-ups.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-megan-4">&#9654;</div>
+        <a class="dl-btn" id="dl-megan-4" title="Download" href="assets/megan-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-megan-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-megan-5" onclick="playSection('megan', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Sleep about 7 hours 45 minutes. She&#x27;s adding running on top of lifting and Pilates for Hyrox prep, watch the total load as that ramps up.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-megan-5">&#9654;</div>
+        <a class="dl-btn" id="dl-megan-5" title="Download" href="assets/megan-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-megan-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-megan-6" onclick="playSection('megan', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No sensitive flags. She&#x27;s capable and self-directed, adapted her own training around hotel gyms and asked good technical questions. Treat any lapses as a systems problem to solve with her, not a motivation problem.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-megan-6">&#9654;</div>
+        <a class="dl-btn" id="dl-megan-6" title="Download" href="assets/megan-07-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-megan-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-megan-7" onclick="playSection('megan', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Move the loads up on leg press and pull-ups now that the reps have caught up. Keep the elbow-friendly modification for flies. Build the next block around Hyrox as the anchor. Her membership already lapsed, so this is the renewal conversation, handle the duo asymmetry with Amir carefully.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-megan-7">&#9654;</div>
+        <a class="dl-btn" id="dl-megan-7" title="Download" href="assets/megan-08-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-megan-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-megan-8" onclick="playSection('megan', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Great training, a genuine food-logging gap that just closed itself the night before the scan, and a lapsed membership that needs a direct, kind conversation. Lead with the consistency and the Hyrox goal, not the gap.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-megan-8">&#9654;</div>
+        <a class="dl-btn" id="dl-megan-8" title="Download" href="assets/megan-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-megan-8"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-megan"></div>
+</div>
+
+<script>
+const files = {
+  beatriz: ['assets/beatriz-01-intro.wav','assets/beatriz-02-wins-coaching.wav','assets/beatriz-03-snapshot.wav','assets/beatriz-04-focus.wav','assets/beatriz-05-closing.wav'],
+  amir: ['assets/amir-01-intro.wav','assets/amir-02-wins.wav','assets/amir-03-own-words.wav','assets/amir-04-concern.wav','assets/amir-05-training.wav','assets/amir-06-recovery.wav','assets/amir-07-frame.wav','assets/amir-08-priorities.wav','assets/amir-09-closing.wav'],
+  megan: ['assets/megan-01-intro.wav','assets/megan-02-wins.wav','assets/megan-03-own-words.wav','assets/megan-04-concern.wav','assets/megan-05-training.wav','assets/megan-06-recovery.wav','assets/megan-07-frame.wav','assets/megan-08-priorities.wav','assets/megan-09-closing.wav']
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '\u25A0' : '\u25BA';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
