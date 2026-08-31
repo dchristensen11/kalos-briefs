@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing, August 31, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Monday, August 31, 2026 &middot; 3 clients &middot; Claudia Saggese (8:15 AM) &middot; Sandy Ngo (10:30 AM) &middot; Mahmoud Elbalawy (1:30 PM)</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Aug 30</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Claudia Saggese</h2>
+      <div class="meta">Sarcopenia / Visceral Fat &middot; Female &middot; 61 &middot; 1st Package Scan &middot; no renewal due, term runs to Jan 27 &middot; first progress reveal</div>
+    </div>
+    <div class="time-badge">8:15 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-claudia" onclick="playAll('claudia')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-claudia" onclick="stopAll('claudia')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-claudia" href="assets/claudia-full-brief.mp3" download="claudia-brief-aug31.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (10:15 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-claudia">
+
+    <div class="section" id="sec-claudia-0" onclick="playSection('claudia', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Morning Daniel. First one of the day is Claudia Saggese, eight fifteen in Campbell, and she is your first package scan since she signed the six month core back on the twenty seventh of July. She is sixty one, five foot five, six kids and seven grandchildren, and the whole reason she is here is that she does not want to become a burden to any of them. This is a first progress reveal, not a renewal conversation. Her term runs to the twenty seventh of January, so there is nothing to sell and the entire slot is yours for coaching. Her baseline on the twenty seventh of July was one forty six point three pounds, forty five point five percent body fat, seventy five point one pounds of lean mass, visceral fat at one thirty four point three, and an ALMI sitting at the fourth percentile for her age. That fourth percentile is the number this whole session is built around.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-claudia-0">&#9654;</div>
+        <a class="dl-btn" id="dl-claudia-0" title="Download" href="assets/claudia-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-claudia-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-claudia-1" onclick="playSection('claudia', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins - Lead With These</div>
+        <div class="sec-text">Start here, because the execution has been genuinely excellent and the numbers themselves are going to be sobering. She has logged thirteen of fourteen primary sessions. Her first week was sixty seven percent and every single week since has been one hundred percent, four weeks straight, and the Kalos app has her at one hundred percent for both the last seven days and the last thirty. Twelve all time personal bests. Average session length one hour sixteen across thirteen sessions, which for a sixty one year old who had not touched resistance training in years is a serious commitment of time.<br><br>Now the one to open on. On the twenty fourth you gave her three targets, one per session. Wednesday was seated row, and you told her she had held ten pounds for ten, ten and ten last time so go to fifteen. She went to thirty five for twelve, then forty for twelve, then forty for ten. You asked for fifteen and she took forty. That session carried fourteen personal bests, ten of them in the main set alone.<br><br>Friday was leg press, all four sets at one twenty for twelve. She ran one hundred for fifteen, then one twenty, one twenty, one twenty, all at twelve. Three of the four exactly as asked.<br><br>Then Sunday, yesterday, chest press. You told her to stay at forty eight and get ten reps on all four sets, because last time she faded to ten, nine, nine, eight. She held forty eight across all four and got ten, ten, eight, eight. Better at the front, still fading at the back.<br><br>And the one nobody asked for. On Sunday her leg press ran one hundred for fourteen, one twenty for twelve, one twenty for twelve, and then one forty for ten. She went to one forty on her own. Her top set on that lift has gone from eighty pounds on the seventh of August to one forty on the thirtieth, and her estimated one rep max is up eighty nine percent over those three weeks, on the single lift that most predicts whether she keeps climbing her own stairs.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-claudia-1">&#9654;</div>
+        <a class="dl-btn" id="dl-claudia-1" title="Download" href="assets/claudia-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-claudia-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-claudia-2" onclick="playSection('claudia', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In Their Own Words</div>
+        <div class="sec-text">This is the honest part. You sent her two questions on Tuesday the twenty fifth, the what have you noticed one and the where do you see yourself in six to twelve months one. She has not answered either. She has not even opened them. There is no seen marker on anything you have sent her since the thirtieth of July, and the last message she wrote in that thread was the thirty first of July saying she had registered at the gym.<br><br>So do not walk in expecting to reference something she said. Ask both questions out loud in the room instead, and ask the noticed one before you show her a single number, because her answer is worth more before the data anchors her.<br><br>What you do have is what she told you at the intro scan in July, in her own words. When you asked what her dream goal was she said, and this is exact, I just wanna be flexible. And a minute later, not to be a burden to my kids. She also described the episode last year where she could not walk the stairs, the one that was not sciatica, and she said herself that when she does strength work it feels a lot better. Mirror that stairs line back to her when you get to the leg numbers. It is hers, it is specific, and it is the reason she is in the room.<br><br>The pattern to hold onto: she does not reply to anything, and she does everything you ask. Two for two on the twentieth of August, three for three this week, all in total silence. Do not read that as disengagement.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-claudia-2">&#9654;</div>
+        <a class="dl-btn" id="dl-claudia-2" title="Download" href="assets/claudia-03-own-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-claudia-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-claudia-3" onclick="playSection('claudia', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">The concern is not consistency, it is that the intensity is scattered and it is scattered in one specific place, the opening set. Iris flags her intensity as scattered, with load added to later sets in seven of thirteen recent workouts, two good examples against seven poor ones.<br><br>Here is the shape of it. Friday, leg press, you asked for one twenty across all four sets. She opened at one hundred and did fifteen reps on it, against a target range of ten to twelve. That is not a hard set, that is a warm up she is counting. You have now corrected this exact habit twice, on the eleventh and again on the twentieth, and she keeps fixing the working sets and leaving the opener light. Same session, her hamstring curl opened at fifty nine for fifteen twice before she went to seventy seven.<br><br>The second thing to watch is the hamstring curl going backwards. On the twenty third she ran seventy seven across three sets. Yesterday she ran sixty four for twelve, three times, which drops her estimated max on that lift from one oh eight to ninety. Nobody asked her to drop it, so ask why.<br><br>One correction so you do not repeat something stale. Iris is still telling you to push her leg press to ninety pounds. That was the ask from the eleventh of August. She is at one forty. Do not say ninety to her.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-claudia-3">&#9654;</div>
+        <a class="dl-btn" id="dl-claudia-3" title="Download" href="assets/claudia-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-claudia-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-claudia-4" onclick="playSection('claudia', 4)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">She is on Evolve three day, phase two since the fifteenth of August, and she moves to phase three on the thirteenth of September, so this scan lands right before a programme change and that is convenient timing for whatever you decide today.<br><br>The split in her file is machines versus free weights and it is stark. Seated leg press eighty to one forty. Seated row ten to forty. Chest press up to forty eight and holding. Every machine climbs. Then the dumbbells. Dumbbell Romanian deadlift has been seventeen and a half pounds on Friday and again on Sunday, same as it was three weeks ago. Dumbbell incline bench press is five pounds and has been five pounds every session. Lateral raise five pounds. Standing Arnold press five pounds. She is confident on a machine where the path is fixed and she is timid the moment she has to stabilise a weight herself.<br><br>That is worth a decision today rather than another nudge. Either load the dumbbells properly with her hands on them so she feels what it should be, or move her programming toward the machines she actually pushes on. At the fourth percentile, real overload somewhere beats timid overload everywhere.<br><br>On the body, her knee history and the core strength loss that affected her stairs are both on file, improved with physio, explicitly not sciatica. Her own note says strength training helps the knees, and the leg press progression says the same thing. Nothing new has been flagged in messages, notes or session comments this period.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-claudia-4">&#9654;</div>
+        <a class="dl-btn" id="dl-claudia-4" title="Download" href="assets/claudia-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-claudia-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-claudia-5" onclick="playSection('claudia', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Recovery looks fine and is not your problem today. Sleep is averaging seven hours fifteen, and she got nine hours twenty last night going into the scan. Heart rate today ranged forty two to one fourteen.<br><br>The number that matters here is steps. She is averaging three thousand two hundred and twelve a day over the last seven days. At week out it was about three thousand three hundred, so it has not moved. You asked her on the twenty fourth for a twenty minute fasted walk before breakfast, and that is the one instruction from that message she has not touched, which is notable precisely because she executed all three lift targets. Her own current focus in Iris literally lists fasted twenty minute walks for visceral fat, so this is something she has already agreed to in principle and has not started.<br><br>Given her visceral number is one thirty four point three, more than double the sixty marker, that walk is the cheapest lever available to her and it costs her nothing in the gym. Find out what is actually in the way. She drives to San Mateo for work on Mondays, so the morning window may simply not exist on those days.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-claudia-5">&#9654;</div>
+        <a class="dl-btn" id="dl-claudia-5" title="Download" href="assets/claudia-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-claudia-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-claudia-6" onclick="playSection('claudia', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No sensitive flags on this one. Iris found nothing else in messages, notes or comments this period, and there is no eating disorder history, no body dysmorphia note and no anxiety flag in her file. Her injuries are logged as minor.<br><br>So this is about personality and communication style, and hers is unusual. She is a doer who does not talk. She has replied to you once since the thirty first of July, in five weeks of messages, and in that time she has hit every single lift target you have set. Silence from her means nothing. What she responds to is one specific instruction at a time with a number attached, and the more concrete you make it the more reliably it lands. General advice will disappear.<br><br>Given she has read none of your recent messages, treat this room as the only channel that is actually working, and get the next block agreed out loud before she leaves rather than sending it afterwards.<br><br>Two other things about her. She is warm, she is Argentinian, she is home cooking most of her food, and she has two glasses of red wine most nights, which is on file and appears in almost none of her logs. Raise the wine as a lever, gently, not as a rule. And the big one, she leaves around the thirty first of December for four to five months in Argentina and Patagonia.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-claudia-6">&#9654;</div>
+        <a class="dl-btn" id="dl-claudia-6" title="Download" href="assets/claudia-07-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-claudia-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-claudia-7" onclick="playSection('claudia', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things to set before she walks out.<br><br>One, the opening set. This is the third time and it needs to stop being a message and start being a rule she can say back to you. Something like, set one is a working set, if you get more than twelve reps on it the weight was wrong. Write it into the programme notes rather than the inbox, because she is not reading the inbox.<br><br>Two, resolve the dumbbell question. Pick a lane today. Either you load the free weights with her in the room so she knows what seventeen and a half should feel like, or you swap them for machine equivalents and stop pretending the five pound incline press is training.<br><br>Three, protein first. Her target is one hundred and thirty grams a day and her strongest days in the log are the ones that open with two shakes. Keep the two shakes as the non negotiable, then look at food quality, which is already good, home cooked and Mediterranean, and only then worry about carb timing around the session. She has logged thirty four meals across twenty of the last thirty days, and the two entries she put in on the twenty seventh and twenty eighth are exactly the kind of detail that makes this easy to coach, so tell her that and ask for the next two days.<br><br>Four, the Argentina plan. She leaves at the end of December for four to five months and her term runs to the twenty seventh of January. A sixty one year old at the fourth percentile losing four months of loaded training is the single biggest risk in her whole file. Bring that up today, not in December.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-claudia-7">&#9654;</div>
+        <a class="dl-btn" id="dl-claudia-7" title="Download" href="assets/claudia-08-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-claudia-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-claudia-8" onclick="playSection('claudia', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. She has done everything you asked, in silence, three weeks running, and her leg press is up eighty nine percent. Lead with that.<br><br>Then lead the data with muscle, not body fat. Fourth percentile ALMI, twenty four point seven pounds of lean in her legs against twenty nine pounds of fat in the same legs. Tie it straight to the stairs, because she brought the stairs up herself in July.<br><br>Body fat and visceral come second, and the walk is the ask there, not the food.<br><br>Ask both reflection questions in the room, because she never opened them.<br><br>And do not discuss bone density. No T score or Z score was captured on the July scan and thirty five days is far too short to say anything honest about bone anyway. Flag it as something to track over the next six months.<br><br>She is your eight fifteen. Go.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-claudia-8">&#9654;</div>
+        <a class="dl-btn" id="dl-claudia-8" title="Download" href="assets/claudia-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-claudia-8"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-claudia"></div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Sandy Ngo</h2>
+      <div class="meta">Recomp / Pre-Pregnancy &middot; Female &middot; 33 &middot; Second Scan &middot; 4-week program ends today, conversion conversation</div>
+    </div>
+    <div class="time-badge">10:30 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-sandy" onclick="playAll('sandy')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-sandy" onclick="stopAll('sandy')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-sandy" href="assets/sandy-full-brief.mp3" download="sandy-brief-aug31.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (8:18 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-sandy">
+
+    <div class="section" id="sec-sandy-0" onclick="playSection('sandy', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Sandy Ngo, 33, five foot one. Her second scan is Monday August 31st at 10:30 in Campbell. Her goal is lean mass gain and the reason behind it is pregnancy planning. She wants to be strong and to protect her bone health and her longevity before she tries to conceive. Her four week program ends the same day she scans, so this is the conversion conversation. Read this scan against August 3rd, not against May. The window is 28 days.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-sandy-0">&#9654;</div>
+        <a class="dl-btn" id="dl-sandy-0" title="Download" href="assets/sandy-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-sandy-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-sandy-1" onclick="playSection('sandy', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins - Lead With These</div>
+        <div class="sec-text">Lead with the hip thrust. On August 4th she opened that lift at 75 pounds for 8. On August 27th she ran 130 for 8, then 130 for 8 again, then 130 for 7. That is a 73 percent jump in 23 days, and you had asked her for 125. She went to 130 on her own.<br><br>Second, consistency. 100 percent over the last 30 days and 100 percent over the last 7. Sixteen sessions out of sixteen, every single week at 100. She is the only perfect record on the board.<br><br>Third, the trend from the last scan already proved the method works. Between May and August her muscle index went from the 7th percentile to the 12th while fat mass came down 2.8 pounds and body fat came down 1.5 points. That is genuine recomposition, not weight loss.<br><br>Fourth, the pattern is everywhere in her file. Bulgarian split squat from 20 for 8 to 35 for 10. Goblet squat from 30 for 12 to 45 for 12. Seated row from 57 and a half for 12 to 70 for 12. Her last four sessions carried twelve, nine, six and zero personal bests in that order.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-sandy-1">&#9654;</div>
+        <a class="dl-btn" id="dl-sandy-1" title="Download" href="assets/sandy-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-sandy-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-sandy-2" onclick="playSection('sandy', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In Their Own Words</div>
+        <div class="sec-text">You asked her two questions on August 25th at one minute past ten in the evening. What have you actually noticed these four weeks, and where do you see yourself six to twelve months from now. Both show as seen. Neither has been answered as of twenty past seven on Sunday evening. So you have nothing from her in her own words on either one, and both need to be asked live in the room before she sees a single number.<br><br>What she did give you, five days earlier on August 20th, was this. She said she had been trying more carbs with the rice cakes and sweet potatoes with breakfast, that her energy overall had been good, and that she was feeling stronger. If she is slow to answer in the room, open with that and ask if it still holds. The phrase to mirror back is feeling stronger, because that is her own word for what the scan is about to show her.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-sandy-2">&#9654;</div>
+        <a class="dl-btn" id="dl-sandy-2" title="Download" href="assets/sandy-03-own-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-sandy-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-sandy-3" onclick="playSection('sandy', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">First, a correction. The message you sent her on August 24th said, sticking with Monday, Wednesday, Friday like we agreed, so two sessions left before the scan. That turned out to be wrong and she told you so on the 25th. She had four programmed sessions and she ran all four: Monday the 24th, Wednesday the 26th, Thursday the 27th and Friday the 28th, with three of them back to back. Do not repeat the Monday, Wednesday, Friday line or the two sessions left line in the room, because she corrected it herself.<br><br>Now the concern. Friday&#x27;s Full Body was her only session of the block with zero personal bests, and she wrote on it that she struggled more that day and thought it was the three workouts in a row. You answered that on the 29th. Do not read Friday as effort dropping off. On the same Full Body session compared against August 22nd, four of six lifts actually improved. The goblet squat went from 12, 12, 10 to 12, 12, 12. The lat pulldown went from 12, 10, 9 to 12, 12, 10. The two that went backwards, the incline bench and the walking lunge, were both late in the session. That is fatigue from stacking days, and it is a scheduling problem rather than a compliance problem.<br><br>The second concern is nutrition data. Her photo log stops on August 22nd, and the two day log you put on for Friday and Saturday is still open. So you cannot confirm her protein total going into this scan. Ask her for it in the room rather than assuming it, and keep the ask warm, because she logs well when she logs.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-sandy-3">&#9654;</div>
+        <a class="dl-btn" id="dl-sandy-3" title="Download" href="assets/sandy-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-sandy-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-sandy-4" onclick="playSection('sandy', 4)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">No injuries recorded anywhere, not in Iris and not in the app, which is rare on this board.<br><br>Three live items. First, and this is the one to fix, on August 26th she left a comment on the alternating dumbbell bicep curl saying her gym does not have 17.5s, that she tried the 20s and is not there yet, and that she is going for higher reps across all three sets instead. That comment has not been answered. She ran 30 for 12, 12 and 12 against an 8 rep target, so she is well past the prescription and working around a gap in the dumbbell rack. The program still has that curl at three by eight on September 2nd, so it needs a real answer.<br><br>Second, on August 27th she went lighter on the kickstand deadlift on purpose. Her words were that she went down for the sole purpose of focusing on her form over struggling with the grip of the 40s. You recommended the Versa Gripp Pro straps and offered to look at a video. She said she would look into the straps. No video has come through, so ask her about grip, because it is limiting a hinge she is otherwise strong on.<br><br>Third, she skipped the core section on August 27th, wrote that she had no time and would do it the next day, and it did not get made up on Friday.<br><br>One that is already closed. On August 24th she raised the seated leg extension prefill and the calf raise machine, and you answered both the same day. She was right about what she was seeing. The programming itself is correct, the reps descend ten, ten, eight, and what she saw ramping up was the app pre filling her previous top weight. Worth one sentence acknowledging she was right, because on the most compliant member on the board that lands well.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-sandy-4">&#9654;</div>
+        <a class="dl-btn" id="dl-sandy-4" title="Download" href="assets/sandy-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-sandy-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-sandy-5" onclick="playSection('sandy', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">She trains early, mostly between quarter past six and half past seven in the morning, except Friday which was a mid morning session. Average session length is one hour and seven minutes across sixteen sessions. She also does hot yoga, sometimes back to back with lifting.<br><br>The three consecutive training days last week are the whole recovery story for this block, and she diagnosed it herself before you did. Her last logged bodyweight in the app is 131 pounds on August 4th, so there is no weight trend to lean on and the scan is the only real reading you have. She has been alcohol free this month by her own choice, which is worth acknowledging given the Napa trip before it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-sandy-5">&#9654;</div>
+        <a class="dl-btn" id="dl-sandy-5" title="Download" href="assets/sandy-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-sandy-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-sandy-6" onclick="playSection('sandy', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No sensitive flags on this one. No eating disorder history, no body dysmorphia note, no anxiety flag, nothing medical in the file.<br><br>Iris reads her as driven by pregnancy prep and bone health, and says she responds best to education plus autonomy on tweaks. That is exactly right and the file backs it. She swaps exercises herself, tells you why, asks good follow up questions, and acts on the answers. Give her the reasoning, not the instruction. Open by celebrating the personal bests, then move to the post workout carbs.<br><br>She is the easiest member on the board to coach, and the way to keep her is to treat her as a partner in the programming rather than someone receiving it. Every single coaching item this block came from her raising it first.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-sandy-6">&#9654;</div>
+        <a class="dl-btn" id="dl-sandy-6" title="Download" href="assets/sandy-07-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-sandy-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-sandy-7" onclick="playSection('sandy', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Five things to set after the scan.<br><br>One, protein. Her target is 110 to 120 grams a day and you cannot confirm it right now, so establish the actual number with her in the room and build from there.<br><br>Two, food quality. Her best logged meals were the salmon with avocado and rice on August 18th and the quinoa bowl with fajita chicken on August 5th, so the quality is genuinely there when she captures it. The ask is simply more days captured, not different food.<br><br>Three, carb timing around training, which she has already adopted and reported back on. Double the post workout rice cakes on the heavy days, carbs with the meal after, and keep them lower on non training days.<br><br>Four, intensity on the first two sets. Iris flags her intensity as scattered, with load added to later sets in only eight of sixteen recent workouts. That is the same note from the August 12th check in, and the hip thrust is the proof of what happens when she does push early.<br><br>Five, scheduling. Build the next block so she is not stacking three lifting days in a row, and build it around the Italy trip that starts straight after this scan. Phase 2 is already queued in the app for September 8th.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-sandy-7">&#9654;</div>
+        <a class="dl-btn" id="dl-sandy-7" title="Download" href="assets/sandy-08-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-sandy-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-sandy-8" onclick="playSection('sandy', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. She has a perfect attendance record, a 73 percent jump on her best lift, and a previous scan that already proved the method works on her. This session is about extending a trend, not establishing one.<br><br>The only number pointing the wrong way is visceral fat, up from 45.8 to 48.7 between May and August. She is well inside a healthy range, so name it honestly rather than skipping it, because she is planning a pregnancy and that credibility is worth more than a clean story.<br><br>Two things you do not have going in. Her protein total for the last week, and her answers to the two questions you sent on the 25th. Get both in the room.<br><br>Keep bone density out of the numbers conversation. Nothing is captured on either scan, so position bone as the metric the next six months are built to move.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-sandy-8">&#9654;</div>
+        <a class="dl-btn" id="dl-sandy-8" title="Download" href="assets/sandy-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-sandy-8"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-sandy"></div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Mahmoud Elbalawy</h2>
+      <div class="meta">Fat Loss toward 15% &middot; Male &middot; 43 &middot; 2nd Package Scan &middot; routine checkpoint, no renewal due</div>
+    </div>
+    <div class="time-badge">1:30 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-mahmoud" onclick="playAll('mahmoud')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-mahmoud" onclick="stopAll('mahmoud')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-mahmoud" href="assets/mahmoud-full-brief.mp3" download="mahmoud-brief-aug31.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (7:40 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-mahmoud">
+
+    <div class="section" id="sec-mahmoud-0" onclick="playSection('mahmoud', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Mahmoud Elbalawy, Monday the thirty first of August at one thirty in the afternoon, in Campbell. This is his fifth DEXA and his second package scan, thirty five days on from the twenty seventh of July. He is a year into a one year virtual that runs to June of twenty twenty seven, so there is nothing to sell here. This is a checkpoint. His goal is fat loss toward fifteen percent, a number he set himself, and he came into this block at sixteen point nine. His why has not moved all year. Longevity for his kids, a ten year old and a three year old, and in his words that is the only reason he lives.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-mahmoud-0">&#9654;</div>
+        <a class="dl-btn" id="dl-mahmoud-0" title="Download" href="assets/mahmoud-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-mahmoud-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-mahmoud-1" onclick="playSection('mahmoud', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Two anchors. His last scan was the twenty seventh of July, and his last time in front of you was the midpoint check in on the eleventh of August.<br><br>Since the July scan he has completed twenty one of twenty five assigned sessions. Since the eleventh of August he has completed fourteen of fifteen. Here is the part that matters. Every single one of his misses sits in a cluster on the seventh, eighth and fourteenth of August. Since the fifteenth he has logged eleven sessions in a row with nothing missed. His thirty day number is eighty percent and it is still climbing because the bad fortnight is still inside the window.<br><br>The single best thing in his file is the twenty fifth of August Power B. Barbell bench press, one hundred and fifteen pounds for five, five, five, eight and twelve, when the last two sets only called for three reps. Four personal bests in that session and his estimated one rep max went from one thirty four to one sixty one inside the hour. He rated it challenging. He rated the exact same Power B session too difficult on the twelfth of August, two weeks earlier, at the same load. That is the whole story of this block in one comparison and it is worth saying to him out loud.<br><br>On nutrition, you asked him on the twenty fifth to post a couple of days of food in the Kalos app before Monday. He posted two. The twenty sixth of August came in at two hundred and three grams of protein and the twenty ninth at two hundred and seventeen, against a target of two hundred and twenty, both on travel days. Food quality was whole food led, beef, chicken salad and a frittata on the twenty ninth. On carb timing, the twenty sixth ran seventy five grams of carbs and the twenty ninth ran one fifty four, and he told you why himself, his cardio was high that day. Fats went seventy two, then seventy eight, then one hundred and ten across those three days against a seventy eight gram floor. So protein is locked and the variance is all in fat and carbohydrate.<br><br>He also answered your cardio question on the twenty eighth. His words. Cardio and heart rate is under control, resting is around eighty seven. That closes the flag you opened on the eleventh of August when his heart rate hit one fifty on the elliptical after a few minutes. Do not raise it again as an open question. It is answered.<br><br>Unprompted in the same message he told you his face is a lot skinnier and people have commented, his pants are down a couple of sizes, and he has gone from an extra large to a large in t shirts. That is the line to mirror back when the numbers land.<br><br>One correction to carry in. Your modal has been saying his three pre scan lift numbers were untested. They were not avoided. The squat, the stiff leg deadlift and the lat pulldown all live in Power A, and he was never given a Power A between the twenty fifth of August and the scan. The next one is the seventh of September. Do not imply he ducked them.<br><br>And one thing you owe him. On the twenty seventh of July in the room, and again by message on the twenty eighth, you told him you would add a lat pulldown alternative for gyms that do not have the machine. It is still not in his program. The seventh of September Power A still has a plain lat pulldown in it and he has told you he usually does not have access to one. Say you will fix it, not that you did.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-mahmoud-1">&#9654;</div>
+        <a class="dl-btn" id="dl-mahmoud-1" title="Download" href="assets/mahmoud-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-mahmoud-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-mahmoud-2" onclick="playSection('mahmoud', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">Eighty percent over the last thirty days, one hundred percent over the last seven. His last session was Saturday the twenty ninth, eight fifty five to ten ten in the morning, Energy Systems Capacity, seven of seven tracked, seventy five minutes. Nothing was assigned for Sunday so there is no gap tonight. Average session length across seventy six workouts is one hour sixteen. Thirty five personal bests all time.<br><br>The one pattern worth naming is load progression. Iris flags that he added load to later sets in only nineteen of seventy six workouts, and you can see it in the raw data. On the twenty fourth of August he ran the squat at one hundred pounds for five, five, five, five, five when the last two sets called for three. Stiff leg deadlift ninety pounds for ten, ten, ten when the targets dropped to eight and six. Lat pulldown one twenty for ten, ten, ten on the same descending scheme. He holds top set reps all the way down instead of moving the weight up. That is not a compliance problem, it is a load selection problem, and it is exactly why you set the new numbers on the twenty fifth.<br><br>Recovery is the one that has not moved. On the eleventh of August he told you he cannot sleep more than four to six hours at a time, that he wakes after four, and that he gets there by sleeping twice a day with a one to two hour nap in the afternoon. You asked him how sleep was holding up on the twenty fifth. He did not answer. You asked again inside the noticed question on the twenty eighth. He answered everything else in that message and skipped sleep both times. Iris now calls sleep his dominant limiter. He is also telling you his energy went down after he took HGH to four units a day.<br><br>Two watch items on the equipment side. Monday&#x27;s session is Power D, and the third movement in it is barbell bent over row for three sets of fifteen. Rowing is on his limit list for the lower back, so watch him there. Friday the fourth of September programs a barbell deadlift at five, five, five, three, three. That is not a new movement for him, he ran barbell deadlifts on the twenty sixth of August at twelve, twelve, ten, ten and eight and rated the session challenging, but Friday is a much heavier scheme on the same lift, so the back is worth watching there too.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-mahmoud-2">&#9654;</div>
+        <a class="dl-btn" id="dl-mahmoud-2" title="Download" href="assets/mahmoud-03-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-mahmoud-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-mahmoud-3" onclick="playSection('mahmoud', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things, and the first one is the whole session.<br><br>One. Sleep. Get an actual number out of him in the room, because you have asked twice in writing and got nothing back both times. He is running Anavar at twenty milligrams a day, test at two hundred a week and HGH at four units a day, and he already links the energy drop to the HGH increase. Until you know what he is actually sleeping, you cannot tell him whether to keep pushing the deficit or hold. This is the item that decides the next block.<br><br>Two. Load, not reps. He is holding top set reps down descending schemes across the board. Set his seventh of September Power A numbers with him in the room, face to face, so they are agreed rather than sent. Stiff leg deadlift to one hundred, lat pulldown to one thirty five, squat to one hundred and ten for the fives. And fix the lat pulldown substitution while he is sitting there, because he travels and he usually cannot get to the machine.<br><br>Three. Nutrition stays exactly where it is on protein. Two hundred and three and two hundred and seventeen grams on two travel days against a two twenty target is the protein question closed. The work left is food quality on the road and carb placement around training, not the protein number. Keep the seventy eight gram fat floor in front of him, because the twenty sixth came in at seventy two.<br><br>One thing to raise carefully rather than instruct on. On the twenty seventh of July he told you he would start anabolics once he was under fifteen percent body fat. By the eleventh of August he was running Anavar at sixteen point nine percent. He moved ahead of his own gate. That is his call and he has medical oversight, but he set that rule himself and it is fair to ask what changed.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-mahmoud-3">&#9654;</div>
+        <a class="dl-btn" id="dl-mahmoud-3" title="Download" href="assets/mahmoud-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-mahmoud-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-mahmoud-4" onclick="playSection('mahmoud', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line. He is having his best behavioural block of the year and the numbers are going to be good. Eleven straight sessions since the fifteenth of August, two hundred and seventeen grams of protein on a travel day, and he is down from an extra large to a large. Lead with the streak and the shirt size before you lead with any percentage.<br><br>He is also unemployed again, mid divorce, with fifty fifty custody of a ten and a three year old, and travelling nearly all the time. He does not want sympathy and he told you himself he is not particularly stressed by it. Treat the consistency as the achievement it is under those conditions.<br><br>Two things you must not say. Do not tell him the lat pulldown swap is done, because it is not. Do not imply he skipped his lift targets, because he was never given a session that contained them.<br><br>And do not leave the room without a real sleep number.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-mahmoud-4">&#9654;</div>
+        <a class="dl-btn" id="dl-mahmoud-4" title="Download" href="assets/mahmoud-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-mahmoud-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-mahmoud"></div>
+</div>
+
+<script>
+const files = {
+  claudia: ['assets/claudia-01-intro.wav','assets/claudia-02-wins.wav','assets/claudia-03-own-words.wav','assets/claudia-04-concern.wav','assets/claudia-05-training.wav','assets/claudia-06-recovery.wav','assets/claudia-07-frame.wav','assets/claudia-08-priorities.wav','assets/claudia-09-closing.wav'],
+  sandy: ['assets/sandy-01-intro.wav','assets/sandy-02-wins.wav','assets/sandy-03-own-words.wav','assets/sandy-04-concern.wav','assets/sandy-05-training.wav','assets/sandy-06-recovery.wav','assets/sandy-07-frame.wav','assets/sandy-08-priorities.wav','assets/sandy-09-closing.wav'],
+  mahmoud: ['assets/mahmoud-01-intro.wav','assets/mahmoud-02-wins-coaching.wav','assets/mahmoud-03-snapshot.wav','assets/mahmoud-04-focus.wav','assets/mahmoud-05-closing.wav']
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '\u25A0' : '\u25BA';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
