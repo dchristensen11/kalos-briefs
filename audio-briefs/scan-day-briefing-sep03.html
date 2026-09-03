@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing, September 3, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Thursday, September 3, 2026 &middot; 3 clients &middot; Kim Celestre (8:15 AM) &middot; Valerie Schiebel (9:45 AM) &middot; Daniel Swartz (1:30 PM)</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Sep 2</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Kim Celestre</h2>
+      <div class="meta">Lean Mass / GLP-1 Preservation &middot; Female &middot; 56 &middot; 2nd Package Scan (4th DEXA) &middot; routine checkpoint, no renewal due</div>
+    </div>
+    <div class="time-badge">8:15 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-kim" onclick="playAll('kim')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-kim" onclick="stopAll('kim')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-kim" href="assets/kim-full-brief.mp3" download="kim-brief-sep03.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (3:17 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-kim">
+
+    <div class="section" id="sec-kim-0" onclick="playSection('kim', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">First up on Thursday morning, 8:15 at Campbell, your first appointment of the day, is Kim Celestre. Kim is 56, on the 6 Month Core through December 29, and this is her second package scan, her fourth DEXA overall. Routine checkpoint, nothing on the line commercially, so this one is pure coaching. She is data driven and loves the why behind everything, so plan to walk her through the actual trend lines rather than a summary.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kim-0">&#9654;</div>
+        <a class="dl-btn" id="dl-kim-0" title="Download" href="assets/kim-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kim-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-kim-1" onclick="playSection('kim', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">The spine of this scan is lean mass on a GLP-1. At the July 30 scan she was 142.7 pounds, 34.4 percent body fat, down from 40 at intro, but lean mass had slid four and a half pounds across two blocks, from about 93 to 88.3, which is the opposite of her stated goal of preserving muscle on Zepbound. Since your June 10 call the fat side has been excellent. Fat mass down 3.7 pounds at the June 29 scan and another 5.5 at July 30, with visceral fat down 18 to about 92. And since July 30 the story got better than your card said until tonight. She traveled for most of August, missed six sessions between August 10 and 21, but held her weight at 137.2 through twelve days of vacation, averaged fifteen thousand steps a day, and the moment she was home she trained. August 24, August 26, August 31, and again last night, September 2, the evening before this scan, with rep PRs in that session. Romanian deadlift at 60 for 10 and bent over row at 40 for 10. Your August 28 messages were seen but never answered in the thread. Her answer was showing up and training. Two things she has told you indirectly. Zepbound went to 10 milligrams in late August and she says it is not being kind to her body, she may want to adjust the dose. And her food logging stopped completely after August 4, so nobody actually knows where protein has been sitting.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kim-1">&#9654;</div>
+        <a class="dl-btn" id="dl-kim-1" title="Download" href="assets/kim-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kim-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-kim-2" onclick="playSection('kim', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">She is on the new Prime dumbbells only three day program you loaded in late August, phase one, and she acknowledged the intensifier links. Last 30 days she completed 6 of 13 assigned sessions, about 46 percent, entirely explained by the planned travel block, and she is four for four since August 24 on her Monday Wednesday Friday cadence. Average session runs about 56 minutes. Recovery notes. After San Diego she commented she took a workout easy and was not feeling one hundred percent, and there is a fresh back flag, she said she cannot do Russian twists and her back was not happy that day, consistent with the L3 to L5 history. Keep the no barbell, no weighted deadlift, no low back arching rules front and center in anything new.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kim-2">&#9654;</div>
+        <a class="dl-btn" id="dl-kim-2" title="Download" href="assets/kim-03-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kim-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-kim-3" onclick="playSection('kim', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Two levers. First, protein visibility. The target stays 120 to 125 grams in small hits every three hours, but with zero logs since August 4 and appetite suppressed harder at 10 milligrams, ask her to log two or three days around her next shot so you can actually calibrate, and lean on the ready made shakes, tofu, edamame, eggs and fish playbook she already likes. Second, keep the training floor she just rebuilt. Three sessions a week on Prime with the intensifiers doing the work, quality and slower eccentrics over heavier loads, and swap anything that pokes the back, Russian twists are already out. If she raises dropping the Zepbound dose, that is a conversation for her prescriber, but the coaching frame is that whatever the dose does, muscle is protected by protein plus three sessions a week, and the last ten days prove she can do her part.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kim-3">&#9654;</div>
+        <a class="dl-btn" id="dl-kim-3" title="Download" href="assets/kim-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kim-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-kim-4" onclick="playSection('kim', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Lead with the comeback. She trained the night before her scan and set rep PRs doing it. Then let the lean mass trend line make the case for protein logging, and she will connect the dots herself.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-kim-4">&#9654;</div>
+        <a class="dl-btn" id="dl-kim-4" title="Download" href="assets/kim-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-kim-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-kim"></div>
+</div>
+
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Valerie Schiebel</h2>
+      <div class="meta">Lean Mass / Performance &middot; Female &middot; 30 &middot; 4th Package Scan (6th DEXA) &middot; routine checkpoint, no renewal due</div>
+    </div>
+    <div class="time-badge">9:45 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-valerie" onclick="playAll('valerie')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-valerie" onclick="stopAll('valerie')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-valerie" href="assets/valerie-full-brief.mp3" download="valerie-brief-sep03.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (3:12 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-valerie">
+
+    <div class="section" id="sec-valerie-0" onclick="playSection('valerie', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Second of the three, 9:45 at Campbell, Valerie Schiebel. Thursday morning, September 3. This is her fourth package scan and her sixth DEXA overall, so she has the deepest trend line of anyone this week. She is 30, on the 6 Month Core through November 11, and there is nothing to sell here. This one is pure coaching, and honestly it is the most satisfying file of the day. You are walking in to a member who has done essentially everything right for five months, with one honest wrinkle she has already told you about herself.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-valerie-0">&#9654;</div>
+        <a class="dl-btn" id="dl-valerie-0" title="Download" href="assets/valerie-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-valerie-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-valerie-1" onclick="playSection('valerie', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Since the August 6 scan she has not missed a thing. Seven for seven on assigned sessions, which puts her at sixty out of sixty workouts all time, one hundred percent in every single month since April. And the Europe trip delivered exactly what she trains for. One hundred twenty miles of hiking, forty thousand feet of elevation gain and loss, and her words on August 31 were that she felt super strong the whole way and even got some running in that felt good. That is her why, made real. The pull up goal is moving too. Band assisted pull ups went from three sets of seven on August 12 to sets of eight, seven and eight on August 31, and she told you she needs less and less assistance, though she cannot do a clean one yet. Now the wrinkle. In that same August 31 reply she told you protein plummeted in Europe. She burned through every protein bar she packed, could not find protein easily, and finished well under the 120 gram target for roughly the back half of August. Her exact words were that she is a bit nervous about this scan. Nobody has replied to that message yet, so the first thing tomorrow does is close that loop. Since the July 22 check in window the other standout was the Connecticut work trip, seven a m to eleven p m days, and she still trained every morning at five or six before work. That is who you are dealing with.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-valerie-1">&#9654;</div>
+        <a class="dl-btn" id="dl-valerie-1" title="Download" href="assets/valerie-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-valerie-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-valerie-2" onclick="playSection('valerie', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">She trained the morning before the scan, September 2, six oh eight to seven eleven a m, ten out of ten exercises, rated it difficult, and set eight personal bests, including a fifty pound hammer curl. She left a comment saying she tried heavier weight and noticed her left arm is weaker with form breaking down, which fits the left side theme in her file, the glute activation work. Iris flags her intensity as the growth area, she tends to add reps instead of plates, but that morning says she heard the message already. Bar hangs went from thirty and twenty two seconds in mid August to thirty five and thirty. She also ran on September 1. No new injuries, the low back and ACL notes are unchanged and nothing acute has come up since August 6.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-valerie-2">&#9654;</div>
+        <a class="dl-btn" id="dl-valerie-2" title="Download" href="assets/valerie-03-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-valerie-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-valerie-3" onclick="playSection('valerie', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Two threads. First, protein resilience abroad, not just domestic travel. The shake system works in the States and failed in Europe, so the upgrade is a travel protein plan that survives a foreign grocery store, powder in the luggage rather than bars alone, and a realistic floor number for trips like that. Second, load progression at home. Now that she is back with her full routine, the ask is plates over reps whenever form is solid, squat and bench have been flatter than her other lifts, while deadlifts, pulldowns and curls keep climbing. Keep the eccentric and band assisted pull up work exactly as is, it is visibly working, and the first strict pull up is a real, dateable goal for this next block. If the lean number comes in soft, the story is already written. Performance was outstanding, the input gap was protein, and it was corrected the day she landed.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-valerie-3">&#9654;</div>
+        <a class="dl-btn" id="dl-valerie-3" title="Download" href="assets/valerie-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-valerie-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-valerie-4" onclick="playSection('valerie', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Easiest room of the day. Open by answering her nervousness before she has to voice it, celebrate the one hundred twenty miles, and she will leave more committed than she walked in.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-valerie-4">&#9654;</div>
+        <a class="dl-btn" id="dl-valerie-4" title="Download" href="assets/valerie-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-valerie-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-valerie"></div>
+</div>
+
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Daniel Swartz</h2>
+      <div class="meta">Lean Mass / Longevity &middot; Male &middot; 62 &middot; 3rd Package Scan &middot; hard stop 2:00 PM</div>
+    </div>
+    <div class="time-badge">1:30 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-swartz" onclick="playAll('swartz')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-swartz" onclick="stopAll('swartz')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-swartz" href="assets/swartz-full-brief.mp3" download="swartz-brief-sep03.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (3:57 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-swartz">
+
+    <div class="section" id="sec-swartz-0" onclick="playSection('swartz', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Last of the three, Daniel Swartz, your 62 year old on the 1 Year Core, in at 1:30 Thursday afternoon at Campbell for his third package scan. One logistics note before anything else. He has an in person work meeting at 2:30 that he cannot be late for, so this session has a hard stop at 2. You already told him you can stop at 2 and that you are in a 1 on 1 right up to 1:30, and he may show up a few minutes early and text you when he arrives. So walk in with the story already loaded, because this one runs short. And remember what this scan is. He is five weeks post surgery with training stopped, so it measures recovery, not adherence.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-swartz-0">&#9654;</div>
+        <a class="dl-btn" id="dl-swartz-0" title="Download" href="assets/swartz-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-swartz-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-swartz-1" onclick="playSection('swartz', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">His last scan was July 22 and his last check in July 21, and the block since then splits cleanly in two. He trained right through July 26, then had surgery on July 30 and has not lifted since. The wins are real though. Since the July 22 scan he has logged 155 meals across 29 of 30 days, an almost unbroken daily food journal that started back up on July 29, two days after surgery. He answered your August 28 pre scan check in the same day. He feels he turned the corner that week, more energy and mobility, appetite back after losing weight post op. He weighed 162 at his doctor in late August, about 12 pounds down from the July scan weight of 175.8. He is using BPC 157 and TB 500 peptides for recovery, and you swapped notes with him on your own experience with those on August 29. He also logged six walks between August 16 and August 30. One thing to know before you look at his journal. He logged one light tequila margarita at a work dinner on September 1, alongside a non alcoholic one. That is the only alcohol entry since June 1, and the paloma he logged on August 30 was alcohol free. Treat it as a footnote, he has been honest in the log the entire way.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-swartz-1">&#9654;</div>
+        <a class="dl-btn" id="dl-swartz-1" title="Download" href="assets/swartz-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-swartz-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-swartz-2" onclick="playSection('swartz', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">Training consistency the last 30 days is zero of four assigned, and that is exactly what it should be. His doctor has him off heavy lifting until roughly September 24. Last completed session was Dumbbell Athlete Phase 2 A on Sunday July 26, 39 days before this scan. The new Dumbbell Athlete three day program you loaded on August 25 after his email is sitting untouched, so his calendar shows missed sessions that are really just the pause wearing a bad label. Worth pausing those assignments until he is cleared so the app stops scoring his recovery as failure. Baseline for this scan is July 22. 175.8 pounds, 20.7 percent body fat, 132 pounds lean, visceral fat at 78, inside the healthy range, and ALMI at the 49th percentile for his age. Expect weight and lean mass to come in soft given the 12 pound post op drop, and say out loud that the visceral fat and body fat progress from the two blocks before surgery was banked before any of this happened.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-swartz-2">&#9654;</div>
+        <a class="dl-btn" id="dl-swartz-2" title="Download" href="assets/swartz-03-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-swartz-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-swartz-3" onclick="playSection('swartz', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">The next block is a recovery block with a clearance date in the middle of it, around September 24. Until then the levers are exactly what he is already doing. Protein first, walks, and the journal. Protein is the one to push. The 138 gram target was a stretch even before surgery, his appetite is finally back, and he is adding shakes on his own, so the move is to lock in one more easy protein source with him, which is the thread left open from your August 28 message. Keep the anti inflammatory, low carb framing he has been following, carbs matched to activity, which right now means walking. Once he is cleared, the re entry needs to be graded, light dumbbell work first, with the right iliopsoas and the L3 history respected before anything resembling a heavy squat pattern. And this appointment is also the natural moment to set the actual reassessment plan, because no return date exists yet anywhere in the thread. One admin note. Iris now shows his term end adjusted to August 25, 2027, the post surgery extension, so confirm that matches what you agreed with him.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-swartz-3">&#9654;</div>
+        <a class="dl-btn" id="dl-swartz-3" title="Download" href="assets/swartz-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-swartz-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-swartz-4" onclick="playSection('swartz', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Short session, big story. The habits held through surgery, the numbers will wobble, and neither of you should blink. Get the protein source agreed, get the return plan on the calendar, and get him to his 2:30.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-swartz-4">&#9654;</div>
+        <a class="dl-btn" id="dl-swartz-4" title="Download" href="assets/swartz-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-swartz-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-swartz"></div>
+</div>
+
+
+<script>
+const files = {
+  kim: ['assets/kim-01-intro.wav','assets/kim-02-wins-coaching.wav','assets/kim-03-snapshot.wav','assets/kim-04-focus.wav','assets/kim-05-closing.wav'],
+  valerie: ['assets/valerie-01-intro.wav','assets/valerie-02-wins-coaching.wav','assets/valerie-03-snapshot.wav','assets/valerie-04-focus.wav','assets/valerie-05-closing.wav'],
+  swartz: ['assets/swartz-01-intro.wav','assets/swartz-02-wins-coaching.wav','assets/swartz-03-snapshot.wav','assets/swartz-04-focus.wav','assets/swartz-05-closing.wav']
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '\u25A0' : '\u25BA';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
