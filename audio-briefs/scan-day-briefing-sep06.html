@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing - Sep 6, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Sunday, September 6, 2026 &middot; 2 clients &middot; Janice Chou &amp; Alan Yang (9:45 AM duo block)</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Sep 5</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Janice Chou</h2>
+      <div class="meta">Eyes First, Fat-Loss Arc &middot; Female &middot; 42 &middot; 4th Package Scan (6th DEXA) &middot; routine checkpoint, duo block booked under her name</div>
+    </div>
+    <div class="time-badge">9:45 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-janice" onclick="playAll('janice')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-janice" onclick="stopAll('janice')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-janice" href="assets/janice-full-brief.mp3" download="janice-brief-sep06.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (5:21 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-janice">
+
+    <div class="section" id="sec-janice-0" onclick="playSection('janice', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Tomorrow at 9:45 you have Janice Chou, and this one changed shape this week in a good way. Sunday morning, 9:45 to 10:45, the sixty minute duo block booked under her name, with Alan riding along like the last three scans. It is her fourth package scan, a routine checkpoint, and the whole read is against August 9, her last scan and last call, a 28 day window. Quick heads up on the one wrinkle from the messaging: the opener she received says the scan reads against July 9, which was the older draft. The real baseline is August 9, so just present against August 9 in the room and nobody needs to know. She is female, 42, a dentist, pre-diabetic, and her levers this block were food and walking only because you paused her training on August 10 pending the eye treatment. No renewal or sales content went anywhere near her messages, and none belongs in this brief either. Baseline you are walking in with: 190.9 total on the DEXA, 44.0 percent body fat, lean 102.6, fat 83.9, visceral 222.9, and ALMI at the 63rd percentile age matched, all confirmed live on her results dashboard tonight.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-janice-0">&#9654;</div>
+        <a class="dl-btn" id="dl-janice-0" title="Download" href="assets/janice-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-janice-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-janice-1" onclick="playSection('janice', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Both anchors are August 9, the scan and the call, and the single biggest thing since then landed on August 31: she wrote back. First message from her since June 25, sixty seven days. Three of the four week-out messages went out that morning at 6:18 and were seen, and by 7:04 that evening she had answered. She confirmed the scan, so the reschedule offer that sat open since August 26 is settled, and then she gave you the real eye news: she is temporarily prohibited from wearing contacts, which means she is doing dentistry without the magnification she is used to. Her ergonomics have been terrible, her whole body feels tight, and she is stretching when work allows. That is a clinician working half blind and hurting, and it is also the most engaged she has been in two months. She owned the gaps herself, said the protein shakes have slipped and the walks are not happening regularly, and thanked you for the reminders. Two open loops to know about. First, nobody has replied to her message yet, so your opening move on Sunday is the reply she has been waiting five days for. Second, the P2 program concern did not get resolved: the phase change from August 24 is still sitting in her app uncommunicated, with the snatch, the single arm overhead squat and the cossack squat still in it. The saving grace is she never opened it, all three sessions before the scan show missed with nothing tracked. But the next ones land Monday, Wednesday and Friday, and P3 starts September 14, so the reset or stay silent decision now has a Sunday deadline. And one correction to last week&#x27;s picture: her step feed was never dead, it backfilled. You now have daily data through August 31.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-janice-1">&#9654;</div>
+        <a class="dl-btn" id="dl-janice-1" title="Download" href="assets/janice-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-janice-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-janice-2" onclick="playSection('janice', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">Nothing here is an adherence story, and you should not let any tool tell you otherwise. The pause is yours, made August 10 for her eyes, and the calendar simply shows what a pause looks like: zero of thirteen in August, the three September P2 sessions missed untouched, last completed session July 20, which will be 48 days by scan day. She is still not on the training pauses file, so the sync still flags her red, and that flag is expected noise. The steps picture is better than we thought a week ago. The feed backfilled and shows her walking every single day through August 31, averaging roughly 2,700 to 3,100 a day across those three weeks, with 2,899 on the 31st. That is flat against her pre-call month of about 3,600, so the agreed increase did not happen, and she told you as much herself, but flat through the worst stretch of her year is not nothing. Nothing has synced since September 1, which looks like her usual burst syncing rather than a dead watch, so no interrogation about the wrist. Two newer signals worth having in your pocket: sleep is syncing now and showed five hours forty eight on August 29, averaging under six, which is its own quiet story about recovery, and Iris now records her vertigo as mostly resolved, with vision, headaches and exhaustion as the remaining limiters. No scale weight since spring, no food journal since July 13, both by design, and neither is a topic.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-janice-2">&#9654;</div>
+        <a class="dl-btn" id="dl-janice-2" title="Download" href="assets/janice-03-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-janice-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-janice-3" onclick="playSection('janice', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Keep it to three things, eyes first, then food, then the walk, and let everything route through her one stated stake, seeing patients. First, the eyes. Get the actual state of the treatment: what the contacts prohibition is about, how long it runs, and the question that has been open for two weeks now, whether anyone has measured her eye pressure and whether she is under an ophthalmologist rather than an optometrist getting contacts adjusted. Everything else in her plan is sized by the answer. Second, protein, and she handed you the opener herself: the shakes have slipped and she wants to bring them back routinely. So the ask is the one she already made, a shake on the rough mornings and one protein source at every meal, aiming back toward the 120 grams on roughly 2000 calories, with the home cooking she is already doing carrying the quality side and processed carbs staying low for the visceral number on her pre-diabetic background. Third, the walk, rebuilt small: five to ten minutes after dinner, the slot she picked herself, framed as blood sugar and stress relief, plus the stretching she is already doing for the tight back and shoulders, which you can bless as part of the plan rather than something she squeezes in guiltily. Then France, September 17 to October 3, two days before her term ends and eleven days after the scan. Do not let it read as a threat to progress; make it the continuity plan, walks and protein instincts travel well, and she comes back to a fresh block. That is the whole ask. No lift targets, no food logging, no step quota.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-janice-3">&#9654;</div>
+        <a class="dl-btn" id="dl-janice-3" title="Download" href="assets/janice-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-janice-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-janice-4" onclick="playSection('janice', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Her words from August 9 are still the whole map: my biggest motivation is figuring out how I can still see patients. She just spent three weeks living that sentence, working without her magnification, and she still came back to you first. Answer her, and the rest of Sunday takes care of itself.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-janice-4">&#9654;</div>
+        <a class="dl-btn" id="dl-janice-4" title="Download" href="assets/janice-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-janice-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Alan Yang</h2>
+      <div class="meta">Burn Arc, BFT 5x/week &middot; Male &middot; 42 &middot; 4th Package Scan (6th DEXA) &middot; routine checkpoint, rides Janice's duo block</div>
+    </div>
+    <div class="time-badge">9:45 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-alan" onclick="playAll('alan')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-alan" onclick="stopAll('alan')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-alan" href="assets/alan-full-brief.mp3" download="alan-brief-sep06.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (5:55 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-alan">
+
+    <div class="section" id="sec-alan-0" onclick="playSection('alan', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Tomorrow morning at 9:45 you have Alan Yang, fourth package scan, riding the duo block with Janice as always. Sunday, September 6, the 60 minute slot booked under her name. He is 42, arc is burn, and the comparison point is August 9, his best block on record. This one is routine track, so no renewal or sales angle anywhere, just the coaching. One admin thing before you walk in: as of last night the duo meeting in Iris still has Member 2 unset, so his side of tomorrow attaches to nobody until that gets fixed. Two minutes in Iris, meeting 125175, set Member 2 to Alan, done.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alan-0">&#9654;</div>
+        <a class="dl-btn" id="dl-alan-0" title="Download" href="assets/alan-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alan-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-alan-1" onclick="playSection('alan', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Both anchors are the same day here: last scan and last check-in call were both August 9. The headline from that day still carries: six point six pounds of lean in a month with fat down one point seven, body fat down to 31.2 percent, ALMI up to the 96th percentile for his age. He knows it was exceptional, his words in the room were holy crap, newbie gains. The honest caveat you want in your pocket: visceral fat rose 2.7, from 183.8 to 186.5, in the very month it was the stated target. Still 31 below February, so the trend is right, but the direction flipped, and tomorrow&#x27;s scan is really asking whether the levers pulled it back. Now, the week-out messages: they did go out, Monday morning August 31 at 6:20, all three of them, the opener, the levers message, and the what have you noticed question. Worth knowing that the levers message that went out was the earlier draft, so it told him steps from your 5,000 average and you were at about five hours, when the app&#x27;s own scan week number was 6,135. If he pushes back on the 5,000 in the room, he is right, so lead with current numbers only. He has not replied to any of it, which is his pattern, one reply since March, so silence means nothing here. The levers themselves as of last night: steps started logging again the very day the messages landed, averaging 5,245 this week against the 6,750 ask, with one great day, 8,559 on Thursday. Sleep is the interesting one and your best coaching line. His bedtime genuinely moved earlier, this week he is down around 11:53, one night at ten past eleven. But every single wake this week is 5:13 to 5:15 in the morning, five days running, machine regular. He did the hard half and the hour got taken at the other end. So the question that opens the whole conversation is: what pulls you out of bed at five? Alarm, work, habit? That answer is where his extra hour lives. Carbs, third lever, cannot be scored: food journal has nothing since March 11, and the Friday Saturday photo ask went out but no photos came. Do not frame that negatively, just read his carb load out loud with him in the room. One more open thread: on August 26 you asked him directly what gets in the way of the earlier bedtime, and the opener that went out did not release that question, so it is still hanging unanswered. Release it lightly before you dig into sleep.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alan-1">&#9654;</div>
+        <a class="dl-btn" id="dl-alan-1" title="Download" href="assets/alan-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alan-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-alan-2" onclick="playSection('alan', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">Training first, and this is the part to hold steady on: his in-app history is empty and that is by design. He trains five mornings a week at BFT in Sunnyvale, three strength, two cardio, one hybrid, with a friend group that keeps him showing up, and none of it flows into the app. So the empty calendar is expected, not a gap, and there are no logged lifts and no lift targets, on purpose. And remember, it is BFT, never the other C word, he was very clear about that. The fresh Iris prep last night called the friend group the real engine of his adherence, which matches everything you know. Recovery is where the actual news is. Resting heart rate has come all the way back down: 57 on Friday, high 50s all week, down about 17 percent on the trend. That 74 you saw on August 28 was a two day blip, so do not raise heart rate as a concern, if anything it is quiet evidence the five mornings are being absorbed. Steps are back to logging daily after the late August gap, averaging 5,245 this week, target is 6,750ish, best day 8,559. Sleep totals are still the limiter, 5 hours 21 this week, but as I said, the story is the locked 5:14 wake, not the bedtime anymore. Weight metric in the app is still frozen at July 1, 267.8, so his Apple Health weight sync has been dead two months, worth one question tomorrow since the fix was supposedly in back in June. Knee is the usual, chronic since he was 20, KT tape, no modifications needed, and there is the intermittent right golfer&#x27;s elbow, same side as the arm that carries 13 percent more lean, worth one curiosity question about whether he unloads that side in class.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alan-2">&#9654;</div>
+        <a class="dl-btn" id="dl-alan-2" title="Download" href="assets/alan-03-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alan-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-alan-3" onclick="playSection('alan', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things for the block coming out of tomorrow. First, the wake time. The bedtime battle is basically won, so stop asking for earlier nights and go after the five o&#x27;clock wake directly. If it is an alarm, the ask is to move it thirty to sixty minutes later on non-training days; if it is work or a kid or a dog, name it and plan around it. That is the single cheapest hour of recovery he has. Second, steps to a durable 6,500 plus. The pattern shows he can do it, one 8,500 day this week, but the average sits at 5,245. The post-lunch and post-dinner ten minute walks are still the mechanism, and they double as his visceral fat lever, which is the number tomorrow either vindicates or re-arms. Third, carb visibility without the journal fight. Four asks since June have not produced a food log, so change the game in the room: read his typical day back to him verbally, agree the 50 grams that come out of the back half of the day, and set the check as a conversation, not an app task. And weave France through all of it: he flies September 17 and is gone to October 3, so this block is really two weeks of execution, then sixteen days where the win is protein first, walking a lot, which France is built for, and holding the 5:14 problem to European time. If you want continuity while he is away, the travel plan messages exist for exactly this and can go out closer to the 17th.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alan-3">&#9654;</div>
+        <a class="dl-btn" id="dl-alan-3" title="Download" href="assets/alan-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alan-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-alan-4" onclick="playSection('alan', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Short version: best block of his membership on the books, visceral ticked the wrong way, the messages went out, he went quiet as always, and the one question that unlocks tomorrow is what has him up at 5:14 every morning. Fix Member 2 on the duo booking before 9:45 and enjoy this one, he is one of the easiest reads on the roster.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-alan-4">&#9654;</div>
+        <a class="dl-btn" id="dl-alan-4" title="Download" href="assets/alan-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-alan-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const files = {
+  janice: ['assets/janice-01-intro.wav','assets/janice-02-wins-coaching.wav','assets/janice-03-snapshot.wav','assets/janice-04-focus.wav','assets/janice-05-closing.wav'],
+  alan: ['assets/alan-01-intro.wav','assets/alan-02-wins-coaching.wav','assets/alan-03-snapshot.wav','assets/alan-04-focus.wav','assets/alan-05-closing.wav']
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '\u25A0' : '\u25BA';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
