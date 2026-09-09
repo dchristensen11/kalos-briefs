@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing - Sep 9, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+  .flag-note { background:#2a1414; border:1px solid #5c2626; color:#fca5a5; font-size:11.5px; padding:8px 12px; margin-top:6px; border-radius:8px; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Wednesday, September 9, 2026 &middot; 4 clients &middot; Justin 10:30 &middot; Marissa 12:30 &middot; Tammi 1:15 &middot; Victoria 2:00</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Sep 8 &middot; two milestone (Marissa, Tammi), two condensed (Justin, Victoria) &middot; Justin and Marissa have unanswered reschedule requests, see their briefs</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Justin Vidamo</h2>
+      <div class="meta">Fat Loss / Visceral Fat Arc · Male · 37 · 2nd Package Scan (4th DEXA) · routine checkpoint · reschedule request unanswered</div>
+    </div>
+    <div class="time-badge">10:30 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-justin-vidamo" onclick="playAll('justin-vidamo')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-justin-vidamo" onclick="stopAll('justin-vidamo')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-justin-vidamo" href="assets/justin-vidamo-full-brief.mp3" download="justin-vidamo-brief-sep09.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (3:14 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-justin-vidamo">
+    <div class="section" id="sec-justin-vidamo-0" onclick="playSection('justin-vidamo', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">This is the brief for Justin Vidamo, tomorrow at 10:30 AM. It's his second package scan on the 6 Month Core, his fourth DEXA overall. Before anything else, one flag. At 12:27 PM today he messaged asking to reschedule to Friday or Saturday this week. Nobody has replied to that yet as of this recording. The calendar still shows him confirmed for 10:30 tomorrow, so this brief is built for that appointment, but you will want to deal with that message before you show up expecting him.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-justin-vidamo-0">&#9654;</div>
+        <a class="dl-btn" id="dl-justin-vidamo-0" title="Download" href="assets/justin-vidamo-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-justin-vidamo-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-justin-vidamo-1" onclick="playSection('justin-vidamo', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Two anchor dates here. His last scan was August 12th, and it was his best one yet. Fat down almost 2 pounds, lean tissue up 2 pounds, visceral fat down again to 193.9, and his ALMI percentile ticked up to the 84th. Real recomposition, and on tirzepatide, which usually works against lean mass, not for it. His last formal check in was actually before that, a mid point call on July 28th, so nothing there is newer than the scan itself. Since August 12th, though, the picture has gone the other way on training. Every named strength session on the calendar from August 14th through September 7th has landed as missed, 8 in a row. Thirty day tracked rate is 36 percent, and it is 1 of 3 in the last 7 days. You flagged the drop off yourself by message on August 24th, and then asked him for a Zoom call on September 2nd at 7:14 in the morning to figure out what is going on. He has not replied to that either. On the plus side, protein is still landing, 150 grams a day by his own report, and that is the one habit that has not slipped. The food journal has been empty since July 27th, 43 days now, and he does not have a macros journal set up either, so there is genuinely no nutrition visibility right now. And that reschedule message today is his first message of any kind since July 28th, so six weeks of silence just broke, even if it is not the message you would have wanted first.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-justin-vidamo-1">&#9654;</div>
+        <a class="dl-btn" id="dl-justin-vidamo-1" title="Download" href="assets/justin-vidamo-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-justin-vidamo-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-justin-vidamo-2" onclick="playSection('justin-vidamo', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">Consistency sits at 36 percent over the last 30 days, 5 of 14 tracked, and 1 of 3 in the last week. The calendar shows a clean run of misses on the named Foundation sessions, August 14th, 19th, 21st, 26th, 28th, 31st, then September 4th and 7th. A few days show some other logged activity without a missed flag, August 12th, 17th, 24th and September 2nd, but that is not confirmed as the actual lifting session, so do not read those as completions. No bodyweight has been logged in Everfit since July 24th, 47 days stale by tomorrow. Left AC shoulder is still on the flag list as limiting, unchanged from before, worth a quick check in the room rather than assuming it is the same.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-justin-vidamo-2">&#9654;</div>
+        <a class="dl-btn" id="dl-justin-vidamo-2" title="Download" href="assets/justin-vidamo-03-training-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-justin-vidamo-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-justin-vidamo-3" onclick="playSection('justin-vidamo', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things worth raising tomorrow. First, get an actual answer on why training stopped after August 12th, and get the Zoom booked or explicitly declined instead of leaving it hanging another week. Second, the food journal and the missing macros journal together mean you are coaching nutrition blind right now, so make posting two ordinary days, not good days, the concrete ask before he leaves. Third, protein at 150 grams is the one thing holding, so name that out loud as proof the habit works when he does it, and use it as the bridge back into training frequency.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-justin-vidamo-3">&#9654;</div>
+        <a class="dl-btn" id="dl-justin-vidamo-3" title="Download" href="assets/justin-vidamo-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-justin-vidamo-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-justin-vidamo-4" onclick="playSection('justin-vidamo', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. August 12th was genuinely his best scan, but everything since has gone quiet, training, logging, and messaging, until today's reschedule ask broke the silence. Handle that message first, then walk in ready to have the training conversation directly and kindly.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-justin-vidamo-4">&#9654;</div>
+        <a class="dl-btn" id="dl-justin-vidamo-4" title="Download" href="assets/justin-vidamo-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-justin-vidamo-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Marissa Gray</h2>
+      <div class="meta">Lean Mass / Longevity Arc · Female · 49 · Second Scan · CONVERSION MOMENT · may not show, unanswered reschedule ask</div>
+    </div>
+    <div class="time-badge">12:30 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-marissa-gray" onclick="playAll('marissa-gray')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-marissa-gray" onclick="stopAll('marissa-gray')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-marissa-gray" href="assets/marissa-gray-full-brief.mp3" download="marissa-gray-brief-sep09.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (5:53 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-marissa-gray">
+    <div class="section" id="sec-marissa-gray-0" onclick="playSection('marissa-gray', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">This is the brief for Marissa Gray, 49 years old, a private investigator, second scan tomorrow at 12:30 PM. Before anything else, a flag. At 1:33 PM today she messaged that she is still out of town and wants to reschedule to next Wednesday or Friday. As of two checks tonight, roughly 15 minutes apart, nobody has replied. The calendar still shows her confirmed for 12:30 tomorrow, so treat this as a possible no-show. Her goal is lean mass gain, derived from her ALMI rather than agreed with her directly, and her why is longevity and aesthetics: toning up, reducing the fat layer and cellulite, building muscle, and feeling solid heading into 50 while perimenopausal symptoms start.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-marissa-gray-0">&#9654;</div>
+        <a class="dl-btn" id="dl-marissa-gray-0" title="Download" href="assets/marissa-gray-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-marissa-gray-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-marissa-gray-1" onclick="playSection('marissa-gray', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins — Lead With These</div>
+        <div class="sec-text">Open with honest self-reporting despite zero logging. She has told you consistently that she has been training and eating well and only the logging has slipped, and she has stuck to that story even when the numbers are bad. She also solved her own scheduling problem on day one, flagging that her unpredictable PI schedule made a fixed plan unworkable and asking for two home plus two gym sessions on variable days. She has a deep athletic history, taekwondo black belt, basketball, soccer, horseback riding, so the gap here is technical, not motivational. And her four logged meals were honest ones, including the glass of wine she didn't hide.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-marissa-gray-1">&#9654;</div>
+        <a class="dl-btn" id="dl-marissa-gray-1" title="Download" href="assets/marissa-gray-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-marissa-gray-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-marissa-gray-2" onclick="playSection('marissa-gray', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In Their Own Words</div>
+        <div class="sec-text">You asked her what she'd noticed and where she sees herself in 6 to 12 months, both sent September 2nd, both seen September 4th, and neither has been answered as of today. If she shows tomorrow and they're still unanswered, ask both out loud in the room before showing a single number. She has already told you she believes she has been doing the work; the scan is about to either confirm or contradict her own account of herself. Get her version on the record first, then reveal.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-marissa-gray-2">&#9654;</div>
+        <a class="dl-btn" id="dl-marissa-gray-2" title="Download" href="assets/marissa-gray-03-own-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-marissa-gray-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-marissa-gray-3" onclick="playSection('marissa-gray', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">The zero percent consistency survived every fix. All 22 plus assigned sessions since August 9th show missed, including the corrected Monday September 7th session the week-out targets were built around. The September 2nd swap from bands to dumbbells removed the equipment excuse but did not change the pattern. Iris also still lists three programs as simultaneously active on her account, an administrative loose end from that swap, not a coaching one.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-marissa-gray-3">&#9654;</div>
+        <a class="dl-btn" id="dl-marissa-gray-3" title="Download" href="assets/marissa-gray-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-marissa-gray-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-marissa-gray-4" onclick="playSection('marissa-gray', 4)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">There is no lift history anywhere in her file. None of the three Monday targets got tested. She has reported lower back stiffness and hip tightness in the mornings, worth watching on hinges and lunges.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-marissa-gray-4">&#9654;</div>
+        <a class="dl-btn" id="dl-marissa-gray-4" title="Download" href="assets/marissa-gray-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-marissa-gray-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-marissa-gray-5" onclick="playSection('marissa-gray', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">She works as a private investigator with a genuinely unpredictable schedule, stress is a stated factor, and a standing desk is a recent win. Perimenopause is starting. No sleep or activity data is available to cross-check any of this.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-marissa-gray-5">&#9654;</div>
+        <a class="dl-btn" id="dl-marissa-gray-5" title="Download" href="assets/marissa-gray-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-marissa-gray-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-marissa-gray-6" onclick="playSection('marissa-gray', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No sensitive coaching flags here. She is a direct, low-friction communicator who solves her own problems rather than waiting to be told. The one risk is over-trusting her verbal reports against a training calendar that has shown nothing for five weeks.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-marissa-gray-6">&#9654;</div>
+        <a class="dl-btn" id="dl-marissa-gray-6" title="Download" href="assets/marissa-gray-07-coaching-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-marissa-gray-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-marissa-gray-7" onclick="playSection('marissa-gray', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things for the next block. Rebuild the programme together in the room since the current one clearly is not landing. Get one logged session, any session, as the actual first goal. Lead with ALMI rather than body fat since that's the number that's genuinely out of range. And get her 6 to 12 month picture on the record since it's still unanswered and the renewal conversation depends on it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-marissa-gray-7">&#9654;</div>
+        <a class="dl-btn" id="dl-marissa-gray-7" title="Download" href="assets/marissa-gray-08-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-marissa-gray-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-marissa-gray-8" onclick="playSection('marissa-gray', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line walking in. The real headline tonight might not be the scan at all, it's whether she shows up, given her message today and the total silence on the training side. If she does show, the zero percent consistency survived every fix you tried, so the honest conversation is about rebuilding from scratch, not adjusting what's there. Her ALMI is the number to lead with, and both reflection questions are still open.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-marissa-gray-8">&#9654;</div>
+        <a class="dl-btn" id="dl-marissa-gray-8" title="Download" href="assets/marissa-gray-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-marissa-gray-8"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Tammi Hall</h2>
+      <div class="meta">Recomp, Muscle &amp; Visceral Arc · Female · 58 · First Package Scan · no renewal, no close</div>
+    </div>
+    <div class="time-badge">1:15 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-tammi-hall" onclick="playAll('tammi-hall')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-tammi-hall" onclick="stopAll('tammi-hall')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-tammi-hall" href="assets/tammi-hall-full-brief.mp3" download="tammi-hall-brief-sep09.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (5:42 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-tammi-hall">
+    <div class="section" id="sec-tammi-hall-0" onclick="playSection('tammi-hall', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">This is the scan day briefing for Tammi Hall. She's fifty eight, and this is her first package scan since her baseline on August third, so there's no renewal conversation and nothing to sell today, this is a pure progress checkpoint. The scan is tomorrow, Wednesday September ninth, at one fifteen in the afternoon in Campbell, allow about forty five minutes. Her goal is recomp: build muscle, bring down visceral fat, get back to one twenty eight pounds. But the real driver is longevity, offsetting postmenopausal muscle and bone loss, and she's named core strength as her own weakest area.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tammi-hall-0">&#9654;</div>
+        <a class="dl-btn" id="dl-tammi-hall-0" title="Download" href="assets/tammi-hall-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tammi-hall-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-tammi-hall-1" onclick="playSection('tammi-hall', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins — Lead With These</div>
+        <div class="sec-text">Open with the personal bests. She hit eight new personal bests on Friday September fourth and twelve more on Sunday September sixth, twenty in her last two sessions alone. She asked to move to three times a week herself, on her own initiative, that's member driven consistency, not something you had to push. And two things you flagged at week out resolved on their own. The lateral raise she commented on landed clean at twenty pounds for twelve, twelve, twelve with no fade on Sunday. And the bent over row, which she'd only pushed to fifty on one set unprompted, she sustained fifty for all three sets by Sunday. She's also front running her own homework, she logged two full days of food in Cronometer on September second and third before you'd even assigned the days.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tammi-hall-1">&#9654;</div>
+        <a class="dl-btn" id="dl-tammi-hall-1" title="Download" href="assets/tammi-hall-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tammi-hall-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-tammi-hall-2" onclick="playSection('tammi-hall', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In Their Own Words</div>
+        <div class="sec-text">You asked her what she'd noticed, sent September second at six fifty three in the morning, and she answered by ten oh two that same morning. Her words: the scale is not budging and clothes don't fit any better, but she feels stronger and better mentally knowing she's working out. She also said she took a bunch of photos last week and never uploaded them. Mirror that scale line back to her before you show her the muscle number, because it sets up exactly why you're leading with ALMI instead of the scale. One thing to notice: she didn't specifically answer the upper back prompt in that message, so ask about it directly in the room. The six to twelve month question was correctly never sent, her six month core runs to February, there's no renewal in play.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tammi-hall-2">&#9654;</div>
+        <a class="dl-btn" id="dl-tammi-hall-2" title="Download" href="assets/tammi-hall-03-own-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tammi-hall-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-tammi-hall-3" onclick="playSection('tammi-hall', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">The number to lead with is ALMI, twenty third percentile at fifty eight. That's unchanged from baseline and it's still the one thing with a real time limit at her stage of life. Second concern: none of the three lift targets you sent her for what should have been Thursday's session actually got tested as asked. That session landed a day later, Friday, not Thursday, nothing was scheduled Wednesday. Leg press stayed at seventy instead of the eighty you asked for. Dumbbell bench stayed at thirty instead of going up a dumbbell. And chin ups were skipped entirely, all three sets missed, because she ran out of session time. There's no more strength work before the scan except possibly the morning of itself.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tammi-hall-3">&#9654;</div>
+        <a class="dl-btn" id="dl-tammi-hall-3" title="Download" href="assets/tammi-hall-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tammi-hall-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-tammi-hall-4" onclick="playSection('tammi-hall', 4)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">Consistency sits at sixty three percent over the last thirty days, ten of sixteen assigned sessions. But look at the split. Every main strength session got done and got done clean, two more since week out, Friday and Sunday, both zero missed exercises. What's still missing is the add on work. Care A was missed on Friday, Core B was missed on Sunday, and the first session of her brand new three times a week program, the one she asked for herself, was also missed on Monday the seventh. Same pattern as week out, just carrying into the new schedule. On the hamstring curl machine you flagged as unavailable at her gym: that's resolved, she completed it clean, thirty five pounds for twelve, twelve, twelve, on Friday. And the six versus seven exercise question she raised the same day is closed, you already told her Sunday you'd drop or swap the last exercise if it happens again, don't reopen it. One more thing worth a verbal check: her squat variation switched from barbell to dumbbell between Tuesday and Sunday as part of the new program. Worth confirming whether that was deliberate for her upper back or just incidental to the new split.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tammi-hall-4">&#9654;</div>
+        <a class="dl-btn" id="dl-tammi-hall-4" title="Download" href="assets/tammi-hall-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tammi-hall-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-tammi-hall-5" onclick="playSection('tammi-hall', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Body weight is essentially flat, one thirty nine point three today against a one thirty nine point one baseline, which fits the story she told you herself, the scale hasn't moved. Sleep has been solid, averaging around eight hours. Steps are around eighty eight hundred a day with pickleball three times a week on top. Protein is the real friction point. Her own words from a September second food log: it's really hard to get in the protein requirement without adding extra calories, she doesn't know how else to get there. She's plant forward with chronic SIBO, running an elemental diet once a day to help close that gap. One flag for you directly: you told her September second you'd put a two day food log on the calendar for Monday and Tuesday. That task was never actually created in Everfit, I checked tonight. She covered herself anyway by logging Monday and Tuesday of last week early, September second and third, but don't reference the assigned task as done, because it isn't there.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tammi-hall-5">&#9654;</div>
+        <a class="dl-btn" id="dl-tammi-hall-5" title="Download" href="assets/tammi-hall-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tammi-hall-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-tammi-hall-6" onclick="playSection('tammi-hall', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No red clinical flags tonight. Her personality read: she does exactly what's asked and tells you about it afterward. She flagged the extra seventh exercise precisely instead of just skipping it, and she front ran her own food logging before you'd even assigned the days. Give her precise numbers and she'll hit them, or tell you exactly why she didn't. One small open loop, not urgent: a broadcast went out today about booking an in house movement assessment, and she asked what it actually is. Still unanswered as of tonight, worth a quick reply at some point.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tammi-hall-6">&#9654;</div>
+        <a class="dl-btn" id="dl-tammi-hall-6" title="Download" href="assets/tammi-hall-07-coaching-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tammi-hall-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-tammi-hall-7" onclick="playSection('tammi-hall', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things for the next block. One, get the core work actually happening, Care A, Core B, Core C are still at zero across two different program versions now, ask her directly what the real barrier is rather than assuming it's willingness. Two, retest the three lift targets that never got a fair shot, leg press to eighty, dumbbell bench up a size, chin ups across all three. Three, build the food logging habit around what she already proved she can do, she logged two clean days on her own, so lock in a repeatable rhythm rather than one off asks. Four, build the next block around her travel before she leaves, Long Beach this weekend, then New York and Germany from September twenty second to October third, then LA and San Luis Obispo from October thirteenth to eighteenth. She's already asked for hotel workouts and said she'd pack bands.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tammi-hall-7">&#9654;</div>
+        <a class="dl-btn" id="dl-tammi-hall-7" title="Download" href="assets/tammi-hall-08-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tammi-hall-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-tammi-hall-8" onclick="playSection('tammi-hall', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Twenty personal bests in her last two sessions, and she asked to train more on her own. The scale hasn't moved, but she has, and her own words hand you the exact opening. No renewal conversation today, this is a progress checkpoint, so keep it entirely off the sales content. Lead with ALMI, tie it to longevity, and give her a clear, honest picture of why muscle comes first.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tammi-hall-8">&#9654;</div>
+        <a class="dl-btn" id="dl-tammi-hall-8" title="Download" href="assets/tammi-hall-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tammi-hall-8"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Victoria Treece</h2>
+      <div class="meta">Lean Mass Gain Arc · Female · 58 · 2nd Package Scan (3rd DEXA) · routine checkpoint · scheduling conflict on scan day</div>
+    </div>
+    <div class="time-badge">2:00 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-victoria-treece" onclick="playAll('victoria-treece')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-victoria-treece" onclick="stopAll('victoria-treece')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-victoria-treece" href="assets/victoria-treece-full-brief.mp3" download="victoria-treece-brief-sep09.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (3:18 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-victoria-treece">
+    <div class="section" id="sec-victoria-treece-0" onclick="playSection('victoria-treece', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Victoria Treece, tomorrow at two PM, this is her second package scan, her third DEXA overall. She's fifty eight, five foot three, training for lean mass gain, and the arc this block is build only. She's leaner than eighty five percent of women her age at the fifteenth percentile body fat, so there is nothing to cut here, only muscle and strength to add. Her stated why is fighting the limits that age and menopause are supposed to impose, and looking good in a bikini in Hawaii, which she has actually just been to.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-victoria-treece-0">&#9654;</div>
+        <a class="dl-btn" id="dl-victoria-treece-0" title="Download" href="assets/victoria-treece-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-victoria-treece-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-victoria-treece-1" onclick="playSection('victoria-treece', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Two anchor points here. Since the July twentieth package scan, fifty one days ago, the whole two point six pound lean gain from that scan landed in her legs, up nine percent, after years away from squatting, at fifty eight years old. Visceral fat dropped eighteen square centimeters in that same stretch. Both are real wins worth opening with tomorrow. But here's what's changed since then. The four day upper lower split was delivered and intensity was genuinely there through mid August. Since then, nothing. Since the August fifth midpoint call, thirty five days ago, none of the three priorities set that day are measurable. No food log, and zero sessions completed since August eighteenth. That's twenty one days with no training logged, right through her whole travel stretch and two days back. You sent her two specific pre scan sessions on September second, a chest press and row day, and a squat and box jump day. Neither happened. And here's something you should know before you walk in. Your read first note says the last thing she heard from you was an automated message back on August nineteenth. That's not accurate anymore. You personally sent her four messages on September second and one more on September fourth, including a direct question asking what she's noticed these seven weeks. None of them got a reply. So the real story isn't silence from Kalos, it's silence from her, twenty one days of it, despite you reaching out five separate times.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-victoria-treece-1">&#9654;</div>
+        <a class="dl-btn" id="dl-victoria-treece-1" title="Download" href="assets/victoria-treece-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-victoria-treece-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-victoria-treece-2" onclick="playSection('victoria-treece', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">Consistency is eighteen percent over the last thirty days, down from twenty nine percent when this was last checked on September second, because the early August sessions have aged out of the window with nothing behind them. Last seven days is zero percent, and September month to date in Iris also reads zero. Her tracker is still syncing, sleep and heart rate data came through as recently as today, so she's not off the grid, she's just not training. One more thing to flag before tomorrow. There's a mismatch between what you told her to do and what the app actually has scheduled. You told her Monday was bench and row, Tuesday was squat and box jump. The live assignment has it a day later, upper body sits on Tuesday, and the squat and box jump day, which includes a brand new exercise for her, is sitting on Wednesday. That's scan day itself. Worth moving that off before tomorrow regardless of whether she trains tonight.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-victoria-treece-2">&#9654;</div>
+        <a class="dl-btn" id="dl-victoria-treece-2" title="Download" href="assets/victoria-treece-03-training-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-victoria-treece-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-victoria-treece-3" onclick="playSection('victoria-treece', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things going into the room. First, get her talking about what actually happened these three weeks of travel, Hawaii, Savannah, a cruise, and DC, because the gym clearly stopped even though her steps didn't. Second, the liver enzyme follow up from the statin is still an open loop, seventeen to sixty four, doctor visit was due four weeks ago and you have no outcome on file, that's a health question that outranks anything on the scan. Third, get the food log restarted, her July logging is the only real nutrition data you have, framed as what worked, not a lecture.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-victoria-treece-3">&#9654;</div>
+        <a class="dl-btn" id="dl-victoria-treece-3" title="Download" href="assets/victoria-treece-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-victoria-treece-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-victoria-treece-4" onclick="playSection('victoria-treece', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. The body composition story is still good, legs and visceral fat both moved in the right direction through July. But training has been flat since August eighteenth, the food log has been empty even longer, and she's gone quiet on you despite five messages this month. This is a checkpoint inside a term that runs to December, there's nothing to close tomorrow, just an honest conversation about restarting.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-victoria-treece-4">&#9654;</div>
+        <a class="dl-btn" id="dl-victoria-treece-4" title="Download" href="assets/victoria-treece-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-victoria-treece-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const files = {
+  'justin-vidamo': ['assets/justin-vidamo-01-intro.wav','assets/justin-vidamo-02-wins-coaching.wav','assets/justin-vidamo-03-training-recovery.wav','assets/justin-vidamo-04-focus.wav','assets/justin-vidamo-05-closing.wav'],
+  'marissa-gray': ['assets/marissa-gray-01-intro.wav','assets/marissa-gray-02-wins.wav','assets/marissa-gray-03-own-words.wav','assets/marissa-gray-04-concern.wav','assets/marissa-gray-05-training.wav','assets/marissa-gray-06-recovery.wav','assets/marissa-gray-07-coaching-frame.wav','assets/marissa-gray-08-priorities.wav','assets/marissa-gray-09-closing.wav'],
+  'tammi-hall': ['assets/tammi-hall-01-intro.wav','assets/tammi-hall-02-wins.wav','assets/tammi-hall-03-own-words.wav','assets/tammi-hall-04-concern.wav','assets/tammi-hall-05-training.wav','assets/tammi-hall-06-recovery.wav','assets/tammi-hall-07-coaching-frame.wav','assets/tammi-hall-08-priorities.wav','assets/tammi-hall-09-closing.wav'],
+  'victoria-treece': ['assets/victoria-treece-01-intro.wav','assets/victoria-treece-02-wins-coaching.wav','assets/victoria-treece-03-training-recovery.wav','assets/victoria-treece-04-focus.wav','assets/victoria-treece-05-closing.wav']
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '\u25A0' : '\u25BA';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
