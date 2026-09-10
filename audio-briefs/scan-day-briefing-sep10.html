@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing - Sep 10, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+  .flag-note { background:#2a1414; border:1px solid #5c2626; color:#fca5a5; font-size:11.5px; padding:8px 12px; margin-top:6px; border-radius:8px; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Thursday, September 10, 2026 &middot; 1 client &middot; Blake 9:45 AM</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Sep 9 &middot; condensed track (routine package scan) &middot; Adam Mayer was originally queued for tomorrow but his scan was rescheduled to Sep 17, found tonight, so he is not on this page</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Blake Capella</h2>
+      <div class="meta">Lean Mass / ALMI Arc &middot; Male &middot; 27 &middot; 2nd Package Scan (4th DEXA) &middot; routine checkpoint &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">9:45 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-blake" onclick="playAll('blake')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-blake" onclick="stopAll('blake')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-blake" href="assets/blake-full-brief.mp3" download="blake-brief-sep10.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (1:42 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-blake">
+    <div class="section" id="sec-blake-0" onclick="playSection('blake', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Blake Capella, second package scan, fourth DEXA overall, tomorrow at 9:45 AM. Goal is lean mass gain, ALMI at the 6th percentile is the number that matters.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-blake-0">&#9654;</div>
+        <a class="dl-btn" id="dl-blake-0" title="Download" href="assets/blake-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-blake-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-blake-1" onclick="playSection('blake', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Since the Aug 13 scan, Blake has rebuilt training from a broken-wrist layoff into seven straight sessions, no gaps, and beaten three lift-target cycles in a row: sumo squat 50 to 80, RDL 70 to 90, hip thrust 15 to 60. Monday's session, two days ago, was his best of the block: 7 personal bests in 45 minutes. Since the Aug 25 midpoint call specifically, his hip thrust instinct beat the prescribed deload, and reflecting on the wrist he told us Monday night that pulling and climbing feel strong while pushing and biking still don't. The gap is nutrition tracking: the Macros Journal has never been set up, and the photo food journal has been stuck at Aug 26 for two weeks despite two follow-up asks.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-blake-1">&#9654;</div>
+        <a class="dl-btn" id="dl-blake-1" title="Download" href="assets/blake-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-blake-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-blake-2" onclick="playSection('blake', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">Consistency is 100 percent over the last 7 days, 73 percent over the last 30, still recovering from August's injury month. Nothing scheduled between now and the scan. Three workout comments from Monday are still open: he questioned his own form on the B-stance deadlift, worth asking about directly.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-blake-2">&#9654;</div>
+        <a class="dl-btn" id="dl-blake-2" title="Download" href="assets/blake-03-training-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-blake-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-blake-3" onclick="playSection('blake', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things for the next block: close the nutrition-tracking gap, since the number driving his goal, lean mass, needs real protein data to coach against; give him a direct answer on the RDL, he's already asking to push past 90; and reintroduce upper body, nothing has been programmed there since mid-August and pulling is coming back faster than pushing by his own report.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-blake-3">&#9654;</div>
+        <a class="dl-btn" id="dl-blake-3" title="Download" href="assets/blake-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-blake-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-blake-4" onclick="playSection('blake', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line walking in: training is fully back on track and outperforming its own targets. The open loop is nutrition logging, not effort. No renewal conversation, he's mid-contract to February. This is a checkpoint, not a verdict.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-blake-4">&#9654;</div>
+        <a class="dl-btn" id="dl-blake-4" title="Download" href="assets/blake-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-blake-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const files = {
+  'blake': ['assets/blake-01-intro.wav','assets/blake-02-wins-coaching.wav','assets/blake-03-training-recovery.wav','assets/blake-04-focus.wav','assets/blake-05-closing.wav']
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '►';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
