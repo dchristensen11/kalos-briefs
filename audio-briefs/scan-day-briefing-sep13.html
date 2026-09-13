@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing - Sep 13, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+  .flag-note { background:#2a1414; border:1px solid #5c2626; color:#fca5a5; font-size:11.5px; padding:8px 12px; margin-top:6px; border-radius:8px; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Sunday, September 13, 2026 &middot; 3 clients &middot; Hina 8:15 AM, Yasmin 9:00 AM, Akshay 12:30 PM</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Sep 12 &middot; Akshay milestone track (first package scan) &middot; Hina and Yasmin condensed track (routine package scan) &middot; no second-scan Slack post for any of the three</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Hina Naseer</h2>
+      <div class="meta">Lean Mass Gain / ALMI &amp; Visceral &middot; Female &middot; 53 &middot; 2nd Package Scan (4th DEXA) &middot; routine checkpoint &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">8:15 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-hina" onclick="playAll('hina')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-hina" onclick="stopAll('hina')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-hina" href="assets/hina-full-brief.mp3" download="hina-brief-sep13.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (3:14 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-hina">
+    <div class="section" id="sec-hina-0" onclick="playSection('hina', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Tomorrow morning at 8:15 you&#x27;re scanning Hina Naseer at the Campbell office. This is her second package scan, her fourth DEXA overall, and it&#x27;s a routine progress checkpoint, not a renewal conversation. She&#x27;s nine months into a one year virtual membership, so there&#x27;s nothing to sell here, just an honest look at where block two landed. Her focus since day one has been lean mass gain, specifically getting her ALMI up toward the 60th percentile from the 45th she&#x27;s been sitting at, and she&#x27;s motivated by her clothes fitting the way denser muscle should let them fit.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-0">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-0" title="Download" href="assets/hina-sep13-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-hina-1" onclick="playSection('hina', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Her last scan was August 9th, and her last real check-in was the mid-point call on August 26th, so here&#x27;s what&#x27;s moved since both. Since the scan, her hip thrust kept climbing. She was at 100 for 10 on August 24th, and she&#x27;s now logged 108 for 9, 8, and 8 on two separate sessions, September 7th and September 9th. That&#x27;s within 2 pounds of a target Daniel hadn&#x27;t even sent her yet. She also took a ten day hiking trip from August 28th to September 6th, worth acknowledging given she&#x27;s got a prior hiking injury in her history, and she came home in one piece. Since the mid-point check-in, the standout is how she handled coming back from that trip. She told her coach herself that she&#x27;d fallen short on protein most days on the trail, then started logging again within a day of getting home. Five straight days, September 7th through the 11th, averaging 153 grams of protein against her 150 gram target. That&#x27;s real ownership, worth naming out loud tomorrow. She&#x27;s also engaged directly with the intensity conversation. After it was explained what training close to failure actually means, she repeated it back correctly and said she&#x27;d start lifting heavier, and the hip thrust numbers back that up. The one thing still sitting there is body image. Unprompted, she brought up that her clothes feel tighter around her stomach even though she&#x27;s gaining muscle, and mentioned considering sizing up in her jeans. That&#x27;s worth opening with some warmth around, because tomorrow&#x27;s numbers are going to say something different than the scale has been telling her.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-1">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-1" title="Download" href="assets/hina-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-hina-2" onclick="playSection('hina', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training/Recovery Snapshot</div>
+        <div class="sec-text">Her thirty day consistency sits at 44 percent, but don&#x27;t lead with that number, it&#x27;s the hiking trip pulling it down, not a compliance problem. Her last seven days are at 75 percent, and three of her four sessions before this scan are already logged clean: Lower on Monday, Upper on Tuesday, Core and Glutes on Wednesday. Her Saturday Full Body session, the last one before you see her, was not logged as of tonight, so double check that in the morning before you walk in. Intensity is still the pattern to watch. She&#x27;s still beating rep targets and leaving the weight alone more often than not, even with the hip thrust improvement. Nothing new on sleep or recovery load since the last check-in.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-2">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-2" title="Download" href="assets/hina-03-training-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-hina-3" onclick="playSection('hina', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things to carry into the next block. First, keep pushing the same intensity message, she responds to it when it&#x27;s explained clearly, so give her the plate, not just the rep count. Second, keep the macro logging streak going now that she&#x27;s back from the trip, she&#x27;s proven she&#x27;ll do it when she&#x27;s home and has her routine back. Third, address the body image thread directly. She&#x27;s noticing her clothes fit tighter even as the muscle builds, so tie tomorrow&#x27;s numbers straight back to that feeling and give her a concrete reason to trust the process over the scale.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-3">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-3" title="Download" href="assets/hina-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-hina-4" onclick="playSection('hina', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in: she&#x27;s had a genuinely good six weeks under a trip that would have knocked a lot of people off track. Hip thrust is up, food logging bounced back fast, and she&#x27;s showing real signs of buying into the intensity coaching. The only open thread is how she feels about her body right now, and that&#x27;s exactly what tomorrow&#x27;s numbers are for.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-hina-4">&#9654;</div>
+        <a class="dl-btn" id="dl-hina-4" title="Download" href="assets/hina-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-hina-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Yasmin Moghaddame</h2>
+      <div class="meta">Lean Mass Gain / ALMI &middot; Female &middot; 25 &middot; 2nd Package Scan (4th DEXA) &middot; routine checkpoint &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">9:00 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-yasmin" onclick="playAll('yasmin')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-yasmin" onclick="stopAll('yasmin')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-yasmin" href="assets/yasmin-full-brief.mp3" download="yasmin-brief-sep13.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (2:40 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-yasmin">
+    <div class="section" id="sec-yasmin-0" onclick="playSection('yasmin', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">You&#x27;re seeing Yasmin at 9 tomorrow morning. This is her second package scan, her fourth DEXA overall since she started with you back in April. She&#x27;s on the one year lite membership, well into it, so this is a routine progress checkpoint, not a renewal conversation.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yasmin-0">&#9654;</div>
+        <a class="dl-btn" id="dl-yasmin-0" title="Download" href="assets/yasmin-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yasmin-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-yasmin-1" onclick="playSection('yasmin', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Since her last scan on August 2nd, she has trained at 100 percent, 23 out of 23 primary workouts, every single one of six straight weeks, and she did it while starting a brand new job. Her hip thrust has jumped 85 percent in that window, from 60 for 8 up to 95 for 12 as of September 10th, one of 14 personal bests she&#x27;s set since the scan. Since her midpoint check-in on August 31st, every single thing you promised her on that call got delivered. The macro review went out, the sumo squat video came in and you reviewed it, and the ball crunch question got answered. Nothing from that call is still owed to her. There is one loop still open. On September 1st she asked a real coaching question on Nordic Hamstring Curl, her arms are failing before her hamstrings do and she wants to know how to fix that so she can push more reps or more weight. That has been sitting for 11 days with no answer. Worth picking up live tomorrow. You also sent her a short reflection question on September 6th, what has she actually noticed over the six weeks. She saw it and has not answered, even though she replies same day to everything else. That is worth a gentle, direct ask in the room, not a red flag, just an opening.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yasmin-1">&#9654;</div>
+        <a class="dl-btn" id="dl-yasmin-1" title="Download" href="assets/yasmin-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yasmin-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-yasmin-2" onclick="playSection('yasmin', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training/Recovery Snapshot</div>
+        <div class="sec-text">Her rolling numbers look strong, 17 of 18 tracked over the last 30 days, 4 of 5 over the last week. Her macro logging had been spotless, 150 grams of protein a day average through September 10th, but it has gone quiet the last two days, September 11th and 12th, the first gap in a long clean run. Not a crisis, just worth noting. Her pre-scan session, a full body day, was assigned for today and had not been logged as of this evening, so check the calendar again in the morning before you walk in, she often trains right after work. Visceral fat is still up from the Europe trip rebound, though still below where she started in April.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yasmin-2">&#9654;</div>
+        <a class="dl-btn" id="dl-yasmin-2" title="Download" href="assets/yasmin-03-training-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yasmin-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-yasmin-3" onclick="playSection('yasmin', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things to carry into the next block. First, close the Nordic Hamstring Curl question live, since her arms failing early is a fixable setup issue, likely tempo or grip, not a strength problem. Second, keep pushing carbs and total calories up around her training, she is under target by a few hundred calories a day even with protein dialed in. Third, keep an eye on whether the macro logging picks back up once the new job settles, since that has been the backbone of everything else working.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yasmin-3">&#9654;</div>
+        <a class="dl-btn" id="dl-yasmin-3" title="Download" href="assets/yasmin-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yasmin-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-yasmin-4" onclick="playSection('yasmin', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. She has been remarkably consistent through a job change, her hip thrust is up 85 percent since the last scan, and the last check-in&#x27;s promises are all delivered. The only things waiting on you are a training question from September 1st and a reflection question she has not answered yet. Nothing here needs damage control, just follow-through.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yasmin-4">&#9654;</div>
+        <a class="dl-btn" id="dl-yasmin-4" title="Download" href="assets/yasmin-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yasmin-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Akshay Keerthi</h2>
+      <div class="meta">Lean Mass / Visceral Fat Arc &middot; Male &middot; 31 &middot; First Package Scan (2nd DEXA) &middot; milestone track &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">12:30 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-akshay" onclick="playAll('akshay')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-akshay" onclick="stopAll('akshay')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-akshay" href="assets/akshay-full-brief.mp3" download="akshay-brief-sep13.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (5:47 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-akshay">
+    <div class="section" id="sec-akshay-0" onclick="playSection('akshay', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Akshay Keerthi, thirty one years old, tomorrow at twelve thirty. This is his first package scan, thirty nine days off his August fifth baseline. He came in carrying a lot of body fat, forty point six percent, and the plan from day one has been build muscle first for about six months before any real cut. Tonight the story is momentum. He just trained today, he answered your reflection question in real depth, and the calorie number is the one loose thread you&#x27;re walking in to tie off.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-akshay-0">&#9654;</div>
+        <a class="dl-btn" id="dl-akshay-0" title="Download" href="assets/akshay-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-akshay-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-akshay-1" onclick="playSection('akshay', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Open with how well he&#x27;s actually doing right now, because the last two weeks completely reversed the picture from a week ago. He hit every workout the last seven days, three for three, and the thirty day number is climbing back up after a rough patch in late August. He trained today, a Challenging session, eleven of eleven exercises, fifteen personal bests, finishing about two hours before you&#x27;re reading this. Two days before that he had another strong session, eleven personal bests there too. Between the two sessions he tested every lift target you set him at week out. On the seated leg press, you told him to just start at sixty, he opened at eighty and built all the way to one twenty for ten reps. On the Romanian deadlift you asked for seventy, his first work set hit eighty. He didn&#x27;t hold it for the next two sets, but he touched the number and then some. He&#x27;s also referring his brother Abhishek in for a scan of his own, and he&#x27;s logged fifty three meals over twenty four of the last thirty days without you ever having to create a food journal task for him. He&#x27;s just doing it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-akshay-1">&#9654;</div>
+        <a class="dl-btn" id="dl-akshay-1" title="Download" href="assets/akshay-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-akshay-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-akshay-2" onclick="playSection('akshay', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In Their Own Words</div>
+        <div class="sec-text">You asked him what he&#x27;s actually noticed these five weeks, and he gave you a real answer, not a one liner. He said his energy and focus have been better, his mind muscle connection has improved, and he notices it in things like table tennis and golf. He said he feels stronger, hard to quantify but clearly better than four or five weeks ago. He said some of the weights he used to pick up feel lighter in his hand now, and he gave you a specific example, fifteen and twenty pound dumbbells that used to feel heavy don&#x27;t anymore. Here&#x27;s the part to lead with in the room. He also told you his weight has been flat around two hundred four pounds for two weeks, and that&#x27;s been a little disappointing to him, even though he&#x27;s trying to talk himself out of caring. That&#x27;s your opening. Tell him the scale being flat while he&#x27;s adding weight to nearly every lift is exactly what recomposition looks like, lean tissue up, fat down, scale roughly the same. He already suspects this is true, he said as much himself, so confirming it will land hard. One thing he didn&#x27;t answer: you also asked specifically whether that right shoulder feels any better on overhead work. He never touched that part, so ask it directly rather than assuming it&#x27;s fine.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-akshay-2">&#9654;</div>
+        <a class="dl-btn" id="dl-akshay-2" title="Download" href="assets/akshay-03-their-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-akshay-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-akshay-3" onclick="playSection('akshay', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">The nutrition target is still unresolved and it&#x27;s the one thing you need to fix in the room. His app is set to twenty seven sixty calories and one eighty four grams of protein. He told you flat out on August twenty fourth that two thousand to twenty two hundred is where he actually feels good, and that twenty six hundred would already feel like a lot of food. Nobody has changed the number since. There are also three different protein figures floating around him right now, one sixty on the original plan, one sixty six from a message in late August, and one eighty four live in the app. Pick one tomorrow and update the app in the room so there&#x27;s only one number left.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-akshay-3">&#9654;</div>
+        <a class="dl-btn" id="dl-akshay-3" title="Download" href="assets/akshay-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-akshay-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-akshay-4" onclick="playSection('akshay', 4)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">Two lifts are worth naming by pattern, not just by number, because it&#x27;s the same behavior both times. On the seated row you asked him to open at eighty and hold ten reps across all three sets. He went sixty, then seventy, then eighty, so he technically touched the number but only on the last set. Same story on the incline dumbbell press, you asked for forty five across every set, he stayed at forty for three sets then jumped straight to fifty, skipping right past the number you gave him. He is a ramper. He warms into weight rather than committing to it from set one. That&#x27;s worth saying to him directly, because once he trusts the number you give him on set one, you&#x27;ll see even faster progress. On the shoulder, no new complaint. He did pressing work in both sessions, a shoulder press machine today and an Arnold press two days ago, both with personal bests and nothing flagged. There is one workout comment on file, struggled on the right side more than the left, but that was on a core exercise, side plank hip drops, not anything overhead. Don&#x27;t assume that&#x27;s his shoulder acting up without asking him directly which side he meant.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-akshay-4">&#9654;</div>
+        <a class="dl-btn" id="dl-akshay-4" title="Download" href="assets/akshay-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-akshay-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-akshay-5" onclick="playSection('akshay', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Sleep has been solid, in the range of seven and a half hours a night the last few weeks. Heart rate and step data look normal for him. He mentioned feeling tired earlier in the evening lately, which he actually framed as a good sign, meaning the training is doing something. Nothing here is a red flag, his recovery is supporting the training load he&#x27;s putting in, not fighting it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-akshay-5">&#9654;</div>
+        <a class="dl-btn" id="dl-akshay-5" title="Download" href="assets/akshay-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-akshay-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-akshay-6" onclick="playSection('akshay', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">He&#x27;s a data driven engineer who chose the twelve month term specifically to force consistency against his own history of yo-yo weight cycles and irregular sleep. He wants external structure and he responds well to numbers, but he undersells his own subjective read, he told you himself he isn&#x27;t fully internalizing the changes yet because the visual stuff takes longer to show. His communication style is precise and honest, he flags his own slips without being asked, the food log catch up on September first is a good example. There&#x27;s no clinical flag here, no body image or mental health concern on file, just someone who needs you to translate the numbers into a story he can feel good about, because he&#x27;s better at reading data than at reading his own body.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-akshay-6">&#9654;</div>
+        <a class="dl-btn" id="dl-akshay-6" title="Download" href="assets/akshay-07-coaching-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-akshay-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-akshay-7" onclick="playSection('akshay', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">First, fix the calorie and protein number in the room, pick one and load it into the app before he leaves. Second, name the ramping pattern directly and ask him to commit to the prescribed weight from set one going forward, especially on the row and the press work. Third, confirm the in-person form assessment date, he already booked it himself so this is just a verbal check, not something you need to schedule. Fourth, use tomorrow to get a real answer on his twelve month picture, since he&#x27;s mid contract and that question was never sent as a message, ask it live instead, and anchor it to his brother coming in for a scan, since that&#x27;s the closest thing to a real personal reason he&#x27;s given you so far.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-akshay-7">&#9654;</div>
+        <a class="dl-btn" id="dl-akshay-7" title="Download" href="assets/akshay-08-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-akshay-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-akshay-8" onclick="playSection('akshay', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line walking in. Consistency just swung hard positive, he trained today and hit every session in the last week. Every lift target got tested and two of the three were beaten outright. He gave you a genuinely useful reflection reply, use the flat scale versus rising weights as your opening story. The nutrition number is the one loose end, fix it in the room. No bone density, no barbell gold standards, no renewal conversation, this one is momentum and one number.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-akshay-8">&#9654;</div>
+        <a class="dl-btn" id="dl-akshay-8" title="Download" href="assets/akshay-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-akshay-8"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const files = {
+  'hina': ['assets/hina-sep13-01-intro.wav', 'assets/hina-02-wins-coaching.wav', 'assets/hina-03-training-snapshot.wav', 'assets/hina-04-focus.wav', 'assets/hina-05-closing.wav'],
+  'yasmin': ['assets/yasmin-01-intro.wav', 'assets/yasmin-02-wins-coaching.wav', 'assets/yasmin-03-training-snapshot.wav', 'assets/yasmin-04-focus.wav', 'assets/yasmin-05-closing.wav'],
+  'akshay': ['assets/akshay-01-intro.wav', 'assets/akshay-02-wins.wav', 'assets/akshay-03-their-words.wav', 'assets/akshay-04-concern.wav', 'assets/akshay-05-training.wav', 'assets/akshay-06-recovery.wav', 'assets/akshay-07-coaching-frame.wav', 'assets/akshay-08-priorities.wav', 'assets/akshay-09-closing.wav']
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '\u25a0' : '\u25ba';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
