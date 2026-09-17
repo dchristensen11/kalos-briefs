@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing - Sep 17, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+  .flag-note { background:#2a1414; border:1px solid #5c2626; color:#fca5a5; font-size:11.5px; padding:8px 12px; margin-top:6px; border-radius:8px; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Thursday, September 17, 2026 &middot; 1 client &middot; Adam 9:45 AM</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Sep 16 &middot; condensed track (routine package scan) &middot; no second-scan Slack post</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Adam Mayer</h2>
+      <div class="meta">Recomp / ALMI &amp; Visceral &middot; Male &middot; 43 &middot; 2nd Package Scan (5th DEXA) &middot; routine checkpoint &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">9:45 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-adam" onclick="playAll('adam')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-adam" onclick="stopAll('adam')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-adam" href="assets/adam-full-brief.mp3" download="adam-brief-sep17.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (2:43 MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-adam">
+    <div class="section" id="sec-adam-0" onclick="playSection('adam', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Adam Mayer scans tomorrow, Thursday September 17th, at 9:45 AM. This is his second package scan, the fifth DEXA since he started back in February. Judge this one against his July 30th baseline, not the very beginning, since that&#x27;s where this block&#x27;s changes actually started.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-adam-0">&#9654;</div>
+        <a class="dl-btn" id="dl-adam-0" title="Download" href="assets/adam-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-adam-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-adam-1" onclick="playSection('adam', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Since the July 30th baseline and since the midpoint check in on August 24th, the build is working. Lean mass is up again, and his ALMI percentile moved for the first time in three scans, from the 13th up to the 18th. Consistency held at 100 percent through all of it, including through a backyard remodel he&#x27;s been project managing himself. The honest tradeoff is visceral fat, which rose about 10 percent over the same block, and that&#x27;s the exact thing his own why is built around, so it needs naming plainly rather than glossed over. On the elbow, he&#x27;s been managing it himself the whole way, swapping exercises and logging it every time something bothered him, without ever missing a session. Daniel corrected the plan on the evening of September 10th, swapping the hammer curls for Zottman curls instead of pulling them out entirely, and today&#x27;s session proved that out, three clean sets with no pain logged. The skull crusher swap to dumbbells is holding too, clean for a second session, and that same session carried six personal bests. Of the three lift targets set on September 10th, he came close on all three. Squat and incline bench both went heavier than before, and the row held steady, just a rep or two short of the number asked for each time.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-adam-1">&#9654;</div>
+        <a class="dl-btn" id="dl-adam-1" title="Download" href="assets/adam-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-adam-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-adam-2" onclick="playSection('adam', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training/Recovery Snapshot</div>
+        <div class="sec-text">Training consistency is 100 percent, 13 for 13 in the last 30 days, 3 for 3 in the last 7, now ten straight weeks at full attendance. Steps and sleep aren&#x27;t syncing from his own tracker, but he self reports around 8,000 steps a day. On food, he logged voluntarily five days straight this week without being asked to, and the quality has been consistently good, protein forward the whole way.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-adam-2">&#9654;</div>
+        <a class="dl-btn" id="dl-adam-2" title="Download" href="assets/adam-03-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-adam-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-adam-3" onclick="playSection('adam', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things for next block. First, the T-bar row: today&#x27;s session held flat at 100 pounds instead of the 105 that was asked for, so that&#x27;s worth another push once the scan is behind him. Second, keep an eye on visceral fat given his own why is centered on the midsection, and be honest that a build phase causes exactly this kind of bump, it&#x27;s not a step backward. Third, keep the elbow-friendly swaps as permanent fixtures rather than temporary workarounds, and it&#x27;s worth asking whether farmer&#x27;s walks or pull ups are also feeding it. On nutrition, protein and food quality are both already dialed in, so carb timing around training is the only real lever left to tighten.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-adam-3">&#9654;</div>
+        <a class="dl-btn" id="dl-adam-3" title="Download" href="assets/adam-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-adam-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-adam-4" onclick="playSection('adam', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line walking in tomorrow: this is the first scan in three that actually moved his ALMI number, the build is working, and the honest tradeoff is the visceral fat bump that comes with it. There&#x27;s no renewal conversation needed, this is a checkpoint inside a term that runs through November. Open with the wins, be straight about visceral fat, and use the room to set next block&#x27;s priorities.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-adam-4">&#9654;</div>
+        <a class="dl-btn" id="dl-adam-4" title="Download" href="assets/adam-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-adam-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const files = {
+  'adam': ['assets/adam-01-intro.wav', 'assets/adam-02-wins.wav', 'assets/adam-03-training.wav', 'assets/adam-04-focus.wav', 'assets/adam-05-closing.wav']
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '►';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
