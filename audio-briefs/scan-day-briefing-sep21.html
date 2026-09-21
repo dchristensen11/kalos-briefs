@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing - Sep 21, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+  .flag-note { background:#2a1414; border:1px solid #5c2626; color:#fca5a5; font-size:11.5px; padding:8px 12px; margin-top:6px; border-radius:8px; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Monday, September 21, 2026 &middot; 4 clients &middot; Tim 8:15 AM &middot; Anuj 9:00 AM &middot; Nam 10:30 AM &middot; Jasmine 12:30 PM</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Sep 20 &middot; Tim, Anuj &amp; Nam condensed track (routine package scans, no close) &middot; Jasmine milestone track (second scan, conversion moment &mdash; duo appointment with husband Jeff, scan only, not a coaching member &mdash; Slack post to Joshua Lee drafted with blank confidence placeholders, Daniel not present for this automated run)</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Tim Bevins</h2>
+      <div class="meta">3rd Package Scan (5th DEXA) · Lean Mass Gain / BUILD · Male · 38 · routine checkpoint · no renewal, no close</div>
+    </div>
+    <div class="time-badge">8:15 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-tim" onclick="playAll('tim')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-tim" onclick="stopAll('tim')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-tim" href="assets/tim-full-brief.mp3" download="tim-brief-sep21.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-tim">
+    <div class="section" id="sec-tim-0" onclick="playSection('tim', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Tim Bevins, Monday at 8:15 in the morning, his third package scan, fifth DEXA overall. His goal is lean mass gain, build only, he is already at the 3rd percentile for body fat for his age, so there is nothing to cut here, and there has not been for a while.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tim-0">&#9654;</div>
+        <a class="dl-btn" id="dl-tim-0" title="Download" href="assets/tim-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tim-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-tim-1" onclick="playSection('tim', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">This one needs some care going in. He came back for two of the three sessions asked of him after a 22 day gap, Push A and Pull A, and PR'd the incline bench at 135 for 8, opening straight at the target weight with no ramp up. Then on the same evening he came back, Monday the 14th, he told you unprompted that his mom had a two day hospital stay, and that she is doing better. Two days later, Thursday's deadlift session went missed, and there has been no message from him either direction since Tuesday evening. That is almost certainly the mom situation, not disengagement, so open with warmth and ask how she is doing before anything about training.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tim-1">&#9654;</div>
+        <a class="dl-btn" id="dl-tim-1" title="Download" href="assets/tim-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tim-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-tim-2" onclick="playSection('tim', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training/Recovery Snapshot</div>
+        <div class="sec-text">Consistency sits at 22 percent over the last 30 days, 67 percent over the last 7. He is still pyramiding into his working weight on every main barbell lift instead of starting on it, Iris independently flags his training intensity as poor for the same reason. The food log is still completely empty, nothing since April. A schedule read he promised did arrive, but in a format that could not actually be used, so what you really have is his verbal commitment to three days a week from last Tuesday.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tim-2">&#9654;</div>
+        <a class="dl-btn" id="dl-tim-2" title="Download" href="assets/tim-03-training-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tim-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-tim-3" onclick="playSection('tim', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things for this block. First, and most important, check in on his mom before anything else, that context changes how tonight's conversation should feel. Second, get one more clean version of his schedule, the one that arrived was unusable. Third, keep pushing the set shape fix on his main lifts, beat sets one and two, back off on set three, it costs him nothing in load and it is the single highest value technical point in his file.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tim-3">&#9654;</div>
+        <a class="dl-btn" id="dl-tim-3" title="Download" href="assets/tim-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tim-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-tim-4" onclick="playSection('tim', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in: the underlying build is real, lean mass and ALMI have both moved the right direction over the year. What's live right now is a family situation that is almost certainly behind this week's missed session and his silence. Lead with warmth, not with the numbers, and let him tell you what's going on before you get into the scan.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-tim-4">&#9654;</div>
+        <a class="dl-btn" id="dl-tim-4" title="Download" href="assets/tim-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-tim-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-tim"></div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Anuj Chakarapani</h2>
+      <div class="meta">2nd Package Scan · Lean Mass Gain / ALMI · Male · 48 · routine checkpoint · no renewal, no close</div>
+    </div>
+    <div class="time-badge">9:00 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-anuj" onclick="playAll('anuj')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-anuj" onclick="stopAll('anuj')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-anuj" href="assets/anuj-full-brief.mp3" download="anuj-brief-sep21.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-anuj">
+    <div class="section" id="sec-anuj-0" onclick="playSection('anuj', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Anuj Chakarapani, Monday at 9 in the morning, his second package scan. Lean mass gain is the goal, this is build only, his body fat sits right at the average for his age so there is nothing to cut here.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anuj-0">&#9654;</div>
+        <a class="dl-btn" id="dl-anuj-0" title="Download" href="assets/anuj-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anuj-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-anuj-1" onclick="playSection('anuj', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Since the August 10th scan, and especially since last week, this has been a strong stretch. He crossed a real line on his own, on September 12th he did his first ever dumbbell split squat without being told to, after avoiding the pattern three separate times. Then this week he stacked 22 more personal bests on top of that, 14 on Tuesday and 8 on Friday. His seated row target was hit clean on Tuesday, three sets right where it was asked to be. The one place he is still stuck is chest press, capped at 70 pounds for 7 reps for the third time now, despite two direct asks to push it further. And the reflection question that was re-sent to him on Sunday was seen the same day but still has not been answered, same as a calf and knee question that has now gone unanswered three separate times.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anuj-1">&#9654;</div>
+        <a class="dl-btn" id="dl-anuj-1" title="Download" href="assets/anuj-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anuj-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-anuj-2" onclick="playSection('anuj', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training/Recovery Snapshot</div>
+        <div class="sec-text">Consistency sits at 77 percent over the last 30 days and 50 percent over the last 7, holding steady from last week, though a second Friday session went fully missed. Nothing is logged or scheduled for tonight, phase 3 of his program actually starts on scan day itself. Worth knowing before you open with it, Iris is currently surfacing an old win about zero missed sessions that is not true anymore, that is a stale quote from the August scan note, not today's picture.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anuj-2">&#9654;</div>
+        <a class="dl-btn" id="dl-anuj-2" title="Download" href="assets/anuj-03-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anuj-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-anuj-3" onclick="playSection('anuj', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things for this block. First, get an answer on the calf and knee out loud in the room, three written asks have gone nowhere and he is now loading split squats, so this needs to land today. Second, the dumbbell split squat load is too heavy, 45 pounds for 6 or 7 reps against a 12 rep prescription, so that comes down to 35 with a slower descent, the pattern stays, only the load changes. Third, push the chest press conversation past the stuck 70 for 7, he responds to being taught the mechanism rather than told what to do, so frame it that way.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anuj-3">&#9654;</div>
+        <a class="dl-btn" id="dl-anuj-3" title="Download" href="assets/anuj-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anuj-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-anuj-4" onclick="playSection('anuj', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in: he is doing the hard things without being asked, the split squat and the personal bests prove that. The open items are all small and fixable: the calf question, the split squat load, and one stubborn number on chest press. Nothing here is a step backward, it is a strong week that just needs a few loose ends tied off in the room.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-anuj-4">&#9654;</div>
+        <a class="dl-btn" id="dl-anuj-4" title="Download" href="assets/anuj-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-anuj-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-anuj"></div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Nam Thi</h2>
+      <div class="meta">2nd Package Scan (3rd DEXA) · Fat Loss · Male · 41 · routine checkpoint · no renewal, no close</div>
+    </div>
+    <div class="time-badge">10:30 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-nam" onclick="playAll('nam')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-nam" onclick="stopAll('nam')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-nam" href="assets/nam-full-brief.mp3" download="nam-brief-sep21.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-nam">
+    <div class="section" id="sec-nam-0" onclick="playSection('nam', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Nam Thi, Monday at 10:30 in the morning, his second package scan, third DEXA overall. His stated goal is fat loss, read off his numbers, since his muscle base is already solid. Body fat sits at the 48th percentile for his age, so there is genuinely fat to lose, and his ALMI at the 63rd percentile has held flat, so the muscle side is not the constraint.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-nam-0">&#9654;</div>
+        <a class="dl-btn" id="dl-nam-0" title="Download" href="assets/nam-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-nam-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-nam-1" onclick="playSection('nam', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">This has been a strong three weeks followed by a rough one. Training held at 100 percent for three straight weeks after the last scan, then broke on Wednesday the 16th, and nothing has been logged since, six days now including today, right through his trip to San Diego. Protein followed the exact same arc. It was corrected nicely by mid September, 196 and 195 grams against the 200 gram target, then during the trip it cratered to 117, 110, and 56 grams on the worst day. He is still logging every single day in the Macros Journal though, even through travel, so this is a compliance gap during a trip, not him going dark on tracking. Steps are the one clean bright spot, averaging just over 5000 a day now, well past the 3500 target. He also answered an unprompted check-in question the same morning it was sent, volunteering that the calorie drop has not hurt his lifts so far.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-nam-1">&#9654;</div>
+        <a class="dl-btn" id="dl-nam-1" title="Download" href="assets/nam-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-nam-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-nam-2" onclick="playSection('nam', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training/Recovery Snapshot</div>
+        <div class="sec-text">Consistency is 86 percent over the last 30 days, down from 93 last week, and only 33 percent over the last 7. The barbell pressing switch that was supposed to reach his third weekly session never got there, so that's still sitting half finished. Left knee continues to limit unilateral work and the left side still lags the right, which is exactly why the October assessment on the calendar matters.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-nam-2">&#9654;</div>
+        <a class="dl-btn" id="dl-nam-2" title="Download" href="assets/nam-03-training-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-nam-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-nam-3" onclick="playSection('nam', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things for this block. First, name the training gap and the protein dip honestly and early, he already knows it happened, and he has been straight about logging through it rather than hiding it. Second, finish the barbell pressing switch on his third session, it has been sitting half done for over a week. Third, use the October in-person assessment to actually address the left side lag rather than letting it drift.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-nam-3">&#9654;</div>
+        <a class="dl-btn" id="dl-nam-3" title="Download" href="assets/nam-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-nam-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-nam-4" onclick="playSection('nam', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in: three good weeks got interrupted by a trip, not by a change in effort or honesty, he kept logging the whole time. That is worth saying to him directly. The plan for this block is simple, get back to the routine that was already working, and close out the pressing switch that never got finished.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-nam-4">&#9654;</div>
+        <a class="dl-btn" id="dl-nam-4" title="Download" href="assets/nam-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-nam-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-nam"></div>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Jasmine Pitman</h2>
+      <div class="meta">Lean Mass Gain · Female · 48 · Second Scan · Duo with husband Jeff (scan only, not a member) · CONVERSION MOMENT, 4-week closes here</div>
+    </div>
+    <div class="time-badge">12:30 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-jasmine" onclick="playAll('jasmine')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-jasmine" onclick="stopAll('jasmine')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-jasmine" href="assets/jasmine-full-brief.mp3" download="jasmine-brief-sep21.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-jasmine">
+    <div class="section" id="sec-jasmine-0" onclick="playSection('jasmine', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Jasmine Pitman, 48, second scan, Monday at 12:30 in the afternoon. This is a duo appointment, her husband Jeff scans alongside her, though he is scan only and not a coaching member. Her stated goal is lean mass gain, and the four week block that started on August 24th ends today, scan day itself.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jasmine-0">&#9654;</div>
+        <a class="dl-btn" id="dl-jasmine-0" title="Download" href="assets/jasmine-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jasmine-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-jasmine-1" onclick="playSection('jasmine', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Lead with what she pulled off on almost no training. Between August 9th and August 24th, fat mass dropped from 43.7 to 41.7 pounds and body fat went from 35.2 to 34 percent, while lean mass actually held, 75.9 up to 76.3. That happened around an anniversary getaway with zero logged workouts, purely from tighter intake. The one session she did complete, August 25th, was a genuinely good one, every set finished, personal bests on three separate lifts. And she solved her own equipment problem in the room without being pushed, her home dumbbells were too light, and offered a choice between buying heavier ones or joining a gym, she picked the gym on the spot.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jasmine-1">&#9654;</div>
+        <a class="dl-btn" id="dl-jasmine-1" title="Download" href="assets/jasmine-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jasmine-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-jasmine-2" onclick="playSection('jasmine', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In Their Own Words</div>
+        <div class="sec-text">She has never replied in the Kaylos app thread, not once, and her ten day check in on September 15th has no transcript and no notes anywhere, so there is no evidence that call even happened. Both reflection questions, what she noticed and where she sees herself in six to twelve months, went out September 14th and sit unseen six days later. So everything you have from her own mouth is still from the August 24th room. The line worth carrying in is this one, unprompted: hopefully, when I see progress, I can get Jeff to do it. That is her second motive, being the proof that gets her husband moving, and it costs nothing to use it today with him sitting right there.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jasmine-2">&#9654;</div>
+        <a class="dl-btn" id="dl-jasmine-2" title="Download" href="assets/jasmine-03-own-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jasmine-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-jasmine-3" onclick="playSection('jasmine', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">The biggest concern is the training gap itself, and it is wider than it looked a week ago. One completed session in the entire block, and every single session assigned since has gone missed, seven for seven. Both lift targets that were sent for the week before the scan were never tested. On top of that, the ten day check in that should have refreshed the picture never happened, or at least never got logged, so you are walking in with the same information you had four weeks ago. Do not lead with any of this out loud, it is already in writing in her messages, repeating it in the room just turns a coaching point into a scolding.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jasmine-3">&#9654;</div>
+        <a class="dl-btn" id="dl-jasmine-3" title="Download" href="assets/jasmine-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jasmine-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-jasmine-4" onclick="playSection('jasmine', 4)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">No injury issues currently active. She had some wrist pain earlier that stopped planks and pushups, but that has resolved. Kit and access are not the blocker, she has a gym membership for barbell and dumbbell work now instead of the underpowered home dumbbells. The programme itself is a twice weekly full body split. The honest near term target is not a number on a lift, it is simply two logged sessions a week for four straight weeks, something she has not yet done once.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jasmine-4">&#9654;</div>
+        <a class="dl-btn" id="dl-jasmine-4" title="Download" href="assets/jasmine-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jasmine-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-jasmine-5" onclick="playSection('jasmine', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">The blocker she has named herself, twice now, is work. She called it really brutal back at the baseline call, and she had not been inside a gym for four to five months before she started with us. Nothing about sleep or extra activity load has come up as a separate issue, work stress is the whole story here. Any plan for the next block that assumes a clean, uninterrupted week is going to fail the exact same way this one did.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jasmine-5">&#9654;</div>
+        <a class="dl-btn" id="dl-jasmine-5" title="Download" href="assets/jasmine-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jasmine-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-jasmine-6" onclick="playSection('jasmine', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No sensitive flags on this one, no eating disorder history, no anxiety notes, nothing clinical to navigate. What the file does show is a strong preference for showing rather than telling, she solves problems in the room and then goes quiet outside of it. She has never once initiated a message. So treat digital silence as her normal, not as a red flag on its own, and get the important conversations done live, because that is clearly where she actually engages.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jasmine-6">&#9654;</div>
+        <a class="dl-btn" id="dl-jasmine-6" title="Download" href="assets/jasmine-07-coaching-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jasmine-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-jasmine-7" onclick="playSection('jasmine', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">For the next block, three things matter. First, rebuild from two sessions a week, nothing more ambitious, because zero logged workouts a week is the actual competitor here, not a specific number of sets. Second, land the shake problem, she does not like the taste of plain shakes, and blending in pineapple or banana fixes the taste and delivers her training carbs in the same move. Third, get a real answer to the six to twelve month question live in the room, since it has never landed digitally and it is exactly what should anchor the next twelve months, especially with Jeff sitting there as a second reason to keep going.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jasmine-7">&#9654;</div>
+        <a class="dl-btn" id="dl-jasmine-7" title="Download" href="assets/jasmine-08-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jasmine-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-jasmine-8" onclick="playSection('jasmine', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in: nutrition alone produced a real, if small, recomposition with zero training, so the case for the next block writes itself, the muscle side has simply not been attempted yet. She is leaner than most of her peers at her age, so there is no case for a cut. The block ends today, so this conversation is also a renewal conversation, and Jeff being in the room is the strongest lever available. Ask both reflection questions live, do not assume they were seen, and build the next plan around a week that can survive a brutal work schedule, because that is the actual test.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jasmine-8">&#9654;</div>
+        <a class="dl-btn" id="dl-jasmine-8" title="Download" href="assets/jasmine-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jasmine-8"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-jasmine"></div>
+</div>
+
+<script>
+const files = {
+  'tim': [
+    'assets/tim-01-intro.wav',
+    'assets/tim-02-wins-coaching.wav',
+    'assets/tim-03-training-recovery.wav',
+    'assets/tim-04-focus.wav',
+    'assets/tim-05-closing.wav'
+  ],
+  'anuj': [
+    'assets/anuj-01-intro.wav',
+    'assets/anuj-02-wins.wav',
+    'assets/anuj-03-training.wav',
+    'assets/anuj-04-focus.wav',
+    'assets/anuj-05-closing.wav'
+  ],
+  'nam': [
+    'assets/nam-01-intro.wav',
+    'assets/nam-02-wins-coaching.wav',
+    'assets/nam-03-training-recovery.wav',
+    'assets/nam-04-focus.wav',
+    'assets/nam-05-closing.wav'
+  ],
+  'jasmine': [
+    'assets/jasmine-01-intro.wav',
+    'assets/jasmine-02-wins.wav',
+    'assets/jasmine-03-own-words.wav',
+    'assets/jasmine-04-concern.wav',
+    'assets/jasmine-05-training.wav',
+    'assets/jasmine-06-recovery.wav',
+    'assets/jasmine-07-coaching-frame.wav',
+    'assets/jasmine-08-priorities.wav',
+    'assets/jasmine-09-closing.wav'
+  ]
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '►';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
