@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing - Sep 23, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+  .flag-note { background:#2a1414; border:1px solid #5c2626; color:#fca5a5; font-size:11.5px; padding:8px 12px; margin-top:6px; border-radius:8px; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Wednesday, September 23, 2026 &middot; 3 clients &middot; Daniel N 8:15 AM &middot; Andrea 9:00 AM &middot; Yue 2:00 PM</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Sep 22 &middot; Daniel Nguyen &amp; Andrea Lewis condensed track (routine package scans, no close) &middot; Yue Min Wong milestone track (second scan, conversion moment &mdash; renewal closes in the room, Slack post to Joshua Lee drafted with blank confidence placeholders, Daniel not present for this automated run)</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Daniel Nguyen</h2>
+      <div class="meta">4th Package Scan (6th DEXA) &middot; Recomp / Fat Loss Phase &middot; Male &middot; 23 &middot; routine checkpoint &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">8:15 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-danielnguyen" onclick="playAll('danielnguyen')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-danielnguyen" onclick="stopAll('danielnguyen')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-danielnguyen" href="assets/danielnguyen-full-brief.mp3" download="danielnguyen-brief-sep23.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-danielnguyen">
+    <div class="section" id="sec-danielnguyen-0" onclick="playSection('danielnguyen', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Daniel Nguyen, Wednesday at 8:15 in the morning, his fourth package scan, sixth DEXA overall. He's in a fat loss phase on the way to a longer recomp arc, body fat is the 67th percentile for his age so there's genuinely fat to lose, and ALMI at the 52nd percentile has climbed all year, so the muscle side is protected.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-danielnguyen-0">&#9654;</div>
+        <a class="dl-btn" id="dl-danielnguyen-0" title="Download" href="assets/danielnguyen-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-danielnguyen-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-danielnguyen-1" onclick="playSection('danielnguyen', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Seventeen of seventeen assigned sessions in the last 30 days, effectively perfect, two just landed a day late rather than missed, and Iris's "missed 2 workouts" flag is wrong. Scale down 5.1 pounds since the Aug 24 scan while lean mass holds. Chest press hit its target exactly with a PR. He took the autonomy he was given on Sep 8 and used it well on his Sep 12 arms day. One food-photo day of the two promised has landed, the second is still outstanding, and that's the honest gap tonight, not a failure.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-danielnguyen-1">&#9654;</div>
+        <a class="dl-btn" id="dl-danielnguyen-1" title="Download" href="assets/danielnguyen-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-danielnguyen-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-danielnguyen-2" onclick="playSection('danielnguyen', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training Snapshot</div>
+        <div class="sec-text">Leg press landed at 335 for 9, short of the 350 ask, but he flagged it himself, the machine's maxed out, that's an equipment ceiling not a compliance miss. Pull up went 16 then 7, a personal best on set one and just one short on set two. Two identical sets keep showing up on the squat and the barbell curl, meaning set one is consistently too light. His stated long-term goal of a 405 deadlift is 98 percent of the gold standard for his size, and nothing in the current program trains a pull from the floor.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-danielnguyen-2">&#9654;</div>
+        <a class="dl-btn" id="dl-danielnguyen-2" title="Download" href="assets/danielnguyen-03-training-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-danielnguyen-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-danielnguyen-3" onclick="playSection('danielnguyen', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things for this block. First, get the second day of food photos in the room, it's the one piece of the Sep 8 agreement still unverified, and it's the only thing standing between "I don't think I can hit 201 grams" and an actual answer. Second, name the deadlift gap, suggest a trap bar or conventional pull for the hinge slot in P2 starting Sep 28, as a variable to offer, not a change to assert, he responds to autonomy. Third, sharpen the why, "shredded 12 percent and a 405 deadlift" is a good picture with no date on it yet.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-danielnguyen-3">&#9654;</div>
+        <a class="dl-btn" id="dl-danielnguyen-3" title="Download" href="assets/danielnguyen-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-danielnguyen-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-danielnguyen-4" onclick="playSection('danielnguyen', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in: this is the best adherence number on the board right now, and the scale is moving at exactly the pace you called the sweet spot. Nothing here is a problem to solve, just two loose ends, one food log day and a deadlift conversation, to tie off in the room.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-danielnguyen-4">&#9654;</div>
+        <a class="dl-btn" id="dl-danielnguyen-4" title="Download" href="assets/danielnguyen-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-danielnguyen-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-danielnguyen"></div>
+</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Andrea Lewis</h2>
+      <div class="meta">4th Package Scan (6th DEXA) &middot; Fat Loss / First Pull Up &middot; Female &middot; routine checkpoint &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">9:00 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-andrea" onclick="playAll('andrea')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-andrea" onclick="stopAll('andrea')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-andrea" href="assets/andrea-full-brief.mp3" download="andrea-brief-sep23.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-andrea">
+    <div class="section" id="sec-andrea-0" onclick="playSection('andrea', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Andrea Lewis, Wednesday at 9 in the morning, her fourth package scan, sixth DEXA overall. Fat loss while preserving strength is the goal, building toward her first unassisted pull up is the standing focus everyone's watching.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrea-0">&#9654;</div>
+        <a class="dl-btn" id="dl-andrea-0" title="Download" href="assets/andrea-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-andrea-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-andrea-1" onclick="playSection('andrea', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Consistency is fresh at 95 percent over the last 30 days, 100 percent in September. Both remaining pre-scan sessions already landed with 20 combined personal bests between them: squat and RDL both cleared target on Sunday, chest press and lat pulldown both moved well this morning. Her pull-up assistance dropped again, 80 and 60 pounds now, down from 70, real progress on the five-year goal. And the week-out opener, lift targets and reflection question that the board said were never sent actually went out Sep 16 at 6:54 in the morning and were seen the same day, that was a stale board, not a real gap.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrea-1">&#9654;</div>
+        <a class="dl-btn" id="dl-andrea-1" title="Download" href="assets/andrea-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-andrea-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-andrea-2" onclick="playSection('andrea', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training Snapshot</div>
+        <div class="sec-text">Iris's own intensity flag confirms what's been a long-standing coaching point by the numbers now, load's been added to later sets in 62 of her last 68 workouts, the pyramiding habit is well documented, not a hunch. Incline bench added load Sunday but only held 6 reps against an 8 rep ask, worth a look. The macro calculator fix, missing rest day, fats up slightly, is still unconfirmed by her, and the visceral fat strategy still hasn't gone out.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrea-2">&#9654;</div>
+        <a class="dl-btn" id="dl-andrea-2" title="Download" href="assets/andrea-03-training-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-andrea-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-andrea-3" onclick="playSection('andrea', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things for this block. First, open with the twenty personal bests and the pull-up assistance drop, she's earned it. Second, name the pyramiding pattern directly now that Iris's own numbers back it up, beat sets one and two, back off on three. Third, decide whether the visceral fat strategy is worth sending this scan, and confirm the macro calculator fix with her live in the room.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrea-3">&#9654;</div>
+        <a class="dl-btn" id="dl-andrea-3" title="Download" href="assets/andrea-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-andrea-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-andrea-4" onclick="playSection('andrea', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in: this is one of the strongest consistency stretches in her file, twenty personal bests in the two sessions right before the scan and real movement on the first-pull-up goal. The open items are small, the pyramiding pattern and two unconfirmed sends, nothing here is a step backward.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-andrea-4">&#9654;</div>
+        <a class="dl-btn" id="dl-andrea-4" title="Download" href="assets/andrea-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-andrea-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-andrea"></div>
+</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Yue Min Wong</h2>
+      <div class="meta">Lean Mass / ALMI &middot; Male &middot; 77 &middot; Second Scan &middot; CONVERSION MOMENT, 4-week closes here</div>
+    </div>
+    <div class="time-badge">2:00 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-yue" onclick="playAll('yue')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-yue" onclick="stopAll('yue')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-yue" href="assets/yue-full-brief.mp3" download="yue-brief-sep23.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-yue">
+    <div class="section" id="sec-yue-0" onclick="playSection('yue', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Yue Min Wong, 77, second scan, Wednesday at 2 in the afternoon. Lean mass gain is the goal, read straight off his ALMI, fourth percentile, the number that made him buy in in the first place. His four week block ends the same day he walks in.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yue-0">&#9654;</div>
+        <a class="dl-btn" id="dl-yue-0" title="Download" href="assets/yue-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yue-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-yue-1" onclick="playSection('yue', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Eleven of twelve sessions in the last 30 days at 77, on top of tennis three days a week, updated through tonight's final pre-scan session. Lat pulldown is genuinely solved, he's at 75 for 12, 11, 8 tonight, beating the 72.5 target that was set for him. He implemented the carb-timing change the same week he was told about it, and logged exactly the two food-journal days that were asked of him, no more, no less.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yue-1">&#9654;</div>
+        <a class="dl-btn" id="dl-yue-1" title="Download" href="assets/yue-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yue-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-yue-2" onclick="playSection('yue', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In Their Own Words</div>
+        <div class="sec-text">He's not a thread replier, four short messages in a month, so his silence means less than it would from most members, he talks through his food journal and on calls instead. Both reflection questions went out Sep 16 and are seen, unanswered, ask them out loud in the room before a single number goes on the screen. The line worth carrying in: "I like to keep moving," that's the whole why in five words.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yue-2">&#9654;</div>
+        <a class="dl-btn" id="dl-yue-2" title="Download" href="assets/yue-03-own-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yue-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-yue-3" onclick="playSection('yue', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">A left hip tweak he flagged in a workout comment over a week ago never got followed up on. His Romanian deadlift went missed twice since, then came back tonight at 60 pounds, well under the 75 pound target and lighter than a month ago. Ask about the hip directly before touching that weight again. Separately, the shoulder press took the correction cleanly on the 17th, then lost it again tonight at the same load, worth a check-in rather than repeating last week's line.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yue-3">&#9654;</div>
+        <a class="dl-btn" id="dl-yue-3" title="Download" href="assets/yue-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yue-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-yue-4" onclick="playSection('yue', 4)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Movement</div>
+        <div class="sec-text">Shoulder and knee arthritis, right-hand weakness limiting pressing, and a 25 percent right-to-left arm imbalance raise the injury risk on overhead work. The equipment note on file is overstated and worth correcting on the spot, he's using leg press, lat pulldown, chest press and cables every week, not just dumbbells and bodyweight, and P2 is built on that equipment.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yue-4">&#9654;</div>
+        <a class="dl-btn" id="dl-yue-4" title="Download" href="assets/yue-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yue-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-yue-5" onclick="playSection('yue', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Sleep is his own instrument, he reads deep sleep off his watch and adjusts training load from it himself, that's the lever that gets him to change behavior. The one session he missed this block he pulled himself, after back soreness and a low deep-sleep reading, that's self-regulation, not a lapse, and it's worth naming as good judgment in the room.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yue-5">&#9654;</div>
+        <a class="dl-btn" id="dl-yue-5" title="Download" href="assets/yue-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yue-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-yue-6" onclick="playSection('yue', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">He responds to reasons, not directives, the cortisol and recovery explanation is what got the carb change to actually stick. Data-driven and asks why. Family-style Chinese meals, low appetite is his real nutrition constraint, which is why the shakes matter most on non-training days. He turned 77 three days after his baseline scan.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yue-6">&#9654;</div>
+        <a class="dl-btn" id="dl-yue-6" title="Download" href="assets/yue-07-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yue-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-yue-7" onclick="playSection('yue', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Three things for this block. First, ask about the hip and check in on the shoulder press, don't assume either is settled. Second, get both reflection questions answered live, especially the six-to-twelve-month one, which has never been put to him before, his answer is the most valuable thing to leave the room with. Third, the renewal is live, build the offer on his own answer and on the arithmetic he'll do for himself about how much muscle he can still add at 77.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yue-7">&#9654;</div>
+        <a class="dl-btn" id="dl-yue-7" title="Download" href="assets/yue-08-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yue-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-yue-8" onclick="playSection('yue', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in: the training and the lat pulldown are the strongest cards in the deck, open there. Visceral fat rising, the hip flag and the shoulder regression are the honest second story, all real but all manageable inside the room. The 4-week ends today, so this is a close, and the honest pitch is time, not urgency.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-yue-8">&#9654;</div>
+        <a class="dl-btn" id="dl-yue-8" title="Download" href="assets/yue-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-yue-8"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-yue"></div>
+</div>
+
+<script>
+const files = {
+  'danielnguyen': [
+    'assets/danielnguyen-01-intro.wav',
+    'assets/danielnguyen-02-wins-coaching.wav',
+    'assets/danielnguyen-03-training-snapshot.wav',
+    'assets/danielnguyen-04-focus.wav',
+    'assets/danielnguyen-05-closing.wav'
+  ],
+  'andrea': [
+    'assets/andrea-01-intro.wav',
+    'assets/andrea-02-wins-coaching.wav',
+    'assets/andrea-03-training-snapshot.wav',
+    'assets/andrea-04-focus.wav',
+    'assets/andrea-05-closing.wav'
+  ],
+  'yue': [
+    'assets/yue-01-intro.wav',
+    'assets/yue-02-wins.wav',
+    'assets/yue-03-own-words.wav',
+    'assets/yue-04-concern.wav',
+    'assets/yue-05-training.wav',
+    'assets/yue-06-recovery.wav',
+    'assets/yue-07-frame.wav',
+    'assets/yue-08-priorities.wav',
+    'assets/yue-09-closing.wav'
+  ]
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '►';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
