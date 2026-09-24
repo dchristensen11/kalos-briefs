@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing - Sep 24, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+  .flag-note { background:#2a1414; border:1px solid #5c2626; color:#fca5a5; font-size:11.5px; padding:8px 12px; margin-top:6px; border-radius:8px; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Thursday, September 24, 2026 &middot; 3 clients &middot; Ron 8:15 AM &middot; Ryan 9:00 AM &middot; Denise 9:45 AM</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Sep 23 &middot; all three condensed track (routine package scans, no close, no Slack post) &middot; built from reads at 8:13 to 8:43 PM, Wednesday</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Ron Zraick</h2>
+      <div class="meta">3rd Package Scan (4th DEXA) &middot; Lean Mass Gain, hold the lean while visceral fat comes down &middot; Male &middot; 67 &middot; routine checkpoint &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">8:15 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-ron" onclick="playAll('ron')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-ron" onclick="stopAll('ron')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-ron" href="assets/ron-full-brief.mp3" download="ron-brief-sep24.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-ron">
+    <div class="section" id="sec-ron-0" onclick="playSection('ron', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Ron Zraick, Thursday at 8:15 in the morning, his third package scan, fourth DEXA overall. He&#x27;s 67, on the six month Core program through December 18, so this is a routine checkpoint with no renewal and no close. The goal is lean mass gain, and the live job is holding the lean he has built while the visceral fat comes down. Baseline is the August 27 scan, so this is a 28 day window. Safety first: stage 3 kidney disease with one kidney, protein held at about 100 grams and never raised, no creatine, and celiac, so strictly gluten free.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-ron-0">&#9654;</div>
+        <a class="dl-btn" id="dl-ron-0" title="Download" href="assets/ron-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-ron-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-ron-1" onclick="playSection('ron', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Two anchors. The last scan was August 27. The last check-in was the September 9 midpoint call. Since the scan, everything you agreed in the room went out on our side: the new Functional Strength block on August 31, lighter loads on the moves the elbow and shoulder dislike, an easy cardio finisher, the visceral fat protocol as a message and an email, and the kidney supplement links. His one finished strength session was September 1, fifty two minutes, thirteen personal bests. Since the September 9 call, everything promised was delivered too. Session notes on the tenth, the ranch week sessions removed, and the October 8 in person assessment at 11:15 is confirmed on the calendar. Now the honest part. None of the four lifts planned since that call got logged. September 10, 12, 19 and 22 all show missed as of eight thirty Wednesday evening. His last message to us was September 2. The four messages we sent September 17 are all still unseen, including the what have you noticed question, so ask it in the room. And do not repeat the line that training has been the best it&#x27;s been. He corrected that in August, he had a back injury.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-ron-1">&#9654;</div>
+        <a class="dl-btn" id="dl-ron-1" title="Download" href="assets/ron-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-ron-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-ron-2" onclick="playSection('ron', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">Consistency is 17 percent over thirty days and nothing in the last seven. His last strength session was September 1, and the last session of any kind was a ten minute stretch on September 2. Read that as illness through the first week of September and then a gym free dude ranch, not drift, and two of those sessions were removed by us. The mid back pain running down the leg is the one to ask about, along with the left leg numbness and the elbow and shoulder irritation. Iris raised a red intensity flag, load creeping up on the later sets in fifteen of eighteen workouts, which matches what happened on September 1. The two day food photo task for September 22 and 23 was assigned and not done. The photo journal has nothing since June 29, and the macros journal is empty.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-ron-2">&#9654;</div>
+        <a class="dl-btn" id="dl-ron-2" title="Download" href="assets/ron-03-training-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-ron-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-ron-3" onclick="playSection('ron', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Open on the muscle. ALMI went from the 33rd to the 37th percentile, and lean mass from 112.7 to 114.6 pounds in four weeks, all of it on about 100 grams of protein because that is what his kidney allows. Nobody has said that sentence to him yet. Set the window before the numbers land: he did one strength session in this block, so do not let the 17 percent lead. Then face the visceral fat. It has gone up at every scan, 150, then 156, then 167. Tie it to the kidney, not the waistline, ask which two Gut Fire items he actually kept, and whether the fasted morning walk ever became a habit. Protein does not move, say so before he asks. Point at October 8 for the back, the shoulder and the elbow. Leave out calorie targets, Gold Standard multipliers, bone density, and any renewal talk.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-ron-3">&#9654;</div>
+        <a class="dl-btn" id="dl-ron-3" title="Download" href="assets/ron-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-ron-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-ron-4" onclick="playSection('ron', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Real muscle on a capped protein intake, visceral fat is the honest problem, and he is walking in after three weeks off the floor, so keep it kind and specific. Ask the noticed question, tie the fat to the kidney, and confirm October 8. No close, and no Slack post.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-ron-4">&#9654;</div>
+        <a class="dl-btn" id="dl-ron-4" title="Download" href="assets/ron-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-ron-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-ron"></div>
+</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Ryan Young</h2>
+      <div class="meta">2nd Package Scan (4th DEXA) &middot; Lean Mass Gain / Explosiveness &middot; Male &middot; 29 &middot; routine checkpoint &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">9:00 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-ryan" onclick="playAll('ryan')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-ryan" onclick="stopAll('ryan')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-ryan" href="assets/ryan-full-brief.mp3" download="ryan-brief-sep24.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-ryan">
+    <div class="section" id="sec-ryan-0" onclick="playSection('ryan', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Ryan Young, Thursday at 9:00 in the morning, his second package scan, fourth DEXA overall. He&#x27;s 29, a twelve month Lite member through May 28, 2027, so this is a routine checkpoint with no renewal and no close. The goal is lean mass gain with explosiveness for volleyball and basketball, and the arc is build only, because body fat is the 10th percentile for his age and there is nothing to cut. Baseline is the July 23 scan, a 63 day window.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-ryan-0">&#9654;</div>
+        <a class="dl-btn" id="dl-ryan-0" title="Download" href="assets/ryan-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-ryan-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-ryan-1" onclick="playSection('ryan', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Two anchors. The last scan was July 23. The last check-in was the August 19 midpoint call, then message blocks on August 25 and September 17. Wins first. Fourteen of fourteen assigned sessions from August 24 to September 23, none missed, a hundred percent over thirty days and over seven. He trained Friday the 18th, Monday the 21st, and Wednesday the 23rd, that last one Wednesday evening from 6:38 to 8:05. Trap bar deadlift went 315, then 337, then 355. Push ups went from 21, 24, 26 up to 30, 30, 31. He delivered the two day food photos, six meals. And he answered the what have you noticed question on September 18. He has not noticed his jump change and puts it down to the level of his team, but several shirts got too tight at the shoulders and he had to rip them open a bit. Lead with the shoulders. Flags. Weight is flat, 157.4 on September 22 against a 158.3 average the week of August 24, though Everfit&#x27;s four week panel reads plus 1.8 percent. New, a workout comment on the 21st says his knees felt unstable, and he skipped the jogs and sprints. The app glitch was already answered, so nothing is owed.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-ryan-1">&#9654;</div>
+        <a class="dl-btn" id="dl-ryan-1" title="Download" href="assets/ryan-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-ryan-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-ryan-2" onclick="playSection('ryan', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">Consistency is 100 percent, and his sessions land Monday, Wednesday and Friday evenings, which matches his real schedule. Nothing is assigned on Thursday, and Friday the 25th, P4 C, is. Against the September 17 asks, what he logged: trap bar 355 for five on all three sets, still three flat sets. Squat came in at 155 and 135, not the 185 asked. Push press stayed at 70. Weighted chin up went 20 for 8, 8, 7, anchored lower than the 30 asked. No reason is recorded for any of it, so ask, and do not call it a miss. His program runs to September 26 and Iris flags it as ending, so the next block gets built in the room.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-ryan-2">&#9654;</div>
+        <a class="dl-btn" id="dl-ryan-2" title="Download" href="assets/ryan-03-training-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-ryan-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-ryan-3" onclick="playSection('ryan', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Open on fourteen of fourteen, before any number. Then ALMI, 51st to 55th percentile, and say the body fat percentile out loud, because it is good news. Handle the scale deliberately, since weight has to head up for the goal to hold. Ask what a normal eating day looks like before prescribing anything, and no calorie target. Ask about the knees, name the variable, jump count, landing volume or sport load, and never drop the jump work. Give him credit on the jumps, every set since August has been three to five reps. Offer beat it on sets one and two, back off on three, as a suggestion, not an order. Consider the seated box jump into triple jump you named on August 19. Leave bone density out.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-ryan-3">&#9654;</div>
+        <a class="dl-btn" id="dl-ryan-3" title="Download" href="assets/ryan-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-ryan-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-ryan-4" onclick="playSection('ryan', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Perfect execution, lifts climbing, shoulders filling his shirts, weight flat, and a new knee comment to ask about. Build the next block in the room. No renewal, no close, no Slack post.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-ryan-4">&#9654;</div>
+        <a class="dl-btn" id="dl-ryan-4" title="Download" href="assets/ryan-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-ryan-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-ryan"></div>
+</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Denise Renteria</h2>
+      <div class="meta">2nd Package Scan (3rd DEXA) &middot; Recomp / ALMI &amp; Visceral &middot; Female &middot; 55 &middot; routine checkpoint &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">9:45 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-denise" onclick="playAll('denise')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-denise" onclick="stopAll('denise')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-denise" href="assets/denise-full-brief.mp3" download="denise-brief-sep24.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-denise">
+    <div class="section" id="sec-denise-0" onclick="playSection('denise', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Denise Renteria, Thursday at 9:45 in the morning, her second package scan, third DEXA. She&#x27;s 55, on the six month Core program through January 23, 2027, so this is a routine checkpoint with no renewal and no close. The goal is recomp, build then lean out. Baseline is the August 27 scan, a 28 day window. Body fat reads 32 percent, but that is the 7th percentile for her age, so say the percentile first.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-denise-0">&#9654;</div>
+        <a class="dl-btn" id="dl-denise-0" title="Download" href="assets/denise-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-denise-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-denise-1" onclick="playSection('denise', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Two anchors. The last scan was August 27. The last check-in was the September 10 midpoint call. Wins first. Eight of eight sessions since August 27, a hundred percent over thirty days and over seven, four of them since the call. On September 16 she flipped her squat loading in one session, 115, 115, 105, 105, first time of asking. On Saturday the 19th she ran the pull up negatives for the first time in her program, 5, 3 and 2 reps, and on Monday the 21st she set seven personal bests. Everything promised on the call was delivered. Flags. The five messages we sent September 17, ending at 6:53 that morning, were seen, and she has not replied. Her last message was September 15. Her answer to the same question on August 26 came within a day, so the silence is a light signal, so ask gently. Sleep was terrible as of September 15 and stress was high. Barbell bench went backwards on September 11, so ask about it. One more thing. Her older daughter has an eating disorder, from the August 11 call, and Iris no longer shows it, so keep every nutrition sentence about performance.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-denise-1">&#9654;</div>
+        <a class="dl-btn" id="dl-denise-1" title="Download" href="assets/denise-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-denise-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-denise-2" onclick="playSection('denise', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">Training is 100 percent, with nothing logged Tuesday or Wednesday. What she logged against the September 17 asks: lat pulldown at 70, not 85, a barbell incline instead of the dumbbell one, and Romanian deadlift at 120 for 9, 9, 9 instead of holding 115. Ask, do not judge. On nutrition, MyFitnessPal has not synced since September 14 and the photo journal has gaps, with the last entry September 21. That is logging cadence, never intake. Iris has a red flag, load rising on the later sets in sixteen of seventeen workouts, and the September 16 squat is its one great example.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-denise-2">&#9654;</div>
+        <a class="dl-btn" id="dl-denise-2" title="Download" href="assets/denise-03-training-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-denise-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-denise-3" onclick="playSection('denise', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Open on the September 16 squat, not on the scan. Then lead the numbers with ALMI, 41st to 43rd percentile, against the 60th named on the call, and give the body fat percentile before the raw number. Handle the clothes question head on. She said, I want my clothes to start fitting differently, and they&#x27;re not yet. Do not promise this scan fixes it, give her the timeline. Visceral fat went from 77.7 to 91.0 and she raised it herself, so have the framing ready before you open the file. Treat the vinegar as habit stacking. Ask about sleep, ask about the bench, and score the pull up negatives, asking for the slowest count and tying it to Spartan. Leave bone density out.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-denise-3">&#9654;</div>
+        <a class="dl-btn" id="dl-denise-3" title="Download" href="assets/denise-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-denise-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-denise-4" onclick="playSection('denise', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. She does what she is asked, the clothes still have not changed, visceral fat is the number to frame, and she has gone quiet since the 15th. Keep it gentle, performance framing only. No renewal, no close, no Slack post.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-denise-4">&#9654;</div>
+        <a class="dl-btn" id="dl-denise-4" title="Download" href="assets/denise-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-denise-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-denise"></div>
+</div>
+
+<script>
+const files = {
+  'ron': [
+    'assets/ron-01-intro.wav',
+    'assets/ron-02-wins-coaching.wav',
+    'assets/ron-03-training-snapshot.wav',
+    'assets/ron-04-focus.wav',
+    'assets/ron-05-closing.wav'
+  ],
+  'ryan': [
+    'assets/ryan-01-intro.wav',
+    'assets/ryan-02-wins-coaching.wav',
+    'assets/ryan-03-training-snapshot.wav',
+    'assets/ryan-04-focus.wav',
+    'assets/ryan-05-closing.wav'
+  ],
+  'denise': [
+    'assets/denise-01-intro.wav',
+    'assets/denise-02-wins-coaching.wav',
+    'assets/denise-03-training-snapshot.wav',
+    'assets/denise-04-focus.wav',
+    'assets/denise-05-closing.wav'
+  ]
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '►';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
