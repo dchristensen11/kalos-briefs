@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing - Oct 1, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+  .flag-note { background:#2a1414; border:1px solid #5c2626; color:#fca5a5; font-size:11.5px; padding:8px 12px; margin-top:6px; border-radius:8px; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Thursday, October 1, 2026 &middot; 3 appointments, 3 clients &middot; Doreen 9:00 AM &middot; Rigo 9:45 AM &middot; Valerie 10:30 AM</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Sep 30 &middot; Doreen and Rigo milestone track (first progress, no close), Valerie condensed (no renewal, no close)</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Doreen Cadieux</h2>
+      <div class="meta">1st Package Scan (2nd DEXA) &middot; Lean mass gain, build only &middot; F &middot; 56 &middot; milestone track, first progress &middot; no close</div>
+    </div>
+    <div class="time-badge">9:00 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-doreen" onclick="playAll('doreen')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-doreen" onclick="stopAll('doreen')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-doreen" href="assets/doreen-oct01-full-brief.mp3" download="doreen-brief-oct01.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-doreen">
+    <div class="section" id="sec-doreen-0" onclick="playSection('doreen', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Doreen Cadieux, fifty six years old, five foot six. Her second Kalos scan is Thursday, October first, at nine in the morning in Campbell. This is her first package scan, and her second DEXA overall, so it is her first real progress checkpoint since the August thirtieth baseline, thirty two days ago. The goal is lean mass gain, build only. Her ALMI sits at the thirty fourth percentile for her age, and that is the whole reason this block exists. This brief was pulled Wednesday evening, September thirtieth, so anything she logs after that is not in here.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-doreen-0">&#9654;</div>
+        <a class="dl-btn" id="dl-doreen-0" title="Download" href="assets/doreen-oct01-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-doreen-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-doreen-1" onclick="playSection('doreen', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Open on Sunday, September twenty seventh. She logged eighteen personal bests in one session, front squat, Romanian deadlift, goblet squat, split squat, step ups and glute bridge all hit new tops. Two days before that, on September twenty fifth, her own hardest lift finally broke through. Shoulder press hit forty for five, up from the thirty she had been stuck at for weeks. Bench moved past fifty the same day, fifty two point nine one for eight. She also chose the harder option herself. The ask was open the front squat at twelve or take the next dumbbell up, and she went straight to the next one, forty to fifty, and kept climbing into Sunday&#x27;s session. And she came back to the food journal the moment you asked, two photo entries on September twenty third with real captions about what she ate and what she skipped. She also keeps adapting instead of skipping. A hotel gym workaround in Hawaii, a forty five minute ocean swim, and in the UK she figured out how to convert the whole app to kilograms on her own.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-doreen-1">&#9654;</div>
+        <a class="dl-btn" id="dl-doreen-1" title="Download" href="assets/doreen-oct01-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-doreen-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-doreen-2" onclick="playSection('doreen', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In Their Own Words</div>
+        <div class="sec-text">She has never once answered a direct message. Fifteen of fifteen in the thread are yours. The what have you noticed question went out Tuesday, September twenty fourth, at one oh five in the afternoon, and there is no reply on record, so ask it out loud before any number lands. Ask about her sleeves and shoulders, how her clothes sit now, which hotel gym dumbbells she reaches for first. The six to twelve month question was never sent. She is mid contract on the six month core through February, so there was no renewal moment to hang it on. But her why is rated thin by Iris, just a one out of five, generic wording, so this scan is the chance to get one real sentence from her on the record. On the call she did say this much herself. I did increase the weight, I was pretty proud. That is the closest thing to a real why you have from her so far, so pull on it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-doreen-2">&#9654;</div>
+        <a class="dl-btn" id="dl-doreen-2" title="Download" href="assets/doreen-oct01-03-own-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-doreen-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-doreen-3" onclick="playSection('doreen', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">The practical limiter right now is equipment. Front squat and the Romanian deadlift are both sitting at fifty pounds, the top of her home dumbbells, so progress on those two has to come from reps and tempo until she gets access to something heavier. Bench and shoulder press just broke through their own ceilings this week, so this is narrower than it was a week ago, but it is still real. The other thing worth naming gently, not dwelling on, is that she missed Monday&#x27;s Full Body session, September twenty eighth, her first miss since the September fifteenth call. One missed session after four straight weeks of showing up is not a trend. Say it plainly and move on.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-doreen-3">&#9654;</div>
+        <a class="dl-btn" id="dl-doreen-3" title="Download" href="assets/doreen-oct01-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-doreen-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-doreen-4" onclick="playSection('doreen', 4)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training and Movement</div>
+        <div class="sec-text">No current injuries. Her knee, hip and shoulder pain all resolved after her weight loss, and she has no mobility limits on file. The one real coaching win worth repeating back to her is the shoulder press cue, scapular plane, elbows slightly forward. Once that was given, the lift stopped fading set to set and she broke through to forty for five. She responds to form education and autonomy, which is exactly what that cue was. Her set shapes elsewhere still show room, the single arm row in particular has the most headroom of anything in her program.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-doreen-4">&#9654;</div>
+        <a class="dl-btn" id="dl-doreen-4" title="Download" href="assets/doreen-oct01-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-doreen-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-doreen-5" onclick="playSection('doreen', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">There is no sleep or stress number on file for her, so do not guess one. What you do know is her total load. She travels essentially every week. Hawaii, then the UK, then a Dallas, Austin and Seattle trip back to back. She is on retatrutide, which blunts her appetite, and she is doing four and five a.m. calls on top of a sick father and her own kids. She is not skipping sessions through any of that, she is moving them and adapting the equipment, which is itself a sign the load is being managed, not ignored.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-doreen-5">&#9654;</div>
+        <a class="dl-btn" id="dl-doreen-5" title="Download" href="assets/doreen-oct01-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-doreen-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-doreen-6" onclick="playSection('doreen', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No sensitive clinical flags on her file. The personality read is simple. She does not write, she trains and she talks. Sixteen of sixteen thread messages are yours and she still shows up and lifts harder every week, so silence in the inbox is her normal, not disengagement. She talks at length on calls, so the room is where you actually get her words, not the thread. Lean into that: give her the instruction, let her execute it, and ask your questions live rather than waiting on a reply that is not coming.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-doreen-6">&#9654;</div>
+        <a class="dl-btn" id="dl-doreen-6" title="Download" href="assets/doreen-oct01-07-coaching-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-doreen-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-doreen-7" onclick="playSection('doreen', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things to set after the scan. First, have the equipment conversation directly. Name the variable, load, reps, tempo, a band, or a different lift entirely, and let her pick rather than deciding for her. Second, get one real sentence on her why, the joints that stopped hurting and the pride at adding weight are both sitting in the transcripts, pull one into the open. Third, close the loop on the elbows forward cue, ask her directly whether it changed how the press felt. Fourth, keep the appetite constraint in mind on anything nutrition, she dislikes shakes and sweeteners, so build around yogurt and cottage cheese rather than pushing shake volume.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-doreen-7">&#9654;</div>
+        <a class="dl-btn" id="dl-doreen-7" title="Download" href="assets/doreen-oct01-08-next-block.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-doreen-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-doreen-8" onclick="playSection('doreen', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Open on the eighteen personal bests from Sunday and the shoulder press breakthrough before a single number lands. Then consistency, with the travel attached, dipped to sixty seven percent after Monday&#x27;s miss but the trend underneath it is still up. Lead the numbers with ALMI as a percentile, the thirty fourth, then say twenty eight percent body fat is actually the seventh percentile for a fifty six year old woman, leaner than ninety three percent of her peers. There is nothing to cut here, this is build only. Ask the noticed question out loud, and get one sentence on her real why before she leaves the room.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-doreen-8">&#9654;</div>
+        <a class="dl-btn" id="dl-doreen-8" title="Download" href="assets/doreen-oct01-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-doreen-8"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-doreen"></div>
+</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Rigo Headly</h2>
+      <div class="meta">1st Package Scan (2nd DEXA) &middot; Fat loss, burn only &middot; M &middot; 49 &middot; milestone track, first progress &middot; no close</div>
+    </div>
+    <div class="time-badge">9:45 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-rigo" onclick="playAll('rigo')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-rigo" onclick="stopAll('rigo')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-rigo" href="assets/rigo-oct01-full-brief.mp3" download="rigo-brief-oct01.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-rigo">
+    <div class="section" id="sec-rigo-0" onclick="playSection('rigo', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Rigo Headly, forty nine years old, five foot nine. He scans Thursday, October first, at nine forty five in the morning in Campbell. This is his first package scan and his second DEXA overall, so it is his first real progress checkpoint, but there is no close here, he already bought the one year core. His baseline is the August twenty fourth intro scan, thirty eight days ago. The working goal is fat loss, burn only, read off the numbers rather than agreed out loud. His ALMI sits at the ninety ninth percentile for his age against body fat at the ninety third percentile, an elite lean base carrying a heavy load.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rigo-0">&#9654;</div>
+        <a class="dl-btn" id="dl-rigo-0" title="Download" href="assets/rigo-oct01-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rigo-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rigo-1" onclick="playSection('rigo', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">He changed his food on his own, through his father&#x27;s cancer diagnosis, a conference trip to Detroit, and a camping trip, with nobody checking in on him. Carbs are near zero, as much lettuce and meat as he can get into a plate, pasta maybe once every seven or eight days. Protein survived the whole crisis, he bought the powder himself and told you on the September fifteenth call that it is the one thing he has been able to keep doing. He also told you, unprompted, that he has been making sure not to let the stress turn into emotional eating. And he has good news to open with himself: a nomination to the CMAA national board, a speech to about two hundred peers on September fifteenth, with the vote in February in front of roughly fifteen thousand people. Ask him about it, he raised it himself.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rigo-1">&#9654;</div>
+        <a class="dl-btn" id="dl-rigo-1" title="Download" href="assets/rigo-oct01-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rigo-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rigo-2" onclick="playSection('rigo', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In Their Own Words</div>
+        <div class="sec-text">The what have you noticed question was never actually asked. It was drafted on September twenty fourth and then skipped on your own instruction, so there is nothing pending here, just nothing asked yet. Put it to him in the room, and frame it around food, not training. Ask about his waistband, how his shirts sit now, his afternoon energy, and the food changes he made on his own. The six to twelve month question was also skipped, no close is in play, the one year core runs another eleven months past this scan. If you use it at all, frame it as planning the next block, not a renewal conversation. In his own words, from the September fifteenth call, on his dad: everything for me completely shifted to that.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rigo-2">&#9654;</div>
+        <a class="dl-btn" id="dl-rigo-2" title="Download" href="assets/rigo-oct01-03-own-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rigo-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rigo-3" onclick="playSection('rigo', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">This is the retention conversation, not a results conversation. He is thirty eight days into a twelve month program with zero of eighteen scheduled sessions completed. Seventeen messages have gone to him since September first and he has replied to exactly none of them. He also no showed the September seventeenth in person form assessment and never answered the request to reschedule it. There is no renewal to close here, so the thirty minutes in the room should go entirely to him, not to the scan numbers.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rigo-3">&#9654;</div>
+        <a class="dl-btn" id="dl-rigo-3" title="Download" href="assets/rigo-oct01-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rigo-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rigo-4" onclick="playSection('rigo', 4)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training and Movement</div>
+        <div class="sec-text">There is no lift history to read from, zero of eighteen sessions means no load was ever logged. The one physical flag worth naming is his left shoulder, an old high school tendon tear that limits his range, and the scan itself confirms it, his right arm carries about seven and a half percent more lean mass than his left. If that shoulder turns out to be what is keeping him out of the gym, the fix is changing the grip, the angle or the load on pressing movements, never dropping the whole exercise.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rigo-4">&#9654;</div>
+        <a class="dl-btn" id="dl-rigo-4" title="Download" href="assets/rigo-oct01-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rigo-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rigo-5" onclick="playSection('rigo', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">His total load right now is heavy outside the gym. He is a country club general manager with frequent wine dinners built into the job, a girlfriend in Orange County he sees every other weekend, and regular hospital visits for his father. His A1c is running six point eight to seven point two, in the diabetic range, and his blood pressure is on low dose medication, so the carb strategy he has been running on his own is doing real clinical work here, not just a fat loss lever.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rigo-5">&#9654;</div>
+        <a class="dl-btn" id="dl-rigo-5" title="Download" href="assets/rigo-oct01-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rigo-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rigo-6" onclick="playSection('rigo', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">The sensitive context that has to shape this whole conversation is his father&#x27;s pancreatic cancer recurrence, confirmed two days after his very first onboarding call. That is the live driver of everything, more than the scan numbers. He does not message, seventeen sent and zero replies, so settle things in the room rather than expecting a thread to do the work. Frame the zero sessions with compassion, not disappointment, he is carrying a lot right now and showed up for the scan anyway.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rigo-6">&#9654;</div>
+        <a class="dl-btn" id="dl-rigo-6" title="Download" href="assets/rigo-oct01-07-coaching-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rigo-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rigo-7" onclick="playSection('rigo', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Keep this block small on purpose. One ask: a single logged session, not three a week, something he can actually hit. Second, the food upload, he is already writing it down on paper by his own report, so just get that moved into the app. Third, rebook the Campbell form assessment right there in the room, not by message, since messages have not worked with him so far. And ask him directly what is in the way. Be ready to hear that three times a week is not survivable right now, and that a two times a week or even a twenty minute version beats a perfect program running at zero.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rigo-7">&#9654;</div>
+        <a class="dl-btn" id="dl-rigo-7" title="Download" href="assets/rigo-oct01-08-next-block.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rigo-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rigo-8" onclick="playSection('rigo', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Open with his dad, not with training, that is the real conversation today. Then the board nomination and the February vote, which is genuinely good news. When the numbers come, lead with the split, ALMI at the ninety ninth percentile against body fat at the ninety third, an elite engine under a heavy load. Before any fat number lands, name the month out loud, zero sessions and his father&#x27;s cancer came back, he should not be doing that arithmetic alone. Close with one small ask, a single session for the next block, and rebook the form assessment before he leaves.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rigo-8">&#9654;</div>
+        <a class="dl-btn" id="dl-rigo-8" title="Download" href="assets/rigo-oct01-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rigo-8"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-rigo"></div>
+</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Valerie Schiebel</h2>
+      <div class="meta">5th Package Scan (7th DEXA) &middot; Lean mass gain, build only &middot; F &middot; 30 &middot; routine checkpoint &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">10:30 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-valerie" onclick="playAll('valerie')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-valerie" onclick="stopAll('valerie')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-valerie" href="assets/valerie-oct01-full-brief.mp3" download="valerie-brief-oct01.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-valerie">
+    <div class="section" id="sec-valerie-0" onclick="playSection('valerie', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Valerie Schiebel, thirty years old, scans Thursday, October first, at ten thirty in the morning in Campbell. This is her fifth package scan and her seventh DEXA overall, so it is a routine checkpoint inside a term already sold. No renewal conversation and no close. Her baseline for this block is the September third scan, so tomorrow is twenty eight days on.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-valerie-0">&#9654;</div>
+        <a class="dl-btn" id="dl-valerie-0" title="Download" href="assets/valerie-oct01-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-valerie-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-valerie-1" onclick="playSection('valerie', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins and Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Two anchors here. The last scan was September third and the last check in was the September fifteenth call. Consistency since then is eighty three percent over the last thirty days, fifty percent over the last seven. The headline win is September twenty fifth, her bench opened exactly at the ninety pound target you set, ninety for eight, ninety for seven, ninety for six, honest fatigue after a clean open. The same week, on September twenty third, she took your coaching the same morning it was given, a flat sets message went out and her deadlift climbed from one fifteen to one twenty five that same day. Her left arm protocol is also being followed properly, the September twenty third single arm row matched at twenty five pounds on both sides. And since April sixth her ALMI has moved from the fifth to the tenth percentile, lean mass up three point seven three pounds, while visceral fat has come down from forty four point seven to thirty seven point two across the six scans. Now the flags. The flat sets pattern is still showing up on the barbell lifts, her deadlift sat at one twenty five for eight, eight and eight on September twenty eighth and never reached the one thirty target. The lat pulldown went the other way, she overshot the load to seventy five but only held seven and then six reps against a target of seventy for ten. And the ice cream trigger reappeared after her travel, junior mints and a glazed donut on September twenty sixth, mac and cheese twice, and a dairy queen dilly bar on September twenty eighth. Same pattern as before, not a new problem, she already knows the fix is not keeping it in the house.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-valerie-1">&#9654;</div>
+        <a class="dl-btn" id="dl-valerie-1" title="Download" href="assets/valerie-oct01-02-wins-coaching.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-valerie-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-valerie-2" onclick="playSection('valerie', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training and Recovery Snapshot</div>
+        <div class="sec-text">Consistency is eighty three percent over the last thirty days and fifty percent over the last seven, with nothing yet logged today as of this brief. The pull ups are still band assisted through September twenty eighth, so track the assistance level coming down, not just the rep count. Everfit&#x27;s own read across her whole history shows her first working set going up after set one in sixty one of her last seventy workouts, which is the same root cause as the flat sets flag, she is leaving her best set for later instead of opening with it. One new thing to watch, she self logged on September twenty eighth that her left hamstring felt weak and her last two reps lost form, worth one line given the known gap on her left side.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-valerie-2">&#9654;</div>
+        <a class="dl-btn" id="dl-valerie-2" title="Download" href="assets/valerie-oct01-03-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-valerie-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-valerie-3" onclick="playSection('valerie', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus for This Block</div>
+        <div class="sec-text">Three things. First, restate the set rule with praise leading. The September twenty third deadlift jump, then the bench opening exactly on target, then the pulldown where she overshot the load but undershot the reps. Beat last time on sets one and two, back off on the last one, that is the rule and the pulldown is where it broke down this time. Second, on nutrition, the morning structure is holding well, protein oats, a shake with creatine, a bar with coffee, all logged before nine fifteen most days, so praise that and do not re-instruct it. Put the conversation on the ice cream trigger instead, lightly, she already knows the answer is not keeping it in the house. Third, check in on the left hamstring comment and the ongoing left arm gap, both are patience items, not problems to fix today.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-valerie-3">&#9654;</div>
+        <a class="dl-btn" id="dl-valerie-3" title="Download" href="assets/valerie-oct01-04-focus.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-valerie-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-valerie-4" onclick="playSection('valerie', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Open on training, eighty three percent over thirty days, fifty percent over the last week. Lead with September twenty fifth&#x27;s bench, opened exactly at the ninety pound target you set for her. The pull up is what she will remember most, give her a concrete way to see the assistance level coming down. Restate the set rule, tempo and reps on the dumbbell lifts rather than a straight load jump, since there is nothing between fifty and sixty pounds on her equipment. No renewal talk, no close, this is a routine checkpoint and it reads like one.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-valerie-4">&#9654;</div>
+        <a class="dl-btn" id="dl-valerie-4" title="Download" href="assets/valerie-oct01-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-valerie-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-valerie"></div>
+</div>
+
+<script>
+const files = {
+  "doreen": [
+    "assets/doreen-oct01-01-intro.wav",
+    "assets/doreen-oct01-02-wins.wav",
+    "assets/doreen-oct01-03-own-words.wav",
+    "assets/doreen-oct01-04-concern.wav",
+    "assets/doreen-oct01-05-training.wav",
+    "assets/doreen-oct01-06-recovery.wav",
+    "assets/doreen-oct01-07-coaching-frame.wav",
+    "assets/doreen-oct01-08-next-block.wav",
+    "assets/doreen-oct01-09-closing.wav"
+  ],
+  "rigo": [
+    "assets/rigo-oct01-01-intro.wav",
+    "assets/rigo-oct01-02-wins.wav",
+    "assets/rigo-oct01-03-own-words.wav",
+    "assets/rigo-oct01-04-concern.wav",
+    "assets/rigo-oct01-05-training.wav",
+    "assets/rigo-oct01-06-recovery.wav",
+    "assets/rigo-oct01-07-coaching-frame.wav",
+    "assets/rigo-oct01-08-next-block.wav",
+    "assets/rigo-oct01-09-closing.wav"
+  ],
+  "valerie": [
+    "assets/valerie-oct01-01-intro.wav",
+    "assets/valerie-oct01-02-wins-coaching.wav",
+    "assets/valerie-oct01-03-snapshot.wav",
+    "assets/valerie-oct01-04-focus.wav",
+    "assets/valerie-oct01-05-closing.wav"
+  ]
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const dd = Math.round(audio.duration);
+      const el = document.getElementById(`dur-${clientId}-${idx}`);
+      if (el) el.textContent = `${Math.floor(dd/60)}:${String(dd%60).padStart(2,'0')}`;
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type='') {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '■' : '►';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>►</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
