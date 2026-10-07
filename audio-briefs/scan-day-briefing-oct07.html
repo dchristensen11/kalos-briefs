@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing - Oct 4, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+  .flag-note { background:#2a1414; border:1px solid #5c2626; color:#fca5a5; font-size:11.5px; padding:8px 12px; margin-top:6px; border-radius:8px; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Wednesday, October 7, 2026 &middot; 4 appointments, 4 clients &middot; Neel 9:00 AM &middot; Victoria 10:30 AM &middot; Rachel P. 12:30 PM &middot; Mahmoud 1:15 PM</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Oct 6, 6:30 PM &middot; Neel and Rachel milestone track, Victoria and Mahmoud condensed (no renewal, no close except Neel)</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Neel Desai</h2>
+      <div class="meta">Second Scan (3rd DEXA) &middot; LBM gain, build first, burn second &middot; milestone track &middot; conversion moment</div>
+    </div>
+    <div class="time-badge">9:00 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-neel" onclick="playAll('neel')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-neel" onclick="stopAll('neel')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-neel" href="assets/neel-oct07-full-brief.mp3" download="neel-oct07-brief.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-neel">
+    <div class="section" id="sec-neel-0" onclick="playSection('neel', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Neel Desai, twenty-eight years old, scanning Wednesday October 7 at 9 AM in Campbell. This is his second scan and his third DEXA, and it is the conversion moment. He is on the four week program, he has not converted, and the program closes at this scan. His goal is lean mass gain, build first and burn second, set from his ALMI at the twenty-ninth percentile. Judge this scan against the September 9 baseline only, a twenty-eight day window. Everything in this brief is as of six thirty PM Tuesday October 6.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-neel-0">&#9654;</div>
+        <a class="dl-btn" id="dl-neel-0" title="Download" href="assets/neel-oct07-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-neel-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-neel-1" onclick="playSection('neel', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, Lead With These</div>
+        <div class="sec-text">Lead with the training. He completed twelve of twelve assigned sessions in the last thirty days, and the last one ended at six oh one PM tonight, Tuesday, the first phase two session, with sixteen personal bests. On September 30 you asked him to open the deadlift at 165 and take one set up to 175. He did 165 for six, then 175 for six on four sets. The squat on Friday October 2 was exactly as written, 145 on two sets and 135 on two, all for eight reps. On September 28 he opened the squat at 135 when you had told him 125. The overhead press on September 30 was 75 for six on three sets when you had asked for two. By the app&#x27;s estimated one rep max, the squat is up about seventy-one percent since September 11 and the deadlift about fifty-one percent since September 18. And he films himself and asks. On September 28 he said he would send a new deadlift recording, and he sent one on September 30 at 10:09 PM.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-neel-1">&#9654;</div>
+        <a class="dl-btn" id="dl-neel-1" title="Download" href="assets/neel-oct07-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-neel-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-neel-2" onclick="playSection('neel', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In Their Own Words</div>
+        <div class="sec-text">Both reflection questions were answered on September 30, and correction to the old card: all five messages from that morning did go out, including both questions. On what he has noticed, at 8:44 AM, he wrote that the scale reads three pounds heavier than when he started, but from the muscle point of view his arms have gotten a nice shape, his legs have gotten hard, his chest has gotten hard, and the puffiness around his face has gone. On where he sees himself in six to twelve months, at 4:49 PM, he wrote that hitting twenty-five percent body fat in one year would be really nice, and that he hopes to look a bit more shaped, with a smaller chest and waist. Mirror his words about arms having a nice shape and legs getting hard when the lean mass number lands, and twenty-five percent body fat in a year when you build the offer. Notice that both answers are about how he looks, while the why on file is badminton, soccer and fewer injuries. Ask which matters most. Also, his scale reading is his own. The DXA total was 208.1 on September 9.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-neel-2">&#9654;</div>
+        <a class="dl-btn" id="dl-neel-2" title="Download" href="assets/neel-oct07-03-own-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-neel-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-neel-3" onclick="playSection('neel', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest Concern</div>
+        <div class="sec-text">The biggest concern is visceral fat. It rose from 167.4 to 174.8 square centimeters between August 26 and September 9, against the goal, and there has been no scan since. Read the direction honestly and ask which tactics he kept: green tea, berries with Greek yogurt, and walks before breakfast. The visceral strategy was ticked on September 10, so do not resend it. Body fat was thirty-seven point seven percent at the ninety-eighth percentile age matched, so never present it unframed. The second concern is the food log. The last meals on file are September 24 and 25. Both food log tasks for October 5 and 6 show as done in the app, but there are no meals in the journal as of six thirty PM October 6. Ask what those two days looked like, and never frame the gap negatively.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-neel-3">&#9654;</div>
+        <a class="dl-btn" id="dl-neel-3" title="Download" href="assets/neel-oct07-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-neel-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-neel-4" onclick="playSection('neel', 4)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training and Movement</div>
+        <div class="sec-text">Form first. You replied on October 1 at 8 AM on his 175 deadlift: the lift looks pretty good, keep the chin tucked so the neck stays in line with the spine. On September 27 you told him to keep his feet parallel, watch a slightly rounded spine, and keep the press controlled with momentum only in the last two reps. Two patterns are flat. The deadlift at 175 for six on four sets on September 30, and the lat pulldown at 115 for six on three sets on both September 28 and October 2. A flat last set means set one had more in it. Teach him that set one is the hardest: beat it on sets one and two, then back off on set three. The October 6 flat sets of twelve were the first phase two day with weights cut as written, so read those gently. Injuries: a recovering right ankle sprain with a history of ankle injuries, a recent wrist sprain, and a past left IT band and glute imbalance.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-neel-4">&#9654;</div>
+        <a class="dl-btn" id="dl-neel-4" title="Download" href="assets/neel-oct07-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-neel-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-neel-5" onclick="playSection('neel', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery Load</div>
+        <div class="sec-text">Sleep is the soft spot. On the September 22 call his Garmin sleep score was seventy-five to seventy-six, driven by work stress and late weekends, and you told him a seven and a half hour average is good for guys. It has not come up in the thread since. He had a bad cold on September 22 and paused berries, and when you asked on September 27 how the cold was, he did not answer directly. He trains every other day and lately in the evenings. His last session ended at six oh one PM tonight, about fifteen hours before the scan.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-neel-5">&#9654;</div>
+        <a class="dl-btn" id="dl-neel-5" title="Download" href="assets/neel-oct07-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-neel-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-neel-6" onclick="playSection('neel', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching Frame</div>
+        <div class="sec-text">No sensitive flags on file beyond the body fat framing. He is motivated by tangible progress signals, like lower soreness and visible changes, and he wants clear structure on what to add next rather than vague advice. He responds well to the reason why and to choosing one or two habits at a time. He answers when asked: both September 30 questions got replies inside a day. His own goal is about looks, twenty-five percent body fat and a smaller chest and waist, so connect build first, burn second to that picture in his words rather than ours. Never quote him calorie numbers. When the Sep 30 message said you would set his numbers at the scan, that means protein, carb timing and fats.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-neel-6">&#9654;</div>
+        <a class="dl-btn" id="dl-neel-6" title="Download" href="assets/neel-oct07-07-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-neel-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-neel-7" onclick="playSection('neel', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next Block Priorities</div>
+        <div class="sec-text">Four things to set after the scan. One, build the offer on his own picture, twenty-five percent body fat in a year, more shaped, muscle first and the leaning out on top. Two, a visceral plan he will actually keep, since the number rose. Three, set intensity: first set hardest, back off on set three. Four, sleep and a food log habit, both unaddressed since the September 22 call. Leave out arm numbers, because the right arm drop is a positioning artifact, bone density, Gold Standards, and any visceral strategy resend.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-neel-7">&#9654;</div>
+        <a class="dl-btn" id="dl-neel-7" title="Download" href="assets/neel-oct07-08-next-block.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-neel-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-neel-8" onclick="playSection('neel', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. He did every session, beat every lift you asked for, and answered both questions the same day. Open on the lifts, frame the twenty-eight day window, lead with ALMI percentile, then lean, then body fat, and keep visceral to direction only. Use his own words for the offer.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-neel-8">&#9654;</div>
+        <a class="dl-btn" id="dl-neel-8" title="Download" href="assets/neel-oct07-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-neel-8"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-neel"></div>
+</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Victoria Treece</h2>
+      <div class="meta">3rd Package Scan (4th DEXA) &middot; LBM gain, build only &middot; F &middot; 58 &middot; routine checkpoint &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">10:30 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-victoria" onclick="playAll('victoria')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-victoria" onclick="stopAll('victoria')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-victoria" href="assets/victoria-oct07-full-brief.mp3" download="victoria-oct07-brief.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-victoria">
+    <div class="section" id="sec-victoria-0" onclick="playSection('victoria', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Victoria Treece, fifty eight, scanning Wednesday October 7 at ten thirty at Campbell. This is her third package scan and her fourth DEXA overall, so it is a routine checkpoint inside a six month term that runs to December seventeenth. No renewal talk and no close. Her goal is lean mass gain, build only, for aesthetics, strength, and fighting the effects of age and menopause, with a bikini in Hawaii as the picture she has in mind. Last scan was September ninth. Last check-in was the September twenty second call. Everything here is as of six thirty PM on October sixth.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-victoria-0">&#9654;</div>
+        <a class="dl-btn" id="dl-victoria-0" title="Download" href="assets/victoria-oct07-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-victoria-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-victoria-1" onclick="playSection('victoria', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins and Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Since the September ninth scan, her upper body work has been perfect. All eight upper sessions are done, from September twelfth through October fifth. After the September twenty seventh message about sets one and two being where the work goes, her first set moved. On September twenty eighth the row went from eight reps to ten at eighty five, and the overhead press from eight to ten at thirty five. On October first the Arnold press went from seven reps to ten at twenty. The row and press held at ten again on October fifth. The single leg Romanian deadlift on September twenty ninth was the pattern done right, twenty five for ten, twenty five for eight, then twenty for eight. Visceral fat has fallen at every scan, one hundred twelve point seven, then ninety four point eight, then ninety three point two, even through the cruise. Since the September twenty second check-in, the shoulder plan was followed: the press stayed at twenty and thirty five and the reps rose. Now the flags. Her second set has not followed the first. On the row she logged eighty five for ten, eight, eight on both September twenty eighth and October fifth, and the Arnold press went ten, eight, eight. The leg days are the problem. Since September ninth she has done four of eight lower sessions against eight of eight upper. The lower sessions she missed were September thirteenth, seventeenth, twenty sixth, and October second. And on September thirtieth, when you asked what she had noticed, she wrote that the weights still feel heavy for legs and that she gets tired and does not have the strength to go up as fast as she would like. Nobody has replied to that. Her legs are also where the lean mass went, down two point seven pounds, so that line and the scan will connect. One more thing. The week-out messages did go out on September thirtieth, including the targets. Of the three, the Arnold press and the row hit set one only. The box squat was set for Tuesday, and her lower session started at six eleven PM tonight, with no sets logged yet as of six thirty, so check that. Her food log task days, October fifth and sixth, had no photos as of six thirty. Her last entries were September thirtieth, two Oikos Pro drinks and five ounces of chicken.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-victoria-1">&#9654;</div>
+        <a class="dl-btn" id="dl-victoria-1" title="Download" href="assets/victoria-oct07-02-wins-since-last-touchpoint.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-victoria-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-victoria-2" onclick="playSection('victoria', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training and Recovery Snapshot</div>
+        <div class="sec-text">Consistency is seventy two percent over thirty days, thirteen of eighteen sessions, and fifty percent over the last seven days, two of four, as of six thirty PM on October sixth. Her last finished session was Monday October fifth, six oh nine to seven oh one PM. Tonight&#x27;s lower session was started at six eleven PM and was not finished at the time of this check. The Friday October second lower session was missed. Shoulders remain the limit, with bilateral frozen shoulder history, so press progression stays on reps before weight. Hormone therapy side effects are still part of the picture, so frame intensity as smart scaling. Her travel pattern is the usual cause of drift, and her daughter does not like diet talk, so the lever is protein packs and breakfast, not tracking.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-victoria-2">&#9654;</div>
+        <a class="dl-btn" id="dl-victoria-2" title="Download" href="assets/victoria-oct07-03-training-recovery-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-victoria-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-victoria-3" onclick="playSection('victoria', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three things. First, protein from breakfast, thirty to forty grams, with creatine daily. She did log two protein drinks and chicken early on September thirtieth, so reinforce that. Second, the legs. Ask what gets in the way of the second lower day each week, and tie the answer to her own words that her legs feel heavy. Third, set one and set two both move, then let set three land where it lands. And decide the next block before you walk in, because her primary workouts end October tenth and the September thirtieth message told her Wednesday would cover what the next block looks like. Leave out bone density, the visceral fat strategy, calorie numbers, fat loss, and the gold standards.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-victoria-3">&#9654;</div>
+        <a class="dl-btn" id="dl-victoria-3" title="Download" href="assets/victoria-oct07-04-focus-for-this-block.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-victoria-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-victoria-4" onclick="playSection('victoria', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in: open on the perfect upper body record, then show her where the lean mass went and let her connect it to the heavy legs. Fix the leg days and settle the next block.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-victoria-4">&#9654;</div>
+        <a class="dl-btn" id="dl-victoria-4" title="Download" href="assets/victoria-oct07-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-victoria-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-victoria"></div>
+</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Rachel Potens</h2>
+      <div class="meta">First Package Scan (2nd DEXA) &middot; LBM gain &middot; milestone track &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">12:30 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-rachelp" onclick="playAll('rachelp')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-rachelp" onclick="stopAll('rachelp')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-rachelp" href="assets/rachelp-oct07-full-brief.mp3" download="rachelp-oct07-brief.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-rachelp">
+    <div class="section" id="sec-rachelp-0" onclick="playSection('rachelp', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Rachel Potens, fifty years old, scanning Wednesday October 7th at 12:30 PM in Campbell. This is her first package scan and her second DEXA, so it is her first real progress reveal. Her baseline is September 5th from the duo intro scan with Brandon. She bought the one year core outright that day, so there is no renewal, no close and no Slack post. Her goal is lean mass gain, build first and lean out second. Her ALMI is the forty second percentile, and you told her on September 10th to build it to the sixtieth to seventieth before going after fat loss. Training has been upper body and core, dumbbells only, because of a torn right meniscus.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rachelp-0">&#9654;</div>
+        <a class="dl-btn" id="dl-rachelp-0" title="Download" href="assets/rachelp-oct07-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rachelp-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rachelp-1" onclick="playSection('rachelp', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins, lead with these</div>
+        <div class="sec-text">Lead with the lifts. She has done seven upper body sessions in a row, September 13th through October 3rd, every one completed, on a torn meniscus. Bench press was 25 pounds on September 17th, 30 on September 24th, and on September 30th she did exactly what you asked, 35 on the first two sets and then backed off to 30. That session had nine personal bests. Her bent over row went 20, then 25, then 30 for three sets of eight. She also ran the set intensity rule on her own on two rows, up on sets one and two and back off on set three. And on September 30th she told you she is feeling stronger and glad to be working on her arms. Open there.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rachelp-1">&#9654;</div>
+        <a class="dl-btn" id="dl-rachelp-1" title="Download" href="assets/rachelp-oct07-02-wins.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rachelp-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rachelp-2" onclick="playSection('rachelp', 2)">
+      <div class="sec-icon">💬</div>
+      <div class="sec-body">
+        <div class="sec-title">In their own words</div>
+        <div class="sec-text">You asked what she has noticed on September 30th at 6:49 in the morning. Her whole answer was, I&#x27;m feeling stronger and glad to be working on my arms. That is thin, so ask the rest in the room, the clothes, the mirror, and how the knee handles a walk. She volunteered that the knee is feeling better but not a hundred percent, that twenty pound RDLs were no problem, and that backward lunges felt iffy and unstable. She also said she is going to move up her walking again. The six to twelve month question was not asked, since she is only a month into a twelve month term. Mirror her word, stronger, when the bench and row numbers come up.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rachelp-2">&#9654;</div>
+        <a class="dl-btn" id="dl-rachelp-2" title="Download" href="assets/rachelp-oct07-03-own-words.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rachelp-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rachelp-3" onclick="playSection('rachelp', 3)">
+      <div class="sec-icon">⚠️</div>
+      <div class="sec-body">
+        <div class="sec-title">Biggest concern</div>
+        <div class="sec-text">Two things. First, the baseline. Two versions of her September 5th scan disagree by about five pounds on the fat and lean split. Use only the Iris and PDF numbers, which are fifty point four pounds of fat, eighty five point five of lean, and thirty five point nine percent body fat. Never quote the raw file, or a five pound error becomes a five pound error in her first progress delta. Second, a new right elbow pain she raised on September 30th. It stopped her going heavier on hammer curls and lateral raises. You told her on October 1st to do regular curls and not let the elbow flare. On October 3rd her alternating curls at 20 pounds went 8, 6 and 10. She has not said anything since, so ask about it.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rachelp-3">&#9654;</div>
+        <a class="dl-btn" id="dl-rachelp-3" title="Download" href="assets/rachelp-oct07-04-concern.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rachelp-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rachelp-4" onclick="playSection('rachelp', 4)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training and movement</div>
+        <div class="sec-text">Her session consistency is 85 percent, 11 of 13 sessions since September 13th. The two misses are both Core B, on September 18th and October 4th. Core B holds the split stance Pallof press, and the next one is October 9th. The Tuesday October 6th upper session, the first of the new program phase, had not been logged as of 6:30 PM Tuesday, so do not say it happened or that it did not. The last logged session was Core A on October 3rd at 8:09 PM. Against your asks, bench was hit, the single arm row was not. You asked for 40 for 10 on the first set and on October 3rd she did 35 for 10, 10 and 10, flat sets. Pressing is fading outside bench, push ups fell to 6, 6, 6, and incline dropped from 30 to 25. Lunges still feel unstable, so offer a stance change on the split stance moves and let her pick.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rachelp-4">&#9654;</div>
+        <a class="dl-btn" id="dl-rachelp-4" title="Download" href="assets/rachelp-oct07-05-training.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rachelp-4"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rachelp-5" onclick="playSection('rachelp', 5)">
+      <div class="sec-icon">😴</div>
+      <div class="sec-body">
+        <div class="sec-title">Recovery load</div>
+        <div class="sec-text">She sleeps about eight hours with some waking, helped by a recent progesterone increase and hurt by red wine. She logged two glasses of wine on September 25th and nothing like it since. Her Everfit steps average about 6,600 a day over the last week, and she said she is building her walking back up. She is out of town October 11th, which is why the scan is Wednesday. Her next upper session after the scan is Saturday October 10th.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rachelp-5">&#9654;</div>
+        <a class="dl-btn" id="dl-rachelp-5" title="Download" href="assets/rachelp-oct07-06-recovery.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rachelp-5"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rachelp-6" onclick="playSection('rachelp', 6)">
+      <div class="sec-icon">🧠</div>
+      <div class="sec-body">
+        <div class="sec-title">Coaching frame</div>
+        <div class="sec-text">She acts on suggestions within days, and she replies rarely, in bursts. Four of the thirty two messages in the thread are hers, and the last message was yours on October 1st, seen, so nothing is owed. Her why is longevity and mobility, in her words, being able to walk without pain. Tie muscle to still walking at sixty, not to how she looks. Never give her a calorie number, she was tempted back to MyFitnessPal on September 22nd, so give instructions, not counts. Her food logging has thinned, entries on September 30th and October 4th only since the 28th, after sixteen straight days. Say the logging has been working and ask which visceral habits held.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rachelp-6">&#9654;</div>
+        <a class="dl-btn" id="dl-rachelp-6" title="Download" href="assets/rachelp-oct07-07-frame.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rachelp-6"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rachelp-7" onclick="playSection('rachelp', 7)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Next block priorities</div>
+        <div class="sec-text">Build the next block off the scan. One, upper body stays the base while the knee heals, with the elbow fixed first. Two, a knee loading test that she chooses, a stance change on split stance moves. Three, set protein and the pre and post carbs from what the scan shows, with no calorie targets. Four, one or two visceral habits she will actually keep. Leave out bone density, a visceral resend, renewal talk, barbell gold standards, and the travel plan.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rachelp-7">&#9654;</div>
+        <a class="dl-btn" id="dl-rachelp-7" title="Download" href="assets/rachelp-oct07-08-priorities.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rachelp-7"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-rachelp-8" onclick="playSection('rachelp', 8)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Open on the lifts and the seven sessions in a row. Ask what she has noticed before the screen comes on. Lead with ALMI at the forty second percentile and frame body fat as the fortieth percentile before the number shows. Say the arc, build first and lean out second. Check the elbow and the knee. Quote only the Iris numbers, and close on food and the next block.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-rachelp-8">&#9654;</div>
+        <a class="dl-btn" id="dl-rachelp-8" title="Download" href="assets/rachelp-oct07-09-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-rachelp-8"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-rachelp"></div>
+</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Mahmoud Elbalawy</h2>
+      <div class="meta">3rd Package Scan (6th DEXA) &middot; protect and rebuild lean &middot; M &middot; 43 &middot; routine checkpoint &middot; no renewal, no close</div>
+    </div>
+    <div class="time-badge">1:15 PM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-mahmoud" onclick="playAll('mahmoud')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-mahmoud" onclick="stopAll('mahmoud')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-mahmoud" href="assets/mahmoud-oct07-full-brief.mp3" download="mahmoud-oct07-brief.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-mahmoud">
+    <div class="section" id="sec-mahmoud-0" onclick="playSection('mahmoud', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Mahmoud Elbalawy, forty three, six foot two. His scan is Wednesday October seventh at one fifteen in Campbell. This is his third package scan and his sixth DEXA overall, a routine checkpoint on a one year virtual membership that runs to June twenty twenty seven. So no close, no renewal talk, and no Slack post. Everything in this brief is as of about six forty PM on Tuesday October sixth.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-mahmoud-0">&#9654;</div>
+        <a class="dl-btn" id="dl-mahmoud-0" title="Download" href="assets/mahmoud-oct07-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-mahmoud-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-mahmoud-1" onclick="playSection('mahmoud', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins and Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Two anchors. His last scan was August thirty first, and his last check-in call was the August eleventh midpoint. Since the scan, the coaching has happened in the thread, and here is where it stands. The wins first. He has logged twenty one of twenty one sessions since September second, through constant travel. His last two sessions, October fifth and October sixth, carried seventeen and nineteen personal bests. Squat went from one thirty five for five on September twenty second to one forty five for eight on October fifth. Split squat went from ninety five to one fifteen. Protein hit two twenty on his October fifth macro screen. And he asked for this scan himself on October first. Now what to watch. The August thirty first scan showed lean mass down five point seven pounds, almost all of it trunk, and he is confident the lean held since, because he points to his home test. That home InBody on September thirtieth read five point four percent body fat. His DEXA on August thirty first read fifteen point two. He told you himself on October first that he doubts the body fat figure, but it is shaping what he expects. Second, his compounds changed after the last scan, by his own message on October fourth. Testosterone went to six hundred milligrams a week, primobolan started about mid September, winstrol was planned to start October fifth, and an eight week anavar course just finished, with growth hormone at four units. He told you he is sharing that to explain why lean mass is probably increasing and fat is decreasing. You replied, Excellent work, be safe. Dosing is his to manage, so do not credit or blame the cycle for whatever the scan shows. Third, on carbs. The six week taper was sent September first, and week five was three twenty on training days. On October fifth, a training day, his macro screen shows one fifty seven grams of carbs, with protein at two twenty and fat at seventy eight. So protein and fat are right and carbs are about half the plan. Separately, the carb and fat targets for his rest days in the app look swapped: carbs read eighty four and fat reads two eleven. Swapped, they read two eleven and eighty four, which sits near the plan. Fourth, he asked you on October fourth why next week shows only three workouts when it was supposed to be four, and you told him you would check. As of tonight the calendar still has only three sessions assigned, October fifth, sixth and eighth. The energy systems day, last done October second, is no longer on it. Expect him to bring it up. Last, nothing Kalos told him is wrong, so there is nothing to retract. The October third messages told him not to let the home reading set his expectations, and he answered the what have you noticed question on October fourth. His words were, a solid Large now, and energy is great in the morning.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-mahmoud-1">&#9654;</div>
+        <a class="dl-btn" id="dl-mahmoud-1" title="Download" href="assets/mahmoud-oct07-02-wins-and-coaching-since-last-touchpoint.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-mahmoud-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-mahmoud-2" onclick="playSection('mahmoud', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training and Recovery Snapshot</div>
+        <div class="sec-text">Consistency is a hundred percent. Twenty one of twenty one assigned sessions since September second, none missed. His last session was lower body on October sixth, from one forty seven to two forty six PM. The one before it was full body A on October fifth, seven fifty one to nine forty two in the morning. On the pre scan targets, he beat every load you asked for but the sets came back flat. Squat was one forty five for eight, eight, eight, against an ask of one fifteen to open. Bench was one forty five for five, five, five against a prescribed eight, so he stayed in fives. Split squat was one fifteen for ten, ten, ten against an ask of one oh five. Leg press on October sixth, one eighty, one eighty, then one forty, is the right shape, with the third set backing off. On recovery, he says sleep is still an issue, but he gets in around six hours a day, his words from October fourth. His resting heart rate was about eighty seven when he reported it on August twenty eighth, on a heavy stack. Next sessions are the upper day on October eighth and full body B on October twelfth.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-mahmoud-2">&#9654;</div>
+        <a class="dl-btn" id="dl-mahmoud-2" title="Download" href="assets/mahmoud-oct07-03-training-recovery-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-mahmoud-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-mahmoud-3" onclick="playSection('mahmoud', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">Three priorities. One, settle the goal out loud. His own words on October fourth are that his goal has always been around two hundred pounds and under ten percent body fat, while the plan since August thirty first is protect and rebuild lean. Get him to say which one the next block serves. Two, set intensity. A third set that finishes level means sets one and two had more in them, so ask for a heavier first two sets and let the third back off, the way the leg press did. Three, food. Protein is on target. Carbs are the gap, so fix the rest day numbers in the app with him while he is in front of you, and talk about where the carbs sit around training. Leave out bone density, any calorie number, renewal or package talk, and advice on his compounds.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-mahmoud-3">&#9654;</div>
+        <a class="dl-btn" id="dl-mahmoud-3" title="Download" href="assets/mahmoud-oct07-04-focus-for-this-block.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-mahmoud-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-mahmoud-4" onclick="playSection('mahmoud', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. The cut did its job, visceral fat is down from one forty two point eight to eighty one point nine, and he did every session. The scan will not match his home reading, so set that up before the screen comes on, name the lean honestly, and use the set shape to show him how to build it back.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-mahmoud-4">&#9654;</div>
+        <a class="dl-btn" id="dl-mahmoud-4" title="Download" href="assets/mahmoud-oct07-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-mahmoud-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-mahmoud"></div>
+</div>
+
+<script>
+const files = {
+  "neel": [
+    "assets/neel-oct07-01-intro.wav",
+    "assets/neel-oct07-02-wins.wav",
+    "assets/neel-oct07-03-own-words.wav",
+    "assets/neel-oct07-04-concern.wav",
+    "assets/neel-oct07-05-training.wav",
+    "assets/neel-oct07-06-recovery.wav",
+    "assets/neel-oct07-07-frame.wav",
+    "assets/neel-oct07-08-next-block.wav",
+    "assets/neel-oct07-09-closing.wav"
+  ],
+  "victoria": [
+    "assets/victoria-oct07-01-intro.wav",
+    "assets/victoria-oct07-02-wins-since-last-touchpoint.wav",
+    "assets/victoria-oct07-03-training-recovery-snapshot.wav",
+    "assets/victoria-oct07-04-focus-for-this-block.wav",
+    "assets/victoria-oct07-05-closing.wav"
+  ],
+  "rachelp": [
+    "assets/rachelp-oct07-01-intro.wav",
+    "assets/rachelp-oct07-02-wins.wav",
+    "assets/rachelp-oct07-03-own-words.wav",
+    "assets/rachelp-oct07-04-concern.wav",
+    "assets/rachelp-oct07-05-training.wav",
+    "assets/rachelp-oct07-06-recovery.wav",
+    "assets/rachelp-oct07-07-frame.wav",
+    "assets/rachelp-oct07-08-priorities.wav",
+    "assets/rachelp-oct07-09-closing.wav"
+  ],
+  "mahmoud": [
+    "assets/mahmoud-oct07-01-intro.wav",
+    "assets/mahmoud-oct07-02-wins-and-coaching-since-last-touchpoint.wav",
+    "assets/mahmoud-oct07-03-training-recovery-snapshot.wav",
+    "assets/mahmoud-oct07-04-focus-for-this-block.wav",
+    "assets/mahmoud-oct07-05-closing.wav"
+  ]
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const d = document.getElementById(`dur-${clientId}-${idx}`);
+      if (d) d.textContent = Math.round(audio.duration) + 's';
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type) {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '\u25A0' : '\u25BA';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
