@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing - Oct 4, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 8px; }
+  .source-line { font-size: 11px; color: #4ade80; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 28px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px 14px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .meta { font-size: 12px; color: #8899cc; margin-top: 3px; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+  .gen-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .gen-btn:hover { opacity: 0.9; }
+  .gen-btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-row { display: flex; }
+  .stop-btn { flex: 1; padding: 11px; background: #2a1a1a; border: none; border-top: 1px solid #3a2020; color: #f87171; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; border-right: 1px solid #1e1e2e; }
+  .stop-btn:hover:not(:disabled) { background: #3a2020; }
+  .stop-btn:disabled { opacity: 0.3; cursor: default; }
+  .dl-all-btn { flex: 1; padding: 11px; background: #1a2a1a; border: none; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .dl-all-btn:hover { background: #1e2e1e; }
+  .sections { padding: 0 4px 4px; }
+  .section { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #1e1e2e; cursor: pointer; transition: background 0.15s; }
+  .section:last-child { border-bottom: none; }
+  .section:hover { background: #1e1e2c; }
+  .section.playing { background: #1e2038; }
+  .sec-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .sec-body { flex: 1; min-width: 0; }
+  .sec-title { font-size: 13px; font-weight: 700; color: #c8cadb; margin-bottom: 4px; }
+  .sec-text { font-size: 12.5px; color: #8890a8; line-height: 1.55; }
+  .sec-controls { display: flex; align-items: center; gap: 10px; flex-shrink: 0; min-width: 70px; justify-content: flex-end; }
+  .play-btn { width: 36px; height: 36px; border-radius: 50%; background: #7c8aff22; border: 1px solid #7c8aff44; color: #a0acff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .play-btn.active { background: #7c8aff44; border-color: #7c8aff; }
+  .dl-btn { font-size: 16px; color: #4ade80; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+  .sec-dur { font-size: 11px; color: #555; min-width: 28px; text-align: right; }
+  .status-bar { padding: 10px 18px; font-size: 12px; color: #666; border-top: 1px solid #1e1e2e; min-height: 38px; display: flex; align-items: center; }
+  .status-bar.ok { color: #4ade80; }
+  .status-bar.error { color: #f87171; }
+  .flag-note { background:#2a1414; border:1px solid #5c2626; color:#fca5a5; font-size:11.5px; padding:8px 12px; margin-top:6px; border-radius:8px; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Thursday, October 8, 2026 &middot; 1 scan briefed &middot; Jason 8:15 AM</div>
+<div class="source-line">Generated locally with Voicebox, voice "George Kalos" &middot; night-before refresh Oct 7, 6:30 PM &middot; condensed track (routine package checkpoint, no renewal, no close, no Slack post)</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <div>
+      <h2>Jason Li</h2>
+      <div class="meta">First Package Scan (3rd DEXA) &middot; LBM gain, build first, burn second &middot; condensed track</div>
+    </div>
+    <div class="time-badge">8:15 AM</div>
+  </div>
+
+  <button class="gen-btn" id="genBtn-jason" onclick="playAll('jason')">
+    <span>&#9654;</span> Play All In Sequence
+  </button>
+  <div class="btn-row">
+    <button class="stop-btn" id="stopBtn-jason" onclick="stopAll('jason')" disabled>&#9632; Stop</button>
+    <a class="dl-all-btn" id="dlAll-jason" href="assets/jason-oct08-full-brief.mp3" download="jason-oct08-brief.mp3" style="text-align:center;text-decoration:none;line-height:1.4">&#8595; Download Full Brief (MP3)</a>
+  </div>
+
+  <div class="sections" id="sections-jason">
+    <div class="section" id="sec-jason-0" onclick="playSection('jason', 0)">
+      <div class="sec-icon">👋</div>
+      <div class="sec-body">
+        <div class="sec-title">Intro</div>
+        <div class="sec-text">Jason Li, thirty years old, scans Thursday October eighth at eight fifteen in the morning in Campbell. This is his first package scan, but it is his third DEXA, so treat it as a routine checkpoint. He had his second scan on September second and bought the one year core that morning. There is no close at this scan and no Slack post. The goal is lean mass gain, build first and lean out second, with a half marathon on November first.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jason-0">&#9654;</div>
+        <a class="dl-btn" id="dl-jason-0" title="Download" href="assets/jason-oct08-01-intro.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jason-0"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-jason-1" onclick="playSection('jason', 1)">
+      <div class="sec-icon">🏆</div>
+      <div class="sec-body">
+        <div class="sec-title">Wins &amp; Coaching Since Last Touchpoint</div>
+        <div class="sec-text">Two anchors. Your last scan was September second, and your last check in was the September twenty second call. The headline from the scan itself is that his muscle percentile went from sixth to ninth to seventeenth across his first three scans, with five pounds of lean tissue added in the month to September second. Since the check in, the best news is the last week. After the New York trip he came back and trained. Lower day on October first had eleven personal bests, and upper day on October fourth had seventeen. He hit nine chin ups on set one, which was your target. He also ran eight miles on October fourth, two hours, effort eight out of ten. Now the flags. He told you on October first that he feels weak coming back, and the numbers say the opposite, so use that. The core blocks were not tracked on either lift day. Bench press and back squat are still untested, because the October fifth full body session was marked missed. The week out messages went out October first, and he has not answered the what have you noticed question. The ankle question you asked September twenty seventh is still unanswered, and the push press video has not come in. Nothing is owed to him. Your last message on October second is marked seen.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jason-1">&#9654;</div>
+        <a class="dl-btn" id="dl-jason-1" title="Download" href="assets/jason-oct08-02-wins-and-coaching-since-last-touchpoint.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jason-1"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-jason-2" onclick="playSection('jason', 2)">
+      <div class="sec-icon">🦴</div>
+      <div class="sec-body">
+        <div class="sec-title">Training / Recovery Snapshot</div>
+        <div class="sec-text">Since September twenty fifth, three of eight assigned sessions are logged. Four were missed September twenty sixth to thirtieth during the trip, then lower on October first, upper on October fourth, and the long run. October fifth was missed, and as of six thirty on Wednesday evening there is no session logged on the sixth or seventh. His food log has a gap too. Last entry was September twenty ninth, and the two days you asked for on October sixth and seventh are not in. Set one is the technical fix. The October fourth bent over row did it right, seventy five for eight, six, four. The overhead press and the box squat stayed flat. And watch the right ankle after long runs.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jason-2">&#9654;</div>
+        <a class="dl-btn" id="dl-jason-2" title="Download" href="assets/jason-oct08-03-training-recovery-snapshot.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jason-2"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-jason-3" onclick="playSection('jason', 3)">
+      <div class="sec-icon">🎯</div>
+      <div class="sec-body">
+        <div class="sec-title">Focus For This Block</div>
+        <div class="sec-text">One, make set one the hard one and let the reps fall, especially on the new phase four lifts. Two, protein first at one fifty grams a day, then better picks, then timing, and fuel with carbs and protein before runs. Three, ask what the plan is for the four weeks between now and the half marathon, because the trip broke the rhythm and he has two sessions in twelve days. Frame it as training and nutrition direction, never as a renewal.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jason-3">&#9654;</div>
+        <a class="dl-btn" id="dl-jason-3" title="Download" href="assets/jason-oct08-04-focus-for-this-block.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jason-3"></div>
+      </div>
+    </div>
+    <div class="section" id="sec-jason-4" onclick="playSection('jason', 4)">
+      <div class="sec-icon">✅</div>
+      <div class="sec-body">
+        <div class="sec-title">Closing</div>
+        <div class="sec-text">Bottom line going in. Open on the two sessions since New York, ask what he has noticed before the screen comes on, lead with muscle percentile, frame body fat before the number appears, and ask about the ankle. No bone density, no calorie number, no package talk.</div>
+      </div>
+      <div class="sec-controls">
+        <div class="play-btn" id="btn-jason-4">&#9654;</div>
+        <a class="dl-btn" id="dl-jason-4" title="Download" href="assets/jason-oct08-05-closing.wav" download>&#8595;</a>
+        <div class="sec-dur" id="dur-jason-4"></div>
+      </div>
+    </div>
+  </div>
+  <div class="status-bar" id="status-jason"></div>
+</div>
+
+<script>
+const files = {
+  "jason": [
+    "assets/jason-oct08-01-intro.wav",
+    "assets/jason-oct08-02-wins-and-coaching-since-last-touchpoint.wav",
+    "assets/jason-oct08-03-training-recovery-snapshot.wav",
+    "assets/jason-oct08-04-focus-for-this-block.wav",
+    "assets/jason-oct08-05-closing.wav"
+  ]
+};
+const audios = {};
+const stopRequested = {};
+let playAllMode = false;
+function getAudio(clientId, idx) {
+  audios[clientId] = audios[clientId] || [];
+  if (!audios[clientId][idx]) {
+    const audio = new Audio(files[clientId][idx]);
+    audio.addEventListener('loadedmetadata', () => {
+      const d = document.getElementById(`dur-${clientId}-${idx}`);
+      if (d) d.textContent = Math.round(audio.duration) + 's';
+    });
+    audios[clientId][idx] = audio;
+  }
+  return audios[clientId][idx];
+}
+function setStatus(clientId, msg, type) {
+  const el = document.getElementById(`status-${clientId}`);
+  if (el) { el.textContent = msg; el.className = 'status-bar' + (type ? ' ' + type : ''); }
+}
+function setBtn(clientId, idx, state) {
+  const btn = document.getElementById(`btn-${clientId}-${idx}`);
+  if (!btn) return;
+  btn.className = 'play-btn' + (state === 'playing' ? ' active' : '');
+  btn.textContent = state === 'playing' ? '\u25A0' : '\u25BA';
+}
+function setSectionPlaying(clientId, idx, playing) {
+  const sec = document.getElementById(`sec-${clientId}-${idx}`);
+  if (sec) sec.className = 'section' + (playing ? ' playing' : '');
+}
+function stopAll(clientId) {
+  stopRequested[clientId] = true;
+  playAllMode = false;
+  const total = files[clientId].length;
+  for (let i = 0; i < total; i++) {
+    const a = audios[clientId] && audios[clientId][i];
+    if (a) { a.pause(); a.currentTime = 0; a.onended = null; }
+    setBtn(clientId, i, '');
+    setSectionPlaying(clientId, i, false);
+  }
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = true;
+  setStatus(clientId, 'Stopped.');
+}
+function playSection(clientId, idx) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  const audio = getAudio(clientId, idx);
+  setBtn(clientId, idx, 'playing');
+  setSectionPlaying(clientId, idx, true);
+  setStatus(clientId, `Playing section ${idx + 1}...`);
+  audio.currentTime = 0;
+  audio.onended = () => {
+    setBtn(clientId, idx, '');
+    setSectionPlaying(clientId, idx, false);
+    if (!playAllMode) setStatus(clientId, 'Done.', 'ok');
+  };
+  audio.play();
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (stopBtn) stopBtn.disabled = false;
+}
+function playIndex(clientId, idx) {
+  const total = files[clientId].length;
+  if (stopRequested[clientId] || idx >= total) {
+    playAllMode = false;
+    setStatus(clientId, stopRequested[clientId] ? 'Stopped.' : 'Briefing complete.', 'ok');
+    const btn = document.getElementById(`genBtn-${clientId}`);
+    const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+    if (btn) { btn.disabled = false; btn.innerHTML = '<span>&#9654;</span> Play All In Sequence'; }
+    if (stopBtn) stopBtn.disabled = true;
+    return;
+  }
+  const audio = getAudio(clientId, idx);
+  document.querySelectorAll(`#sections-${clientId} .section`).forEach((s, si) => setSectionPlaying(clientId, si, si === idx));
+  setBtn(clientId, idx, 'playing');
+  setStatus(clientId, `Section ${idx + 1} of ${total}: ${document.querySelector(`#sec-${clientId}-${idx} .sec-title`).textContent}`);
+  audio.currentTime = 0;
+  audio.onended = () => { if (playAllMode) playIndex(clientId, idx + 1); };
+  audio.play();
+}
+function playAll(clientId) {
+  stopAll(clientId);
+  stopRequested[clientId] = false;
+  playAllMode = true;
+  const btn = document.getElementById(`genBtn-${clientId}`);
+  const stopBtn = document.getElementById(`stopBtn-${clientId}`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Playing...'; }
+  if (stopBtn) stopBtn.disabled = false;
+  playIndex(clientId, 0);
+}
+</script>
+</body>
+</html>
