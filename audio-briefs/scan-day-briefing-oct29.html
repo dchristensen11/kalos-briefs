@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Day Briefing - Oct 29, 2026</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f14; color: #e8eaf0; min-height: 100vh; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #fff; margin-bottom: 4px; }
+  .date-line { font-size: 12px; color: #666; margin-bottom: 24px; }
+  .client-card { background: #1a1a26; border: 1px solid #2a2a3a; border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
+  .card-header { background: linear-gradient(135deg, #16213e 0%, #1a1a3e 100%); padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .card-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .card-header .time-badge { background: #7c8aff22; border: 1px solid #7c8aff55; color: #a0acff; font-size: 15px; font-weight: 700; padding: 7px 16px; border-radius: 20px; white-space: nowrap; }
+  .play-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #7c8aff 0%, #a78bfa 100%); color: #fff; font-size: 16px; font-weight: 700; border: none; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .play-btn:hover { opacity: 0.9; }
+  .dur { font-size: 13px; font-weight: 600; opacity: 0.75; }
+  .dl-btn { display: block; padding: 12px; background: #1a2a1a; border-top: 1px solid #2a3a20; color: #4ade80; font-size: 13px; font-weight: 600; text-align: center; text-decoration: none; transition: background 0.15s; }
+  .dl-btn:hover { background: #1e2e1e; }
+</style>
+</head>
+<body>
+<h1>Scan Day Briefing</h1>
+<div class="date-line">Thursday, October 29, 2026 &middot; 2 scans</div>
+
+<div class="client-card">
+  <div class="card-header">
+    <h2>Blake Capella</h2>
+    <div class="time-badge">9:00 AM</div>
+  </div>
+  <button class="play-btn" id="play-blake" onclick="toggle('blake')">
+    <span id="icon-blake">&#9654;</span> <span>Play Brief</span> <span class="dur" id="dur-blake"></span>
+  </button>
+  <a class="dl-btn" href="assets/blake-oct29-full-brief.mp3" download="blake-oct29-brief.mp3">&#8595; Download MP3</a>
+</div>
+<div class="client-card">
+  <div class="card-header">
+    <h2>Charlie Lee</h2>
+    <div class="time-badge">9:45 AM</div>
+  </div>
+  <button class="play-btn" id="play-charlie" onclick="toggle('charlie')">
+    <span id="icon-charlie">&#9654;</span> <span>Play Brief</span> <span class="dur" id="dur-charlie"></span>
+  </button>
+  <a class="dl-btn" href="assets/charlie-oct29-full-brief.mp3" download="charlie-oct29-brief.mp3">&#8595; Download MP3</a>
+</div>
+
+<script>
+const briefs = {
+  "blake": "assets/blake-oct29-full-brief.mp3",
+  "charlie": "assets/charlie-oct29-full-brief.mp3"
+};
+const audios = {};
+function fmt(s) { return Math.floor(s / 60) + ':' + String(Math.round(s % 60)).padStart(2, '0'); }
+function getAudio(slug) {
+  if (!audios[slug]) {
+    const a = new Audio(briefs[slug]);
+    a.addEventListener('loadedmetadata', () => {
+      const d = document.getElementById('dur-' + slug);
+      if (d) d.textContent = fmt(a.duration);
+    });
+    a.addEventListener('ended', () => setIcon(slug, false));
+    audios[slug] = a;
+  }
+  return audios[slug];
+}
+function setIcon(slug, playing) {
+  const i = document.getElementById('icon-' + slug);
+  if (i) i.innerHTML = playing ? '&#9632;' : '&#9654;';
+}
+function toggle(slug) {
+  const a = getAudio(slug);
+  if (a.paused) {
+    Object.keys(audios).forEach(s => { if (s !== slug) { audios[s].pause(); setIcon(s, false); } });
+    a.play();
+    setIcon(slug, true);
+  } else {
+    a.pause();
+    setIcon(slug, false);
+  }
+}
+Object.keys(briefs).forEach(getAudio);
+</script>
+</body>
+</html>
